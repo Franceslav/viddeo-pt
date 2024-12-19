@@ -1,8 +1,10 @@
-import React from 'react'
+import SayHello from "@/app/_components/say-hello"
 
 const Gallery = () => {
   return (
-    <div>Gallery</div>
+    <div>
+      <SayHello />
+    </div>
   )
 }
 
