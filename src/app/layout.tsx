@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+
+import { Toaster } from "sonner";
+
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 import "@/styles/globals.css";
 
-const inter = Inter({ 
-  weight: ["400", "500", "600", "700"], 
+const inter = Inter({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin-ext"],
 });
 
@@ -22,7 +27,14 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
-        {children}
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <div className="flex-1 flex">
+            {children}
+          </div>
+          <Footer />
+        </div>
+        <Toaster />
       </body>
     </html>
   );
