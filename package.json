@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.1",
+    "@tanstack/react-query": "^5.62.8",
+    "@trpc/client": "^11.0.0-rc.666",
+    "@trpc/react-query": "^11.0.0-rc.666",
+    "@trpc/server": "^11.0.0-rc.666",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.15.0",
@@ -20,7 +24,8 @@
     "react-dom": "^19.0.0",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
