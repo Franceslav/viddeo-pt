@@ -5,7 +5,7 @@ import Credentials from 'next-auth/providers/credentials'
 import { prisma } from "@/config/prisma"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 
-import { caller } from "./app/server/_app"
+import { caller } from "./app/server/routers/_app"
 
 
 const providers = [
@@ -20,7 +20,7 @@ const providers = [
           return null;
         }
 
-        const user = await caller({ db: prisma }).user.getUserByEmail({ email: credentials.email as string });
+        const user = await caller({db: prisma}).user.getUserByEmail({ email: credentials.email as string });
 
         if (!user) {
           throw new Error('User not found');

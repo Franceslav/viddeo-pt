@@ -1,6 +1,7 @@
 import Container from "@/components/container"
 
 const Gallery = () => {
+
   return (
     <Container>
       <div>
