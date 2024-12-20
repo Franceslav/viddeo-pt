@@ -4,16 +4,16 @@ import bcryptjs from "bcryptjs";
 
 export const userRouter = router({
   getUserByEmail: publicProcedure
-    .input(z.object({ email: z.string() }))
+    .input(z.object({ email: z.string().email() }))
     .query(async ({ input, ctx }) => {
       const user = await ctx.db.user.findUnique({
         where: { email: input.email }
       })
-      
+
       return user
     }),
   validateUserPassWord: publicProcedure
-    .input(z.object({ email: z.string(), password: z.string() }))
+    .input(z.object({ email: z.string().email(), password: z.string() }))
     .query(async ({ input, ctx }) => {
       const user = await ctx.db.user.findUnique({
         where: { email: input.email }
@@ -28,5 +28,18 @@ export const userRouter = router({
       if(!isPasswordValid) {
         throw new Error("Invalid password")
       }
+    }),
+  createUser: publicProcedure
+    .input(z.object({ name: z.string(), email: z.string().email(), password: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const hashedPassword = bcryptjs.hashSync(input.password, 10)
+
+      await ctx.db.user.create({
+        data: {
+          name: input.name,
+          email: input.email,
+          password: hashedPassword
+        }
+      })
     })
 })

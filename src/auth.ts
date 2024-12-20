@@ -11,6 +11,7 @@ import { caller } from "./app/server/routers/_app"
 const providers = [
   Credentials({
     credentials: {
+      name: {label: "Name", type: "text"},
       email: { label: "Email", type: "email" },
       password: { label: "Password", type: "password" },
     },
