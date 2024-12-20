@@ -8,7 +8,9 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import Container from "@/components/container"
 
+
 const Home = () => {
+
   return (
     <div className="flex-1">
       <Container>

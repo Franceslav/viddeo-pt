@@ -1,10 +1,12 @@
-import SayHello from "@/app/_components/say-hello"
+import Container from "@/components/container"
 
 const Gallery = () => {
   return (
-    <div>
-      <SayHello />
-    </div>
+    <Container>
+      <div>
+        <h1>Gallery</h1>
+      </div>
+    </Container>
   )
 }
 
