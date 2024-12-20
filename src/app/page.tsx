@@ -16,16 +16,16 @@ const Home = () => {
       <Container>
         <main className="flex flex-col items-center px-4 pb-4 pt-16 bg-stone-200/60 rounded-3xl shadow gap-10 overflow-hidden relative">
           <div className="w-full flex items-center justify-center relative">
-            <div className="max-w-md md:max-w-xl flex flex-col items-center gap-3 z-10">
+            <div className="max-w-md md:max-w-xl flex flex-col items-center gap-6 z-10">
               <Badge variant='outline' className="flex items-center shadow backdrop-blur-sm bg-white/50 gap-2 py-1 rounded-full">
                 <CalendarPlus className="size-4" />
                 <span>Viddeo 1.0 &bull; Public Beta</span>
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-semibold text-center">
+              <h1 className="text-5xl md:text-6xl font-semibold text-center">
                 Watch and <span className="text-primary">interact</span> effortlessly
               </h1>
               <p className="text-sm md:text-base font-medium text-center max-w-xs md:max-w-sm">Discover, watch, and engage with videos while enjoying a seamless viewing experience.</p>
-              <Link href='/generator' className={cn("w-full max-w-40 font-normal mt-3", buttonVariants({ variant: "default", className: "bg-foreground" }))}>
+              <Link href='/gallery' className={cn("w-full max-w-40 font-normal mt-3", buttonVariants({ variant: "default", className: "bg-foreground" }))}>
                 <span>Get Started</span>
               </Link>
             </div>

@@ -1,8 +1,10 @@
-import { Button } from "./ui/button"
+import Link from "next/link"
+import { buttonVariants } from "./ui/button"
+import { cn } from "@/lib/utils"
 
 const LoginBtn = () => {
   return (
-    <Button variant='ghost'>Log in</Button>
+    <Link href='/auth' className={cn(buttonVariants({ variant: "ghost" }))}>Log in</Link>
   )
 }
 
