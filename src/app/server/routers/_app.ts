@@ -1,5 +1,6 @@
-import { createCallerFactory, router } from './trpc';
-import { userRouter } from './routers/user';
+import { createCallerFactory, router } from "../trpc";
+import { userRouter } from "./user";
+
 
 export const appRouter = router({
   user: userRouter

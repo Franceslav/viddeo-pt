@@ -1,8 +1,8 @@
 'use client'
 
-import { trpc } from './client';
-import { httpBatchLink } from '@trpc/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
+import { trpc } from "./client";
 
 function getBaseUrl() {
   const base = (() => {
