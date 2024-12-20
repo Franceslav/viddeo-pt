@@ -4,11 +4,12 @@ import { AuthError } from "next-auth"
 
 import { publicProcedure, router } from "../trpc"
 import { caller } from "./_app"
+import { TRPCError } from "@trpc/server"
 
 export const authRouter = router({
   loginWidthCredentials: publicProcedure
     .input(z.object({ email: z.string().email(), password: z.string() }))
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       try {
         await signIn("credentials", { email: input.email, password: input.password })
       } catch (error) {
@@ -26,24 +27,27 @@ export const authRouter = router({
     .input(z.object({ name: z.string(), email: z.string().email(), password: z.string() }))
     .mutation(async ({ input, ctx }) => {
       try {
-        const userExists = await caller({ db: ctx.db }).user.getUserByEmail({ email: input.email })
-
-        if (userExists) {
-          throw new Error("User already exists")
-        }
-
         await caller({ db: ctx.db }).user.createUser({ name: input.name, email: input.email, password: input.password })
 
         const result = await signIn("credentials", { email: input.email, password: input.password, redirect: false })
 
         if (result.error) {
-          return { success: false, error: result.error }
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'Invalid credentials'
+          })
         }
 
         return { success: true }
       } catch (error) {
-        console.error(error);
-        return { success: false, error: "An unexpected error occurred" };
+        if(error instanceof TRPCError) {
+          throw error
+        }
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'An unexpected error occurred'
+        })
       }
     })
 })

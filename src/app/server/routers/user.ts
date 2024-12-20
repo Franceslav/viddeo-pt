@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 import bcryptjs from "bcryptjs";
+import { TRPCError } from "@trpc/server";
 
 export const userRouter = router({
   getUserByEmail: publicProcedure
@@ -9,6 +10,13 @@ export const userRouter = router({
       const user = await ctx.db.user.findUnique({
         where: { email: input.email }
       })
+
+      if (!user) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'User not found'
+        })
+      }
 
       return user
     }),
@@ -20,19 +28,38 @@ export const userRouter = router({
       })
 
       if (!user?.password) {
-        throw new Error("User not found")
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'User not found'
+        })
       }
 
       const isPasswordValid = await bcryptjs.compare(input.password, user.password)
 
-      if(!isPasswordValid) {
-        throw new Error("Invalid password")
+      if (!isPasswordValid) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Invalid password'
+        })
       }
+
+      return { isValid: true }
     }),
   createUser: publicProcedure
     .input(z.object({ name: z.string(), email: z.string().email(), password: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const hashedPassword = bcryptjs.hashSync(input.password, 10)
+      const hashedPassword = await bcryptjs.hash(input.password, 10)
+
+      const userExists = await ctx.db.user.findUnique({
+        where: { email: input.email }
+      })
+
+      if (userExists) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'User already exists'
+        })
+      }
 
       await ctx.db.user.create({
         data: {
