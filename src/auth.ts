@@ -26,7 +26,7 @@ const providers = [
           throw new Error('User not found');
         }
 
-        // await validateUserPassword(user, credentials.password as string);
+        await caller({db: prisma}).user.validateUserPassWord({ email: credentials.email as string, password: credentials.password as string })
 
         return user;
       } catch (error) {
