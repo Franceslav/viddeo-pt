@@ -1,12 +1,16 @@
 'use client'
 
+
+import { trpc } from '@/app/_trpc/client';
 import { FC } from 'react'
 
 interface Props {
-  videoUrl: string
+  id: string
 }
 
-const VideoPLayer: FC<Props> = ({ videoUrl }) => {
+const VideoPLayer: FC<Props> = ({ id }) => {
+
+  const [data] = trpc.video.getVideo.useSuspenseQuery({ id })
 
   return (
     <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
@@ -15,7 +19,7 @@ const VideoPLayer: FC<Props> = ({ videoUrl }) => {
         poster="/assets/placeholder-medium.webp"
         controls
       >
-        <source src={videoUrl} type="video/mp4" />
+        <source src={data.url} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       {/* <div className="absolute inset-0 flex items-center justify-center">

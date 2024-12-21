@@ -4,14 +4,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { makeQueryClient } from "./query-client";
 import { trpc } from "./client";
+import { useState } from "react";
+import superjson from "superjson";
 
 let clientQueryClientSingleton: QueryClient;
 function getQueryClient() {
   if (typeof window === 'undefined') {
-    // Server: always make a new query client
     return makeQueryClient();
   }
-  // Browser: use singleton pattern to keep the same query client
   return (clientQueryClientSingleton ??= makeQueryClient());
 }
 
@@ -24,21 +24,27 @@ function getBaseUrl() {
   return `${base}/api/trpc`;
 }
 
-const queryClient = getQueryClient();
+export function TRPCProvider(
+  props: Readonly<{
+    children: React.ReactNode;
+  }>,
+) {
+  const queryClient = getQueryClient();
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: getBaseUrl(),
+          transformer: superjson,
+        }),
 
-const trpcClient = trpc.createClient({
-  links: [
-    httpBatchLink({
-      url: getBaseUrl(),
+      ],
     }),
-  ],
-});
-
-export default function Provider({ children }: { children: React.ReactNode }) {
+  );
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        {children}
+        {props.children}
       </QueryClientProvider>
     </trpc.Provider>
   );

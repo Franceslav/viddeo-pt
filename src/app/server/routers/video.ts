@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router, } from "../trpc";
-import { Video } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { Video } from "@prisma/client";
 
 export const videoRouter = router({
   uploadVideo: publicProcedure

@@ -20,7 +20,7 @@ export function VideoCard({ id, title, views, uploadedAt }: VideoCardProps) {
     <Card className="w-full group cursor-pointer" onClick={() => router.push(`/gallery/video/${id}`)}>
       <CardContent className="p-0">
         <div className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden">
-          <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" fill className="object-cover" />
+          <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-xl">
             <PlayCircle className="w-12 h-12 text-white opacity-80" />
           </div>

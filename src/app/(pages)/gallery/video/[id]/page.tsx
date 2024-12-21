@@ -1,25 +1,24 @@
-'use client'
-
 import Container from "@/components/container"
-import { useParams } from "next/navigation"
 import VideoPLayer from "../_components/video-player"
+import { HydrateClient, trpc } from "@/app/server/routers/_app"
+import { Suspense } from "react"
 
-const VideoPage = () => {
-  const { id } = useParams()
+type Params = Promise<{ id: string }>
 
-  // const { data: video, isLoading } = trpc.video.getVideo.useQuery({ id: id as string })
+const Page = async ({ params }: { params: Params }) => {
+  const { id } = await params
+
+  void trpc.video.getVideo.prefetch({ id })
 
   return (
-    <Container>
-      {isLoading && !video ? (
-        <div>
-          Loading...
-        </div>
-      ) : (
-        <VideoPLayer videoUrl={video?.url} />
-      )}
-    </Container>
+    <HydrateClient>
+      <Container>
+        <Suspense fallback={<div>Loading...</div>}>
+          <VideoPLayer id={id as string} />
+        </Suspense>
+      </Container>
+    </HydrateClient>
   )
 }
 
-export default VideoPage
+export default Page

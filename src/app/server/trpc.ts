@@ -1,20 +1,23 @@
-import { prisma } from "@/config/prisma";
 import { PrismaClient } from "@prisma/client";
+import { cache } from "react";
+
 import { initTRPC } from "@trpc/server";
+import { prisma } from "@/config/prisma";
+import superjson from "superjson";
 
 type Context = {
   db: PrismaClient;
 };
 
-const createTRPCContext = () => {
+export const createTRPCContext = cache(async () => {
   return {
     db: prisma,
   };
-};
+});
 
-const t = initTRPC.context<Context>().create();
+const t = initTRPC.context<Context>().create({
+  transformer: superjson,
+});
 
 export const publicProcedure = t.procedure;
-export const { createCallerFactory, router } = t;
-
-export { createTRPCContext }
+export const { router, createCallerFactory } = t;

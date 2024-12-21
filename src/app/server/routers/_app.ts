@@ -1,12 +1,11 @@
+import { createHydrationHelpers } from '@trpc/react-query/rsc';
+import { cache } from "react";
+
 import { createCallerFactory, createTRPCContext, router } from "../trpc";
 import { authRouter } from "./auth";
 import { userRouter } from "./user";
 import { videoRouter } from "./video";
-import { createHydrationHelpers } from '@trpc/react-query/rsc';
-import { cache } from "react";
-
 import { makeQueryClient } from "@/app/_trpc/query-client";
-
 
 export const appRouter = router({
   auth: authRouter,

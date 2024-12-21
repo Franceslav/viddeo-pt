@@ -7,9 +7,7 @@ const Gallery = () => {
   return (
     <Container>
       <HydrateClient>
-        <div>
-          <VideosList />
-        </div>
+        <VideosList />
       </HydrateClient>
     </Container>
   )
