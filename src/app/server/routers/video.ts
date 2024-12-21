@@ -7,5 +7,10 @@ export const videoRouter = router({
     .mutation(async ({ input, ctx }) => {
       const video = await ctx.db.video.create({ data: input })
       return video
+    }),
+  getVideos: publicProcedure
+    .query(async ({ ctx }) => {
+      const videos = await ctx.db.video.findMany()
+      return videos
     })
 })
