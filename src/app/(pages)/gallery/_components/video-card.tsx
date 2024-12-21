@@ -3,6 +3,7 @@
 import { PlayCircle } from 'lucide-react'
 import { Card, CardContent } from "@/components/ui/card"
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 interface VideoCardProps {
   id: string
@@ -19,6 +20,7 @@ export function VideoCard({ id, title, views, uploadedAt }: VideoCardProps) {
     <Card className="w-full group cursor-pointer" onClick={() => router.push(`/gallery/video/${id}`)}>
       <CardContent className="p-0">
         <div className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden">
+          <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" fill className="object-cover" />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-xl">
             <PlayCircle className="w-12 h-12 text-white opacity-80" />
           </div>

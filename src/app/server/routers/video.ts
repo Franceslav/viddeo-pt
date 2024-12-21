@@ -12,5 +12,11 @@ export const videoRouter = router({
     .query(async ({ ctx }) => {
       const videos = await ctx.db.video.findMany()
       return videos
+    }),
+  getVideo: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const video = await ctx.db.video.findUnique({ where: { id: input.id } })
+      return video
     })
 })
