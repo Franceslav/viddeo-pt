@@ -8,3 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 export function getInitials(name: string) {
   return name.split(' ').map(word => word[0]).join('').toUpperCase()
 }
+
+export function formatDateShort(date: Date) {
+  return date.toLocaleDateString('es', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit'
+  })
+}
