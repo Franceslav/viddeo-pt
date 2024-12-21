@@ -1,10 +1,10 @@
 import { z } from "zod"
 import { signIn } from "@/auth"
 import { AuthError } from "next-auth"
+import { TRPCError } from "@trpc/server"
 
 import { publicProcedure, router } from "../trpc"
 import { caller } from "./_app"
-import { TRPCError } from "@trpc/server"
 
 export const authRouter = router({
   loginWidthCredentials: publicProcedure

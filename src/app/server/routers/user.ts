@@ -1,7 +1,8 @@
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc";
 import bcryptjs from "bcryptjs";
 import { TRPCError } from "@trpc/server";
+
+import { publicProcedure, router } from "../trpc";
 
 export const userRouter = router({
   getUserByEmail: publicProcedure
