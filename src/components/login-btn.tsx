@@ -1,24 +1,15 @@
 import Link from "next/link"
 import { buttonVariants } from "./ui/button"
-import { cn, getInitials } from "@/lib/utils"
-import { auth } from "@/auth"
-import { Avatar, AvatarFallback } from "./ui/avatar"
+import { cn } from "@/lib/utils"
 
-const LoginBtn = async () => {
-
-  const session = await auth()
+const LoginBtn = () => {
 
   return (
-    <>
-      {session?.user ? (
-        <Avatar>
-          <AvatarFallback>{session.user.name ? getInitials(session.user.name) : "U"}</AvatarFallback>
-        </Avatar>
-      ) : (
-        <Link href='/auth' className={cn(buttonVariants({ variant: "ghost" }))}>Log in</Link>
-      )}
-    </>
-
+    <Link
+      href='/auth'
+      className={cn(buttonVariants({ variant: "ghost" }))}>
+      Log in
+    </Link>
   )
 }
 

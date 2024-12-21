@@ -3,6 +3,8 @@ import { MenuIcon, Video } from 'lucide-react'
 
 import Container from './container'
 import LoginBtn from './login-btn'
+import UserMenu from './user-menu'
+import { auth } from '@/auth'
 
 
 interface NavItem {
@@ -25,7 +27,10 @@ const navItems: NavItem[] = [
   }
 ]
 
-const Header = () => {
+const Header = async () => {
+
+  const session = await auth()
+
   return (
     <header className='py-6'>
       <Container className='flex items-center justify-between md:!px-12'>
@@ -43,7 +48,7 @@ const Header = () => {
               ))}
             </ul>
           </nav>
-          <LoginBtn />
+          {session?.user ? <UserMenu name={session.user.name} /> : <LoginBtn />}
         </div>
         <div className='flex md:hidden'>
           <MenuIcon className='size-6' />

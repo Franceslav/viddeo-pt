@@ -49,5 +49,5 @@ export const authRouter = router({
           message: 'An unexpected error occurred'
         })
       }
-    })
+    }),
 })

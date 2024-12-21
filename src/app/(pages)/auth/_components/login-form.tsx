@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -17,7 +16,6 @@ const loginSchema = z.object({
 })
 
 const LoginForm = () => {
-  const router = useRouter()
 
   const { mutate: login, isPending } = trpc.auth.loginWidthCredentials.useMutation({
     onError: (error) => {
@@ -25,7 +23,8 @@ const LoginForm = () => {
     },
     onSuccess: () => {
       toast.success("Login Success")
-      router.push("/")
+      // TODO: fix this redirect
+      window.location.href = "/"
     }
   })
 
@@ -33,7 +32,7 @@ const LoginForm = () => {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
-      password: ""
+      password: "" 
     },
   })
 
