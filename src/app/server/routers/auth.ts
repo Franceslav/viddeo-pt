@@ -4,7 +4,7 @@ import { AuthError } from "next-auth"
 import { TRPCError } from "@trpc/server"
 
 import { publicProcedure, router } from "../trpc"
-import { caller } from "./_app"
+import { trpc } from "./_app"
 
 export const authRouter = router({
   loginWidthCredentials: publicProcedure
@@ -25,9 +25,9 @@ export const authRouter = router({
     }),
   registerWithCredentials: publicProcedure
     .input(z.object({ name: z.string(), email: z.string().email(), password: z.string() }))
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       try {
-        await caller({ db: ctx.db }).user.createUser({ name: input.name, email: input.email, password: input.password })
+        await trpc.user.createUser({ name: input.name, email: input.email, password: input.password })
 
         const result = await signIn("credentials", { email: input.email, password: input.password, redirect: false })
 

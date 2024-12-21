@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 import { trpc } from "@/app/_trpc/client"
@@ -19,15 +18,14 @@ const registerSchema = z.object({
 
 const RegisterForm = () => {
 
-  const router = useRouter()
-
   const { mutate: register, isPending } = trpc.auth.registerWithCredentials.useMutation({
     onError: (error) => {
       toast.error(error.message)
     },
     onSuccess: () => {
       toast.success("User created successfully")
-      router.push("/")
+      // TODO: fix this redirect
+      window.location.href = "/"
     }
   })
 

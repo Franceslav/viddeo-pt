@@ -1,10 +1,9 @@
-import { caller } from '@/app/server/routers/_app'
-import { prisma } from '@/config/prisma'
+import {  trpc } from '@/app/server/routers/_app'
 import { VideoCard } from './video-card'
 import { formatDateShort } from '@/lib/utils'
 
 const VideosList = async () => {
-  const videos = await caller({ db: prisma }).video.getVideos()
+  const videos = await trpc.video.getVideos()
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

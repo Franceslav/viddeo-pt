@@ -5,8 +5,8 @@ import Credentials from 'next-auth/providers/credentials'
 import { prisma } from "@/config/prisma"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 
-import { caller } from "./app/server/routers/_app"
 import { TRPCError } from "@trpc/server"
+import { trpc } from "./app/server/routers/_app"
 
 
 const providers = [
@@ -22,9 +22,9 @@ const providers = [
       }
 
       try {
-        const user = await caller({ db: prisma }).user.getUserByEmail({ email: credentials.email as string });
+        const user = await trpc.user.getUserByEmail({ email: credentials.email as string });
         
-        await caller({ db: prisma }).user.validateUserPassWord({ email: credentials.email as string, password: credentials.password as string });
+        await trpc.user.validateUserPassWord({ email: credentials.email as string, password: credentials.password as string });
 
         return user;
       } catch (error) {

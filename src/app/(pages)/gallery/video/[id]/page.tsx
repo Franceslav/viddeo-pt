@@ -3,12 +3,11 @@
 import Container from "@/components/container"
 import { useParams } from "next/navigation"
 import VideoPLayer from "../_components/video-player"
-import { trpc } from "@/app/_trpc/client"
 
 const VideoPage = () => {
   const { id } = useParams()
 
-  const { data: video, isLoading } = trpc.video.getVideo.useQuery({ id: id as string })
+  // const { data: video, isLoading } = trpc.video.getVideo.useQuery({ id: id as string })
 
   return (
     <Container>

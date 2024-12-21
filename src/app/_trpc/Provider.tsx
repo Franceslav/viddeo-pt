@@ -2,7 +2,18 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
+import { makeQueryClient } from "./query-client";
 import { trpc } from "./client";
+
+let clientQueryClientSingleton: QueryClient;
+function getQueryClient() {
+  if (typeof window === 'undefined') {
+    // Server: always make a new query client
+    return makeQueryClient();
+  }
+  // Browser: use singleton pattern to keep the same query client
+  return (clientQueryClientSingleton ??= makeQueryClient());
+}
 
 function getBaseUrl() {
   const base = (() => {
@@ -13,7 +24,8 @@ function getBaseUrl() {
   return `${base}/api/trpc`;
 }
 
-const queryClient = new QueryClient();
+const queryClient = getQueryClient();
+
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
