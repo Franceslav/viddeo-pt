@@ -42,5 +42,13 @@ const providers = [
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
+  callbacks: {
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.sub as string
+      }
+      return session
+    }
+  },
   providers,
 })
