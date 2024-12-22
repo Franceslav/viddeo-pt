@@ -13,7 +13,7 @@ const VideoContainer: FC<Props> = async ({ id }) => {
 
   return (
     <div className='flex flex-col lg:flex-row gap-8'>
-      <div className='lg:w-2/3'>
+      <div className='flex flex-col gap-4 lg:w-2/3'>
         <VideoPLayer videoUrl={video.url} />
         <div className='flex flex-col gap-2'>
           <h2 className='text-2xl font-bold'>
