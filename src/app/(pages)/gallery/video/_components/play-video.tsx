@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Play } from "lucide-react"
 import { FC, useState } from "react"
 
@@ -21,7 +22,7 @@ const PlayVideo: FC<Props> = ({ videoRef }) => {
   }
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
+    <div className={cn("inset-0 flex items-center justify-center", isPlaying ? "hidden" : "absolute")}>
       <button onClick={togglePlay} className="bg-white bg-opacity-80 rounded-full p-4 text-gray-800 hover:bg-opacity-100 transition-opacity">
         <Play size={48} />
       </button>
