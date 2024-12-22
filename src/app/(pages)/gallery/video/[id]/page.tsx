@@ -1,7 +1,9 @@
+import { Suspense } from "react"
+import { ErrorBoundary } from 'react-error-boundary';
+
 import Container from "@/components/container"
 import VideoPLayer from "../_components/video-player"
 import { HydrateClient, trpc } from "@/app/server/routers/_app"
-import { Suspense } from "react"
 
 type Params = Promise<{ id: string }>
 
@@ -13,9 +15,11 @@ const Page = async ({ params }: { params: Params }) => {
   return (
     <HydrateClient>
       <Container>
-        <Suspense fallback={<div>Loading...</div>}>
-          <VideoPLayer id={id as string} />
-        </Suspense>
+        <ErrorBoundary fallback={<div>Something went wrong</div>}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <VideoPLayer id={id as string} />
+          </Suspense>
+        </ErrorBoundary>
       </Container>
     </HydrateClient>
   )
