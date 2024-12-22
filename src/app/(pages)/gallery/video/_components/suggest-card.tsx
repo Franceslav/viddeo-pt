@@ -23,7 +23,10 @@ const SuggestCard: FC<Props> = ({ id, title }) => {
         <div className="flex-grow">
           <h3 className="text-base font-semibold line-clamp-2">{title}</h3>
           <p className="text-sm text-gray-500">
-            lorem impsum
+            Lorem impsum
+          </p>
+          <p className="text-sm text-gray-500">
+            Lorem - 100 views
           </p>
         </div>
       </CardContent>

@@ -1,7 +1,6 @@
 import { Suspense } from "react"
 import { ErrorBoundary } from 'react-error-boundary';
 
-import Container from "@/components/container"
 import { HydrateClient } from "@/app/server/routers/_app"
 import Loading from "./loading";
 import VideoContainer from "../_components/video-container";
@@ -13,13 +12,11 @@ const Page = async ({ params }: { params: Params }) => {
 
   return (
     <HydrateClient>
-      <Container>
-        <ErrorBoundary fallback={<div>Something went wrong</div>}>
-          <Suspense fallback={<Loading />}>
-            <VideoContainer id={id} />
-          </Suspense>
-        </ErrorBoundary>
-      </Container>
+      <ErrorBoundary fallback={<div>Something went wrong</div>}>
+        <Suspense fallback={<Loading />}>
+          <VideoContainer id={id} />
+        </Suspense>
+      </ErrorBoundary>
     </HydrateClient>
   )
 }
