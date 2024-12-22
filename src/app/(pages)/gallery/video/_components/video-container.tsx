@@ -1,12 +1,13 @@
 import { trpc } from '@/app/server/routers/_app'
 import React, { FC } from 'react'
 import VideoPLayer from './video-player';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Props {
   id: string;
 }
 
-const VideoContainer: FC<Props> = async ({ id }) => {
+export const VideoContainer: FC<Props> = async ({ id }) => {
 
   const video = await trpc.video.getVideo({ id });
 
@@ -25,4 +26,14 @@ const VideoContainer: FC<Props> = async ({ id }) => {
   )
 }
 
-export default VideoContainer
+
+// TODO: Create separate component for loading state if needed
+export const VideoContainerLoading = () => {
+  return (
+    <div className='flex flex-col gap-4'>
+      <Skeleton className='aspect-video w-full h-full rounded-lg' />
+      <Skeleton className='w-full h-10 rounded-lg' />
+      <Skeleton className='w-full h-10 rounded-lg' />
+    </div>
+  )
+}
