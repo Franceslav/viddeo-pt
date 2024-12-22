@@ -5,8 +5,6 @@ const SuggestedVideos = async () => {
 
   const videos = await trpc.video.getVideos()
 
-  console.log({ render: "component-rendered" })
-
   return (
     <div>
       <h3 className="text-xl font-semibold mb-4">Up next</h3>
