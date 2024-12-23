@@ -4,12 +4,13 @@ import { FC, useRef } from 'react'
 import FullScreenVideo from './full-screen-video';
 import PlayVideo from './play-video';
 import ChangeVideoSpeed from './change-video-speed';
+import { Video } from '@prisma/client';
 
 interface Props {
-  videoUrl: string
+  video: Video
 }
 
-const VideoPLayer: FC<Props> = ({ videoUrl }) => {
+const VideoPLayer: FC<Props> = ({ video }) => {
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -20,10 +21,10 @@ const VideoPLayer: FC<Props> = ({ videoUrl }) => {
         poster="/assets/placeholder-medium.webp"
         ref={videoRef}
       >
-        <source src={videoUrl} type="video/mp4" />
+        <source src={video.url} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      <PlayVideo videoRef={videoRef} />
+      <PlayVideo videoRef={videoRef}/>
       <ChangeVideoSpeed videoRef={videoRef} />
       <FullScreenVideo videoRef={videoRef} />
     </div>

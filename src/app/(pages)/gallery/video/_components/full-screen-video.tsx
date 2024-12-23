@@ -1,5 +1,7 @@
+'use client'
+
 import { Fullscreen } from 'lucide-react'
-import React, { FC } from 'react'
+import { FC } from 'react'
 
 interface Props {
   videoRef: React.RefObject<HTMLVideoElement | null>

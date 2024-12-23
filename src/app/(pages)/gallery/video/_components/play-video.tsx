@@ -1,5 +1,9 @@
+'use client'
+
+import { trpc } from "@/app/_trpc/client";
 import { cn } from "@/lib/utils";
 import { Play } from "lucide-react"
+import { useParams } from "next/navigation";
 import { FC, useState } from "react"
 
 interface Props {
@@ -9,6 +13,11 @@ interface Props {
 const PlayVideo: FC<Props> = ({ videoRef }) => {
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [viewCounted, setViewCounted] = useState(false);
+
+  const videoId = useParams().id as string
+
+  const { mutate: increaseViews } = trpc.video.increaseViews.useMutation();
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -16,6 +25,10 @@ const PlayVideo: FC<Props> = ({ videoRef }) => {
         videoRef.current.pause()
       } else {
         videoRef.current.play()
+        if(!viewCounted){
+          increaseViews({ id: videoId })
+          setViewCounted(true)
+        }
       }
       setIsPlaying(!isPlaying)
     }

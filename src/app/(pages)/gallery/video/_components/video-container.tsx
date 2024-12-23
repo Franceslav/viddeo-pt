@@ -18,7 +18,7 @@ const VideoContainer: FC<Props> = async ({ id }) => {
 
   return (
     <>
-      <VideoPLayer videoUrl={video.url} />
+      <VideoPLayer video={video} />
       <div className="">
         <h1 className="text-2xl font-bold mb-4">Awesome Video Title</h1>
         <div className="flex items-center justify-between flex-wrap gap-4">
