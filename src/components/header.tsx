@@ -1,10 +1,12 @@
 import Link from 'next/link'
-import { MenuIcon, Video } from 'lucide-react'
+import { MenuIcon, Tv, Video } from 'lucide-react'
 
 import Container from './container'
 import LoginBtn from './login-btn'
 import UserMenu from './user-menu'
 import { auth } from '@/auth'
+import { cn } from '@/lib/utils'
+import { buttonVariants } from './ui/button'
 
 
 interface NavItem {
@@ -19,11 +21,11 @@ const navItems: NavItem[] = [
   },
   {
     title: 'Pricing',
-    href: '/pricing',
+    href: '/#',
   },
   {
     title: 'Support',
-    href: '/support',
+    href: '/#',
   }
 ]
 
@@ -38,8 +40,8 @@ const Header = async () => {
           <Video className='size-6' />
           <span className='text-lg font-bold'>Viddeo</span>
         </Link>
-        <div className='flex-1 hidden md:flex items-center gap-2 '>
-          <nav className='flex-1 flex justify-center'>
+        <div className='flex-1 flex items-center justify-end gap-2 '>
+          <nav className='flex-1 justify-center hidden md:flex'>
             <ul className='flex items-center gap-6'>
               {navItems.map(({ title, href }) => (
                 <li key={title}>
@@ -48,10 +50,14 @@ const Header = async () => {
               ))}
             </ul>
           </nav>
-          {session?.user ? <UserMenu name={session.user.name} /> : <LoginBtn />}
-        </div>
-        <div className='flex md:hidden'>
-          <MenuIcon className='size-6' />
+          <div className='flex items-center justify-end gap-2'>
+            <div className='flex md:hidden'>
+              <Link href='/gallery' className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }))}>
+                <Tv className='size-6' />
+              </Link>
+            </div>
+            {session?.user ? <UserMenu name={session.user.name} /> : <LoginBtn />}
+          </div>
         </div>
       </Container>
     </header>
