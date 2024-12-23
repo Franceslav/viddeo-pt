@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MenuIcon, Tv, Video } from 'lucide-react'
+import { Tv, Video } from 'lucide-react'
 
 import Container from './container'
 import LoginBtn from './login-btn'
