@@ -36,7 +36,7 @@ Viddeo es un proyecto desarrollado como parte de una prueba técnica con el obje
 
 1. Clona el repositorio y navega a la carpeta del proyecto:
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/CarlosPProjects/viddeo-pt.git
    cd viddeo
    ```
 
@@ -84,11 +84,11 @@ Se han implementado los siguientes procedimientos de tRPC:
 - **Video**:
   - Subir videos, listar videos, obtener detalles de un video, incrementar vistas.
 
-## Capturas de Pantalla
+## Captura de Pantalla
 
 ![Hero](https://github.com/user-attachments/assets/6547108f-2351-474b-b268-1bb6a19d9ea0)
 
-## Main functions diagram
+## Diagrama de flujo principal
 
 ![Diagram](https://github.com/user-attachments/assets/a29b427e-8525-4196-8a60-699302873ebf)
 
