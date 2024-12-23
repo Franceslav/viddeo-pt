@@ -69,5 +69,21 @@ export const userRouter = router({
           password: hashedPassword
         }
       })
-    })
+    }),
+    getUserById: publicProcedure
+      .input(z.object({ id: z.string() }))
+      .query(async ({ input, ctx }) => {
+        const user = await ctx.db.user.findUnique({
+          where: { id: input.id }
+        })
+
+        if (!user) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'User not found'
+          })
+        }
+
+        return user
+      })
 })
