@@ -20,11 +20,9 @@ const FullScreenVideo: FC<Props> = ({ videoRef }) => {
   }
 
   return (
-    <div className='absolute top-2 left-2 text-primary'>
-      <button onClick={toggleFullScreen}>
-        <Fullscreen size={24} />
-      </button>
-    </div>
+    <button onClick={toggleFullScreen} className="text-white">
+      <Fullscreen />
+    </button>
   )
 }
 

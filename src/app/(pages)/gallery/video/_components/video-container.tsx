@@ -1,5 +1,5 @@
 import { trpc } from '@/app/server/routers/_app'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import VideoPLayer from './video-player';
 import { Button } from '@/components/ui/button';
 import { ThumbsUp } from 'lucide-react';
