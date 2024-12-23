@@ -1,10 +1,9 @@
 import { trpc } from '@/app/server/routers/_app'
-import { FC } from 'react'
+import { FC, Suspense } from 'react'
 import VideoPLayer from './video-player';
-import { Button } from '@/components/ui/button';
-import { ThumbsUp } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDateShort, getInitials } from '@/lib/utils';
+import LikeButton from './like-button';
 
 interface Props {
   id: string;
@@ -16,11 +15,13 @@ const VideoContainer: FC<Props> = async ({ id }) => {
 
   const user = await trpc.user.getUserById({ userId: video.userId });
 
+  await trpc.likes.getLikes.prefetch({ id: video.id });
+
   return (
     <>
       <VideoPLayer video={video} />
       <div className="">
-        <h1 className="text-2xl font-bold mb-4">Awesome Video Title</h1>
+        <h1 className="text-2xl font-bold mb-4">{video.title}</h1>
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center space-x-4">
             <Avatar>
@@ -32,9 +33,9 @@ const VideoContainer: FC<Props> = async ({ id }) => {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <ThumbsUp className="mr-2 h-4 w-4" /> 100K
-            </Button>
+            <Suspense fallback={<div>Loading...</div>}>
+              <LikeButton videoId={video.id} />
+            </Suspense>
           </div>
         </div>
         <p className="mt-4 text-sm text-gray-500">{video.views} views • {formatDateShort(video.createdAt)}</p>

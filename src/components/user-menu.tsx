@@ -7,7 +7,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import Link from 'next/link'
 import { getInitials } from "@/lib/utils"
 import { FC } from "react"
 import LogoutBtn from "./logout-btn"
@@ -28,11 +27,9 @@ const UserMenu: FC<Props> = ({ name }) => {
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link href='/profile'>
-          <DropdownMenuItem>
-            Profile
-          </DropdownMenuItem>
-        </Link>
+        <DropdownMenuItem disabled>
+          Profile
+        </DropdownMenuItem>
         <DropdownMenuItem disabled>Billing</DropdownMenuItem>
         <DropdownMenuItem disabled>Subscription</DropdownMenuItem>
         <DropdownMenuSeparator />
