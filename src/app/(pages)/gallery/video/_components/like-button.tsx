@@ -14,7 +14,7 @@ const LikeButton = ({ videoId }: { videoId: string }) => {
 
   const [, { data }] = trpc.likes.getLikes.useSuspenseQuery({ id: videoId })
 
-  const { mutate: likeVideo } = trpc.likes.likeVideo.useMutation({
+  const { mutate: likeVideo, isPending } = trpc.likes.likeVideo.useMutation({
     onSuccess: () => {
       utils.likes.getLikes.invalidate({ id: videoId })
     }
@@ -38,7 +38,7 @@ const LikeButton = ({ videoId }: { videoId: string }) => {
 
   return (
     <div className="flex items-center space-x-2">
-      <Button variant="outline" size="sm" onClick={handleLike} className={hasLiked ? "bg-primary text-white" : ""}>
+      <Button disabled={isPending} variant="outline" size="sm" onClick={handleLike} className={hasLiked ? "bg-primary text-white" : ""}>
         <ThumbsUp className="mr-2 h-4 w-4" /> {data.length}
       </Button>
     </div>
