@@ -1,5 +1,4 @@
 import { z } from "zod"
-import { TRPCError } from "@trpc/server";
 import { publicProcedure, router } from "../trpc"
 
 export const likesRouter = router({
