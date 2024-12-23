@@ -8,9 +8,10 @@ import { FC } from "react";
 interface Props {
   id: string;
   title: string;
+  views: number;
 }
 
-const SuggestCard: FC<Props> = ({ id, title }) => {
+const SuggestCard: FC<Props> = ({ id, title, views }) => {
 
   const router = useRouter()
 
@@ -20,13 +21,13 @@ const SuggestCard: FC<Props> = ({ id, title }) => {
         <div className="flex-shrink-0 w-40 h-24 bg-gray-100 rounded-xl overflow-hidden">
           <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" width={160} height={90} className="w-full h-full object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
         </div>
-        <div className="flex-grow">
+        <div className="">
           <h3 className="text-base font-semibold line-clamp-2">{title}</h3>
           <p className="text-sm text-gray-500">
-            Lorem impsum
+            Lorem ipsum dolor sit amet, consectetur.
           </p>
           <p className="text-sm text-gray-500">
-            Lorem - 100 views
+            {views} views
           </p>
         </div>
       </CardContent>

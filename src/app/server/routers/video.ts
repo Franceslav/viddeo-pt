@@ -29,5 +29,14 @@ export const videoRouter = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Video not found" })
       }
       return video
+    }),
+  increaseViews: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const video = await ctx.db.video.update({ where: { id: input.id }, data: { views: { increment: 1 } } })
+      if (!video) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to increase views" })
+      }
+      return video
     })
 })

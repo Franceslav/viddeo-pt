@@ -14,7 +14,7 @@ const VideoContainer: FC<Props> = async ({ id }) => {
 
   const video = await trpc.video.getVideo({ id });
 
-  const user = await trpc.user.getUserById({ id: video.userId });
+  const user = await trpc.user.getUserById({ userId: video.userId });
 
   return (
     <>

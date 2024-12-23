@@ -71,10 +71,10 @@ export const userRouter = router({
       })
     }),
     getUserById: publicProcedure
-      .input(z.object({ id: z.string() }))
+      .input(z.object({ userId: z.string() }))
       .query(async ({ input, ctx }) => {
         const user = await ctx.db.user.findUnique({
-          where: { id: input.id }
+          where: { id: input.userId }
         })
 
         if (!user) {

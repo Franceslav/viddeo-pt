@@ -10,7 +10,7 @@ const SuggestedVideos = async () => {
       <h3 className="text-xl font-semibold mb-4">Up next</h3>
       <div className="space-y-4">
         {videos.map((video) => (
-          <SuggestCard key={video.id} id={video.id} title={video.title} />
+          <SuggestCard key={video.id} id={video.id} title={video.title} views={video.views} />
         ))}
       </div>
     </div>
