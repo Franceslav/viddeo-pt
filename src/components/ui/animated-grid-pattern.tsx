@@ -10,6 +10,7 @@ interface AnimatedGridPatternProps {
   height?: number;
   x?: number;
   y?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   strokeDasharray?: any;
   numSquares?: number;
   className?: string;
@@ -28,6 +29,7 @@ export default function AnimatedGridPattern({
   className,
   maxOpacity = 0.5,
   duration = 4,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   repeatDelay = 0.5,
   ...props
 }: AnimatedGridPatternProps) {
@@ -75,6 +77,7 @@ export default function AnimatedGridPattern({
   // Resize observer to update container dimensions
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
+      // eslint-disable-next-line prefer-const
       for (let entry of entries) {
         setDimensions({
           width: entry.contentRect.width,
