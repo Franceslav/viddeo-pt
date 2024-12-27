@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Viddeo
 
-## Getting Started
+## Descripción
 
-First, run the development server:
+Viddeo es un proyecto desarrollado como parte de una prueba técnica con el objetivo de construir una aplicación funcional de reproducción de videos. Aunque su enfoque principal es cumplir con los requisitos indicados, se han agregado funcionalidades adicionales para mejorar habilidades y explorar nuevas tecnologías. La mayor parte de la lógica se encuentra en el reproductor de video.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Características Principales
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Listado de videos con opciones para visualizarlos en detalle.
+- Página de detalles del video:
+  - Reproductor de video.
+  - Información del creador del video.
+  - Contador de reproducciones.
+  - Botón de "like" (disponible solo para usuarios registrados y logueados).
+  - Descripción del video.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tecnologías Utilizadas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js 15**: Framework para aplicaciones React.
+- **TailwindCSS**: Estilizado con clases de utilidad.
+- **Shadcn**: Componentes para interfaces de usuario consistentes.
+- **tRPC**: API type-safe para comunicación entre frontend y backend.
+- **TypeScript**: Tipado estático.
+- **MongoDB**: Base de datos.
+- **Prisma**: ORM para interactuar con la base de datos.
+- **Auth.js**: Manejo de autenticación.
 
-## Learn More
+## Configuración y Uso
 
-To learn more about Next.js, take a look at the following resources:
+### Requisitos Previos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.js (v18 o superior).
+- Cuenta en MongoDB.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Instrucciones de Configuración
 
-## Deploy on Vercel
+1. Clona el repositorio y navega a la carpeta del proyecto:
+   ```bash
+   git clone https://github.com/CarlosPProjects/viddeo-pt.git
+   cd viddeo
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Instala las dependencias:
+   ```bash
+   npm install --force
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Configura las variables de entorno en un archivo `.env`:
+   - Genera un secreto para Auth.js:
+     ```bash
+     npx auth secret
+     ```
+   - Agrega la URL de tu base de datos de MongoDB.
+
+4. Configura Prisma:
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+
+### Despliegue en Vercel
+
+1. Configura los comandos de build:
+   - **Build Command**: `prisma generate && next build`
+   - **Install Command**: `npm i --force`
+
+2. Asegúrate de configurar las variables de entorno en el panel de configuración de Vercel.
+
+## Estructura de tRPC
+
+Se han implementado los siguientes procedimientos de tRPC:
+
+- **Auth**:
+  - Registro y login.
+- **Like**:
+  - Obtener y crear likes (en base al ID del usuario y el ID del video).
+- **User**:
+  - Crear usuario, validar contraseña, obtener usuario por ID o email.
+- **Video**:
+  - Subir videos, listar videos, obtener detalles de un video, incrementar vistas.
+
+## Captura de Pantalla
+
+![Hero](https://github.com/user-attachments/assets/6547108f-2351-474b-b268-1bb6a19d9ea0)
+
+## Diagrama de flujo principal
+
+![Diagram](https://github.com/user-attachments/assets/a29b427e-8525-4196-8a60-699302873ebf)
+
+
+
