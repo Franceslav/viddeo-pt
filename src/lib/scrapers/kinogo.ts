@@ -9,12 +9,25 @@ export type ScrapedEpisode = {
 }
 
 export async function scrapeKinogo(targetUrl: string): Promise<ScrapedEpisode[]> {
-  const { data: html } = await axios.get<string>(targetUrl, {
+  const httpsProxy = process.env.KINOGO_PROXY
+  const agent = httpsProxy ? (await import('https-proxy-agent')).HttpsProxyAgent(httpsProxy) : undefined
+
+  const { data: html, status } = await axios.get<string>(targetUrl, {
     headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'ru,en;q=0.9',
+      'Referer': new URL(targetUrl).origin + '/',
     },
-    timeout: 20000
+    httpAgent: agent as any,
+    httpsAgent: agent as any,
+    timeout: 20000,
+    validateStatus: () => true,
   })
+
+  if (status >= 400 || !html || html.length < 500) {
+    throw new Error(`Source blocked or unavailable (status ${status})`)
+  }
 
   const $ = cheerio.load(html)
   const episodes: ScrapedEpisode[] = []
