@@ -72,7 +72,12 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
                 return
             }
             setIsImporting(true)
-            const res = await fetch('/api/scrape/kinogo', {
+            
+            // Определяем, какой API использовать на основе URL
+            const isVidLink = importUrl.includes('vidlink.pro')
+            const apiEndpoint = isVidLink ? '/api/scrape/vidlink' : '/api/scrape/kinogo'
+            
+            const res = await fetch(apiEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: importUrl })
@@ -135,12 +140,12 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Импорт серий по URL</CardTitle>
-                        <CardDescription>Вставьте ссылку на страницу и выберите сезон. Серии будут созданы автоматически.</CardDescription>
+                        <CardDescription>Вставьте ссылку на страницу (VidLink.pro или Kinogo) и выберите сезон. Серии будут созданы автоматически.</CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-3 md:grid-cols-4">
                         <div className="md:col-span-2">
                             <Label htmlFor="importUrl">URL страницы</Label>
-                            <Input id="importUrl" placeholder="https://..." value={importUrl} onChange={(e) => setImportUrl(e.target.value)} />
+                            <Input id="importUrl" placeholder="https://vidlink.pro/tv/2190/2/5 или https://kinogo.online/..." value={importUrl} onChange={(e) => setImportUrl(e.target.value)} />
                         </div>
                         <div>
                             <Label>Сезон</Label>
