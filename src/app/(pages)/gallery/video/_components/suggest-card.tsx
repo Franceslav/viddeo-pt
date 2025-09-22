@@ -39,9 +39,6 @@ const SuggestCard: FC<Props> = ({ id, title, views, type = 'video', image }) => 
           <h3 className="text-sm font-black line-clamp-2 text-black mb-1" style={{ textShadow: '1px 1px 0px #000000' }}>
             {title}
           </h3>
-          <p className="text-xs text-gray-700 font-bold mb-1">
-            &quot;OH MY GOD!&quot;
-          </p>
           <p className="text-xs text-gray-600 font-semibold">
             {views} просмотров
           </p>
