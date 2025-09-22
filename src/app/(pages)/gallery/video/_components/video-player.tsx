@@ -21,10 +21,7 @@ const VideoPLayer: FC<Props> = ({ video }) => {
     const src = video.url
 
     if (src?.includes('.m3u8') && Hls.isSupported()) {
-      h = new Hls({
-        fragLoadPolicy: { maxTimeToFirstByteMs: 10000, maxLoadTimeMs: 20000 },
-        manifestLoadPolicy: { maxTimeToFirstByteMs: 8000, maxLoadTimeMs: 15000 }
-      })
+      h = new Hls()
       h.loadSource(src)
       h.attachMedia(v)
     } else if (src) {
