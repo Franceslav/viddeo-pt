@@ -66,13 +66,40 @@ Viddeo es un proyecto desarrollado como parte de una prueba técnica con el obje
    npm run dev
    ```
 
-### Despliegue en Vercel
+### Деплой на VPS (PM2)
 
-1. Configura los comandos de build:
-   - **Build Command**: `prisma generate && next build`
-   - **Install Command**: `npm i --force`
+1. Переменные окружения (пример см. `.env.example`):
+   - `DATABASE_URL` (или `MONGODB_URI`)
+   - `AUTH_SECRET` (сгенерировать: `npx auth secret`)
+   - опционально: `PORT=3000`, `HOST=0.0.0.0`
 
-2. Asegúrate de configurar las variables de entorno en el panel de configuración de Vercel.
+2. Установка зависимостей и сборка:
+   ```bash
+   npm ci --omit=dev || npm i --production
+   npm run build
+   ```
+
+3. Prisma (если используется):
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+4. Запуск через PM2:
+   ```bash
+   npm i -g pm2
+   pm2 start ecosystem.config.cjs --env production
+   pm2 save
+   pm2 startup
+   ```
+
+5. Обновления релиза:
+   ```bash
+   git pull
+   npm ci --omit=dev || npm i --production
+   npm run build
+   pm2 reload viddeo
+   ```
 
 ## Estructura de tRPC
 
