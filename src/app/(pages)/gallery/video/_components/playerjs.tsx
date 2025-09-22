@@ -5,6 +5,7 @@ import { useEffect, useId, useRef } from 'react'
 declare global {
   interface Window {
     Playerjs?: any
+    PlayerjsAsync?: any
   }
 }
 
@@ -29,21 +30,23 @@ export default function PlayerJS({ src, poster, title }: Props) {
       const existingScript = document.querySelector('script[src*="playerjs"]')
       if (existingScript) return
       
-      // Load PlayerJS from CDN
+      // Load PlayerJS from CDN (synchronously as recommended)
       const script = document.createElement('script')
       script.type = 'text/javascript'
-      script.async = true
       script.src = 'https://playerjs.com/static/player.js'
       document.head.appendChild(script)
       
       await new Promise<void>((resolve) => {
-        script.addEventListener('load', () => resolve())
+        script.addEventListener('load', () => {
+          console.log('PlayerJS script loaded')
+          resolve()
+        })
         script.addEventListener('error', () => {
-          console.warn('Failed to load PlayerJS from CDN, trying fallback')
+          console.warn('Failed to load PlayerJS from CDN')
           resolve() // Don't reject, just continue
         })
         // fallback timeout
-        setTimeout(() => resolve(), 5000)
+        setTimeout(() => resolve(), 3000)
       })
     }
 
@@ -80,24 +83,20 @@ export default function PlayerJS({ src, poster, title }: Props) {
             
             try {
               // Create PlayerJS instance with correct API
-              playerRef.current = new window.Playerjs({
+              const playerConfig = {
                 id: containerId,
                 file: src,
                 poster: poster || undefined,
                 title: title || undefined,
-              })
+              }
               
-              // Check if PlayerJS actually created the player
-              setTimeout(() => {
-                const playerElement = container.querySelector('video, iframe, embed')
-                if (!playerElement) {
-                  console.warn('PlayerJS did not create video element, falling back to HTML5')
-                  showFallbackPlayer()
-                } else {
-                  console.log('PlayerJS created video element successfully')
-                  initializedRef.current = true
-                }
-              }, 1000)
+              console.log('Creating PlayerJS with config:', playerConfig)
+              
+              playerRef.current = new window.Playerjs(playerConfig)
+              
+              // Mark as initialized immediately
+              initializedRef.current = true
+              console.log('PlayerJS instance created successfully')
               
             } catch (playerError) {
               console.error('PlayerJS creation failed:', playerError)
@@ -118,13 +117,7 @@ export default function PlayerJS({ src, poster, title }: Props) {
             console.log('PlayerJS timeout, forcing fallback')
             showFallbackPlayer()
           }
-        }, 2000)
-        
-        // Immediate fallback for testing - always show HTML5 player
-        setTimeout(() => {
-          console.log('Forcing HTML5 fallback for testing')
-          showFallbackPlayer()
-        }, 1000)
+        }, 3000)
       } catch (error) {
         console.error('Failed to initialize PlayerJS:', error)
         showFallbackPlayer()
@@ -146,21 +139,19 @@ export default function PlayerJS({ src, poster, title }: Props) {
     if (container) {
       if (src) {
         console.log('Showing fallback player for:', src)
+        
+        // Try iframe PlayerJS first
+        const iframeUrl = `https://playerjs.com/player.html?file=${encodeURIComponent(src)}${poster ? `&poster=${encodeURIComponent(poster)}` : ''}${title ? `&title=${encodeURIComponent(title)}` : ''}`
+        
         container.innerHTML = `
-          <video 
-            controls 
-            style="width: 100%; height: 100%; object-fit: contain;"
-            ${poster ? `poster="${poster}"` : ''}
-            ${title ? `title="${title}"` : ''}
-            onerror="console.error('Video load error:', this.error)"
-            onloadstart="console.log('Video loading started')"
-            oncanplay="console.log('Video can play')"
-          >
-            <source src="${src}" type="video/mp4">
-            <source src="${src}" type="video/webm">
-            <source src="${src}" type="video/ogg">
-            Ваш браузер не поддерживает видео тег.
-          </video>
+          <iframe 
+            src="${iframeUrl}"
+            style="width: 100%; height: 100%; border: none;"
+            frameborder="0"
+            allowfullscreen
+            allow="autoplay; fullscreen; picture-in-picture;"
+            onerror="console.error('Iframe PlayerJS failed, showing HTML5'); this.parentElement.innerHTML='<video controls style=\\"width: 100%; height: 100%; object-fit: contain;\\" ${poster ? `poster=\\"${poster}\\"` : ''} ${title ? `title=\\"${title}\\"` : ''}><source src=\\"${src}\\" type=\\"video/mp4\\"><source src=\\"${src}\\" type=\\"video/webm\\"><source src=\\"${src}\\" type=\\"video/ogg\\">Ваш браузер не поддерживает видео тег.</video>'"
+          ></iframe>
         `
       } else {
         container.innerHTML = `
