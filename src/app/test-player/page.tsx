@@ -9,11 +9,18 @@ export default function TestPlayerPage() {
       
       <div className="space-y-8">
         <div>
-          <h2 className="text-lg font-semibold mb-2">Тест с MP4 видео</h2>
+          <h2 className="text-lg font-semibold mb-2">Тест с MP4 видео (рабочий URL)</h2>
           <PlayerJS 
-            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            poster="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
-            title="Big Buck Bunny"
+            src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
+            title="Sample Video"
+          />
+        </div>
+        
+        <div>
+          <h2 className="text-lg font-semibold mb-2">Тест с простым MP4</h2>
+          <PlayerJS 
+            src="https://www.w3schools.com/html/mov_bbb.mp4"
+            title="W3Schools Video"
           />
         </div>
         

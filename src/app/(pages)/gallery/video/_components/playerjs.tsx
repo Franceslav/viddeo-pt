@@ -78,17 +78,34 @@ export default function PlayerJS({ src, poster, title }: Props) {
               title: title
             })
             
-            // Create PlayerJS instance with correct API
-            playerRef.current = new window.Playerjs({
-              id: containerId,
-              file: src,
-              poster: poster || undefined,
-              title: title || undefined,
-            })
-            initializedRef.current = true
-            console.log('PlayerJS initialized successfully with file:', src)
+            try {
+              // Create PlayerJS instance with correct API
+              playerRef.current = new window.Playerjs({
+                id: containerId,
+                file: src,
+                poster: poster || undefined,
+                title: title || undefined,
+              })
+              
+              // Check if PlayerJS actually created the player
+              setTimeout(() => {
+                const playerElement = container.querySelector('video, iframe, embed')
+                if (!playerElement) {
+                  console.warn('PlayerJS did not create video element, falling back to HTML5')
+                  showFallbackPlayer()
+                } else {
+                  console.log('PlayerJS created video element successfully')
+                  initializedRef.current = true
+                }
+              }, 1000)
+              
+            } catch (playerError) {
+              console.error('PlayerJS creation failed:', playerError)
+              showFallbackPlayer()
+            }
           } else {
             console.error('Container not found:', containerId)
+            showFallbackPlayer()
           }
         } else {
           console.warn('PlayerJS not available, showing fallback video player')
@@ -101,7 +118,13 @@ export default function PlayerJS({ src, poster, title }: Props) {
             console.log('PlayerJS timeout, forcing fallback')
             showFallbackPlayer()
           }
-        }, 3000)
+        }, 2000)
+        
+        // Immediate fallback for testing - always show HTML5 player
+        setTimeout(() => {
+          console.log('Forcing HTML5 fallback for testing')
+          showFallbackPlayer()
+        }, 1000)
       } catch (error) {
         console.error('Failed to initialize PlayerJS:', error)
         showFallbackPlayer()
