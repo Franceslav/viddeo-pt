@@ -29,11 +29,11 @@ export function VideoCard({ id, title, views, uploadedAt, type = 'video', image 
   return (
     <Card className="w-full group cursor-pointer" onClick={handleClick}>
       <CardContent className="p-0">
-        <div className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden">
+        <div className="relative aspect-video bg-black rounded-xl overflow-hidden">
           {image ? (
-            <Image src={image} alt={title} fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
+            <Image src={image} alt={title} fill className="object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
           ) : (
-            <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
+            <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" fill className="object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
           )}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-xl">
             <PlayCircle className="w-12 h-12 text-white opacity-80" />

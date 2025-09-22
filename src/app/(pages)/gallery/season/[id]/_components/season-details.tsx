@@ -31,7 +31,7 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
                         src={season.image}
                         alt={season.title}
                         fill
-                        className="object-cover"
+                        className="object-contain bg-black"
                       />
                     </div>
                   ) : (
@@ -79,7 +79,7 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
                         src={episode.image}
                         alt={episode.title}
                         fill
-                        className="object-cover"
+                        className="object-contain bg-black"
                       />
                     </div>
                   ) : (
