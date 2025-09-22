@@ -94,7 +94,15 @@ export default function PlayerJS({ src, poster, title }: Props) {
       <div id={containerId} className="w-full h-full" />
       {!src && (
         <div className="absolute inset-0 flex items-center justify-center text-white">
-          <p>Нет видео для воспроизведения</p>
+          <div className="text-center">
+            <p className="text-lg font-semibold mb-2">Нет видео для воспроизведения</p>
+            <p className="text-sm text-gray-300">URL видео не указан</p>
+          </div>
+        </div>
+      )}
+      {src && src.includes('.m3u8') && (
+        <div className="absolute top-2 right-2 bg-yellow-600 text-white px-2 py-1 rounded text-xs">
+          HLS
         </div>
       )}
     </div>

@@ -31,7 +31,12 @@
     
     // Set video source
     if (this.file) {
-      this.video.src = this.file;
+      // Check if it's HLS (.m3u8)
+      if (this.file.includes('.m3u8')) {
+        this.setupHLS();
+      } else {
+        this.video.src = this.file;
+      }
     }
     
     // Set poster
@@ -60,10 +65,48 @@
     
     this.video.addEventListener('error', (e) => {
       console.error('PlayerJS: Video error', e);
-      // Show error message
+      console.error('Video error details:', {
+        error: this.video.error,
+        networkState: this.video.networkState,
+        readyState: this.video.readyState,
+        src: this.video.src,
+        currentSrc: this.video.currentSrc
+      });
+      
+      // Show detailed error message
       const errorDiv = document.createElement('div');
-      errorDiv.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 8px;';
-      errorDiv.innerHTML = '<p>Ошибка загрузки видео</p><p style="font-size: 12px; margin-top: 10px;">Проверьте URL или формат файла</p>';
+      errorDiv.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 8px; max-width: 80%;';
+      
+      let errorMessage = 'Ошибка загрузки видео';
+      let errorDetails = 'Проверьте URL или формат файла';
+      
+      if (this.video.error) {
+        switch (this.video.error.code) {
+          case 1:
+            errorMessage = 'Видео прервано';
+            errorDetails = 'Загрузка была прервана пользователем';
+            break;
+          case 2:
+            errorMessage = 'Ошибка сети';
+            errorDetails = 'Проблема с загрузкой видео';
+            break;
+          case 3:
+            errorMessage = 'Ошибка декодирования';
+            errorDetails = 'Видео повреждено или не поддерживается';
+            break;
+          case 4:
+            errorMessage = 'Формат не поддерживается';
+            errorDetails = 'Браузер не поддерживает этот формат видео';
+            break;
+        }
+      }
+      
+      errorDiv.innerHTML = `
+        <p style="font-weight: bold; margin-bottom: 10px;">${errorMessage}</p>
+        <p style="font-size: 12px; margin-bottom: 10px;">${errorDetails}</p>
+        <p style="font-size: 10px; color: #ccc;">URL: ${this.video.src || 'не указан'}</p>
+      `;
+      
       this.container.appendChild(errorDiv);
     });
     
@@ -120,6 +163,28 @@
 
   PlayerJS.prototype.getDuration = function() {
     return this.video ? this.video.duration : 0;
+  };
+
+  PlayerJS.prototype.setupHLS = function() {
+    // For HLS streams, we'll try to use native HLS support first
+    // If not available, we'll show a message to use a compatible browser
+    if (this.video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native HLS support (Safari)
+      this.video.src = this.file;
+      console.log('PlayerJS: Using native HLS support');
+    } else {
+      // No native HLS support, show message
+      console.log('PlayerJS: No native HLS support, showing message');
+      const hlsDiv = document.createElement('div');
+      hlsDiv.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 8px; max-width: 80%;';
+      hlsDiv.innerHTML = `
+        <p style="font-weight: bold; margin-bottom: 10px;">HLS поток не поддерживается</p>
+        <p style="font-size: 12px; margin-bottom: 10px;">Для воспроизведения HLS используйте Safari или установите расширение HLS.js</p>
+        <p style="font-size: 10px; color: #ccc;">URL: ${this.file}</p>
+        <a href="${this.file}" target="_blank" style="color: #4ade80; text-decoration: underline; font-size: 12px;">Открыть в новой вкладке</a>
+      `;
+      this.container.appendChild(hlsDiv);
+    }
   };
 
   PlayerJS.prototype.destroy = function() {
