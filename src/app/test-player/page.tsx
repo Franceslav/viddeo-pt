@@ -26,6 +26,22 @@ export default function TestPlayerPage() {
         </div>
         
         <div>
+          <h2 className="text-lg font-semibold mb-2">Тест с несуществующим видео</h2>
+          <PlayerJS 
+            src="https://example.com/nonexistent-video.mp4"
+            title="Non-existent Video"
+          />
+        </div>
+        
+        <div>
+          <h2 className="text-lg font-semibold mb-2">Тест с CORS ошибкой</h2>
+          <PlayerJS 
+            src="https://httpbin.org/status/403"
+            title="CORS Error Test"
+          />
+        </div>
+        
+        <div>
           <h2 className="text-lg font-semibold mb-2">Тест без видео (ошибка)</h2>
           <PlayerJS 
             src=""
