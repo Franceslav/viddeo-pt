@@ -21,7 +21,7 @@ export const SeasonsList = async () => {
                   src={season.image}
                   alt={season.title}
                   fill
-                  className="object-contain bg-black"
+                  className="object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">

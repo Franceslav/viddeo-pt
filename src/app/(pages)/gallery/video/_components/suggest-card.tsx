@@ -28,11 +28,11 @@ const SuggestCard: FC<Props> = ({ id, title, views, type = 'video', image }) => 
   return (
     <Card className="w-full group cursor-pointer border-2 border-black shadow-lg bg-white hover:bg-yellow-100 transition-colors duration-300" onClick={handleClick}>
       <CardContent className="p-2 flex space-x-2">
-        <div className="flex-shrink-0 w-40 h-24 bg-black rounded-lg overflow-hidden border-2 border-black">
+        <div className="flex-shrink-0 w-40 h-24 bg-gray-200 rounded-lg overflow-hidden border-2 border-black">
           {image ? (
-            <Image src={image} alt={title} width={160} height={90} className="w-full h-full object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
+            <Image src={image} alt={title} width={160} height={90} className="w-full h-full object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
           ) : (
-            <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" width={160} height={90} className="w-full h-full object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
+            <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" width={160} height={90} className="w-full h-full object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
           )}
         </div>
         <div className="flex-1">
