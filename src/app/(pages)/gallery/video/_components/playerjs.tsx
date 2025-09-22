@@ -9,16 +9,26 @@ declare global {
   }
 }
 
+interface VideoSource {
+  url: string
+  label: string
+  type?: 'mp4' | 'webm' | 'hls' | 'dash'
+}
+
 interface Props {
   src: string
   poster?: string | null
   title?: string
+  sources?: VideoSource[]
+  showPlayerSelector?: boolean
 }
 
-export default function PlayerJS({ src, poster, title }: Props) {
+export default function PlayerJS({ src, poster, title, sources = [], showPlayerSelector = false }: Props) {
   const containerId = useId().replace(/:/g, '')
+  const playerSelectorId = `${containerId}-selector`
   const initializedRef = useRef(false)
   const playerRef = useRef<any>(null)
+  const currentSourceRef = useRef(src)
 
   useEffect(() => {
     let cancelled = false
@@ -50,11 +60,11 @@ export default function PlayerJS({ src, poster, title }: Props) {
       })
     }
 
-    const init = async () => {
-      if (initializedRef.current || cancelled) return
+    const createPlayer = async (videoSrc: string) => {
+      if (cancelled) return
       
       try {
-        console.log('Initializing PlayerJS with src:', src)
+        console.log('Creating PlayerJS with src:', videoSrc)
         
         await ensureScript()
         if (cancelled) return
@@ -76,7 +86,7 @@ export default function PlayerJS({ src, poster, title }: Props) {
             
             console.log('Creating PlayerJS instance with:', {
               id: containerId,
-              file: src,
+              file: videoSrc,
               poster: poster,
               title: title
             })
@@ -85,7 +95,7 @@ export default function PlayerJS({ src, poster, title }: Props) {
               // Create PlayerJS instance with correct API
               const playerConfig = {
                 id: containerId,
-                file: src,
+                file: videoSrc,
                 poster: poster || undefined,
                 title: title || undefined,
               }
@@ -100,28 +110,34 @@ export default function PlayerJS({ src, poster, title }: Props) {
               
             } catch (playerError) {
               console.error('PlayerJS creation failed:', playerError)
-              showFallbackPlayer()
+              showFallbackPlayer(videoSrc)
             }
           } else {
             console.error('Container not found:', containerId)
-            showFallbackPlayer()
+            showFallbackPlayer(videoSrc)
           }
         } else {
           console.warn('PlayerJS not available, showing fallback video player')
-          showFallbackPlayer()
+          showFallbackPlayer(videoSrc)
         }
-        
-        // Fallback timeout - if PlayerJS doesn't work, show HTML5 player
-        setTimeout(() => {
-          if (!initializedRef.current) {
-            console.log('PlayerJS timeout, forcing fallback')
-            showFallbackPlayer()
-          }
-        }, 3000)
       } catch (error) {
         console.error('Failed to initialize PlayerJS:', error)
-        showFallbackPlayer()
+        showFallbackPlayer(videoSrc)
       }
+    }
+
+    const init = async () => {
+      if (initializedRef.current || cancelled) return
+      
+      // Fallback timeout - if PlayerJS doesn't work, show HTML5 player
+      setTimeout(() => {
+        if (!initializedRef.current) {
+          console.log('PlayerJS timeout, forcing fallback')
+          showFallbackPlayer(currentSourceRef.current)
+        }
+      }, 3000)
+      
+      await createPlayer(currentSourceRef.current)
     }
 
     init()
@@ -134,14 +150,14 @@ export default function PlayerJS({ src, poster, title }: Props) {
     }
   }, [containerId, src, poster, title])
 
-  const showFallbackPlayer = () => {
+  const showFallbackPlayer = (videoSrc: string = currentSourceRef.current) => {
     const container = document.getElementById(containerId)
     if (container) {
-      if (src) {
-        console.log('Showing fallback player for:', src)
+      if (videoSrc) {
+        console.log('Showing fallback player for:', videoSrc)
         
         // Try iframe PlayerJS first
-        const iframeUrl = `https://playerjs.com/player.html?file=${encodeURIComponent(src)}${poster ? `&poster=${encodeURIComponent(poster)}` : ''}${title ? `&title=${encodeURIComponent(title)}` : ''}`
+        const iframeUrl = `https://playerjs.com/player.html?file=${encodeURIComponent(videoSrc)}${poster ? `&poster=${encodeURIComponent(poster)}` : ''}${title ? `&title=${encodeURIComponent(title)}` : ''}`
         
         container.innerHTML = `
           <iframe 
@@ -150,7 +166,7 @@ export default function PlayerJS({ src, poster, title }: Props) {
             frameborder="0"
             allowfullscreen
             allow="autoplay; fullscreen; picture-in-picture;"
-            onerror="console.error('Iframe PlayerJS failed, showing HTML5'); this.parentElement.innerHTML='<video controls style=\\"width: 100%; height: 100%; object-fit: contain;\\" ${poster ? `poster=\\"${poster}\\"` : ''} ${title ? `title=\\"${title}\\"` : ''}><source src=\\"${src}\\" type=\\"video/mp4\\"><source src=\\"${src}\\" type=\\"video/webm\\"><source src=\\"${src}\\" type=\\"video/ogg\\">Ваш браузер не поддерживает видео тег.</video>'"
+            onerror="console.error('Iframe PlayerJS failed, showing HTML5'); this.parentElement.innerHTML='<video controls style=\\"width: 100%; height: 100%; object-fit: contain;\\" ${poster ? `poster=\\"${poster}\\"` : ''} ${title ? `title=\\"${title}\\"` : ''}><source src=\\"${videoSrc}\\" type=\\"video/mp4\\"><source src=\\"${videoSrc}\\" type=\\"video/webm\\"><source src=\\"${videoSrc}\\" type=\\"video/ogg\\">Ваш браузер не поддерживает видео тег.</video>'"
           ></iframe>
         `
       } else {
@@ -166,22 +182,68 @@ export default function PlayerJS({ src, poster, title }: Props) {
     }
   }
 
+  const handlePlayerChange = async (newSrc: string) => {
+    currentSourceRef.current = newSrc
+    initializedRef.current = false
+    
+    // Destroy current player
+    if (playerRef.current && typeof playerRef.current.destroy === 'function') {
+      playerRef.current.destroy()
+    }
+    
+    // Create new player
+    await createPlayer(newSrc)
+  }
+
+  // Create all sources including the main src
+  const allSources = [
+    { url: src, label: 'Плеер 1', type: src.includes('.m3u8') ? 'hls' : 'mp4' as const },
+    ...sources
+  ]
+
   return (
-    <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-      <div id={containerId} className="w-full h-full" />
-      {!src && (
-        <div className="absolute inset-0 flex items-center justify-center text-white">
-          <div className="text-center">
-            <p className="text-lg font-semibold mb-2">Нет видео для воспроизведения</p>
-            <p className="text-sm text-gray-300">URL видео не указан</p>
+    <div className="space-y-4">
+      {/* Player Selector */}
+      {showPlayerSelector && allSources.length > 1 && (
+        <div className="flex flex-wrap gap-2">
+          {allSources.map((source, index) => (
+            <button
+              key={index}
+              onClick={() => handlePlayerChange(source.url)}
+              className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
+                currentSourceRef.current === source.url
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              {source.label}
+              {source.type && (
+                <span className="ml-1 text-xs opacity-75">
+                  ({source.type.toUpperCase()})
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+      
+      {/* Player Container */}
+      <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
+        <div id={containerId} className="w-full h-full" />
+        {!src && (
+          <div className="absolute inset-0 flex items-center justify-center text-white">
+            <div className="text-center">
+              <p className="text-lg font-semibold mb-2">Нет видео для воспроизведения</p>
+              <p className="text-sm text-gray-300">URL видео не указан</p>
+            </div>
           </div>
-        </div>
-      )}
-      {src && src.includes('.m3u8') && (
-        <div className="absolute top-2 right-2 bg-yellow-600 text-white px-2 py-1 rounded text-xs">
-          HLS
-        </div>
-      )}
+        )}
+        {src && src.includes('.m3u8') && (
+          <div className="absolute top-2 right-2 bg-yellow-600 text-white px-2 py-1 rounded text-xs">
+            HLS
+          </div>
+        )}
+      </div>
     </div>
   )
 }

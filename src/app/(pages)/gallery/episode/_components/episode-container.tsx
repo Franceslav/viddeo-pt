@@ -34,7 +34,19 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
         </Button>
       </div>
 
-      <PlayerJS src={episode.url} poster={episode.image} title={episode.title} />
+            <PlayerJS 
+              src={episode.url} 
+              poster={episode.image} 
+              title={episode.title}
+              showPlayerSelector={true}
+              sources={[
+                {
+                  url: episode.url,
+                  label: "Плеер 1",
+                  type: episode.url.includes('.m3u8') ? 'hls' : 'mp4'
+                }
+              ]}
+            />
       
       <div className="mt-4">
         <div className="flex items-center gap-2 mb-2">

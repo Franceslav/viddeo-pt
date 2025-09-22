@@ -9,15 +9,28 @@ export default function TestPlayerPage() {
       
       <div className="space-y-8">
         <div>
-          <h2 className="text-lg font-semibold mb-2">Тест с MP4 видео (рабочий URL)</h2>
+          <h2 className="text-lg font-semibold mb-2">Тест с несколькими плеерами (как на Kinogo)</h2>
           <PlayerJS 
             src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
             title="Sample Video"
+            showPlayerSelector={true}
+            sources={[
+              {
+                url: "https://www.w3schools.com/html/mov_bbb.mp4",
+                label: "Плеер 2",
+                type: "mp4"
+              },
+              {
+                url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                label: "Плеер 3 (HLS)",
+                type: "hls"
+              }
+            ]}
           />
         </div>
         
         <div>
-          <h2 className="text-lg font-semibold mb-2">Тест с простым MP4</h2>
+          <h2 className="text-lg font-semibold mb-2">Тест с одним плеером</h2>
           <PlayerJS 
             src="https://www.w3schools.com/html/mov_bbb.mp4"
             title="W3Schools Video"
