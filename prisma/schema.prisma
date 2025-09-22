@@ -1,3 +1,9 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
@@ -11,14 +17,53 @@ model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
   email         String?   @unique
-  password      String?
   emailVerified DateTime?
   image         String?
+  accounts      Account[]
+  sessions      Session[]
+  videos        Video[]
+  episodes      Episode[]
+  likes         Like[]
+  comments      Comment[]
+  characterComments CharacterComment[]
+  commentLikes  CommentLike[]
+  characterCommentLikes CharacterCommentLike[]
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
 
-  accounts Account[]
-  sessions Session[]
-  videos   Video[]
+model Season {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String?
+  seasonNumber Int
+  isActive     Boolean @default(true)
+  image        String? // URL картинки сезона
+
+  episodes Episode[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Episode {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  description   String
+  url           String
+  episodeNumber Int
+  image         String? // URL картинки эпизода
+
+  seasonId String @db.ObjectId
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  views    Int       @default(0)
   likes    Like[]
+  comments Comment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -29,9 +74,10 @@ model Video {
   title       String
   description String
   url         String
+  image       String? // URL картинки видео
 
-  userId      String @db.ObjectId
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   views Int    @default(0)
   likes Like[]
@@ -41,12 +87,17 @@ model Video {
 }
 
 model Like {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  userId  String @db.ObjectId
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  videoId String @db.ObjectId
-  video   Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  videoId String? @db.ObjectId
+  video   Video?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  episodeId String?  @db.ObjectId
+  episode   Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  type String // "like" or "dislike"
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -92,4 +143,84 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Comment {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  userId    String  @db.ObjectId
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  episodeId String  @db.ObjectId
+  episode   Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  
+  // Ответы на комментарии
+  parentId String? @db.ObjectId
+  parent   Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies  Comment[] @relation("CommentReplies")
+  
+  // Лайки/дизлайки комментариев
+  commentLikes CommentLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Character {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  image       String? // URL картинки персонажа
+  isActive    Boolean @default(true)
+  characterComments CharacterComment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CharacterComment {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  content     String
+  userId      String  @db.ObjectId
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  characterId String  @db.ObjectId
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  
+  // Поддержка ответов
+  parentId    String? @db.ObjectId
+  parent      CharacterComment? @relation("CharacterCommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies     CharacterComment[] @relation("CharacterCommentReplies")
+  
+  // Лайки для комментариев персонажей
+  characterCommentLikes CharacterCommentLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CommentLike {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String  @db.ObjectId
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentId String  @db.ObjectId
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  type      String  // "like" or "dislike"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, commentId])
+}
+
+model CharacterCommentLike {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String  @db.ObjectId
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  characterCommentId String  @db.ObjectId
+  characterComment   CharacterComment @relation(fields: [characterCommentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  type      String  // "like" or "dislike"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, characterCommentId])
 }
