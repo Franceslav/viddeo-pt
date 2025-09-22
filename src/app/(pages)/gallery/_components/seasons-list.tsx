@@ -28,8 +28,8 @@ export const SeasonsList = async () => {
                   <ImageIcon className="w-12 h-12 text-gray-400" />
                 </div>
               )}
-              <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                <Button size="sm" asChild>
+              <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-100 md:opacity-0 md:hover:opacity-100 transition-opacity pointer-events-none md:pointer-events-auto">
+                <Button size="sm" asChild className="pointer-events-auto">
                   <Link href={`/gallery/season/${season.id}`}>
                     <Play className="w-4 h-4 mr-2" />
                     Смотреть
