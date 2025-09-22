@@ -51,6 +51,8 @@ export default function PlayerJS({ src, poster, title }: Props) {
       if (initializedRef.current || cancelled) return
       
       try {
+        console.log('Initializing PlayerJS with src:', src)
+        
         await ensureScript()
         if (cancelled) return
         
@@ -61,11 +63,20 @@ export default function PlayerJS({ src, poster, title }: Props) {
           attempts++
         }
         
+        console.log('PlayerJS available after', attempts, 'attempts:', !!window.Playerjs)
+        
         if (window.Playerjs) {
           const container = document.getElementById(containerId)
           if (container && !cancelled) {
             // Clear container first
             container.innerHTML = ''
+            
+            console.log('Creating PlayerJS instance with:', {
+              id: containerId,
+              file: src,
+              poster: poster,
+              title: title
+            })
             
             // Create PlayerJS instance with correct API
             playerRef.current = new window.Playerjs({
@@ -76,13 +87,24 @@ export default function PlayerJS({ src, poster, title }: Props) {
             })
             initializedRef.current = true
             console.log('PlayerJS initialized successfully with file:', src)
+          } else {
+            console.error('Container not found:', containerId)
           }
         } else {
           console.warn('PlayerJS not available, showing fallback video player')
           showFallbackPlayer()
         }
+        
+        // Fallback timeout - if PlayerJS doesn't work, show HTML5 player
+        setTimeout(() => {
+          if (!initializedRef.current) {
+            console.log('PlayerJS timeout, forcing fallback')
+            showFallbackPlayer()
+          }
+        }, 3000)
       } catch (error) {
         console.error('Failed to initialize PlayerJS:', error)
+        showFallbackPlayer()
       }
     }
 
@@ -98,20 +120,35 @@ export default function PlayerJS({ src, poster, title }: Props) {
 
   const showFallbackPlayer = () => {
     const container = document.getElementById(containerId)
-    if (container && src) {
-      container.innerHTML = `
-        <video 
-          controls 
-          style="width: 100%; height: 100%; object-fit: contain;"
-          ${poster ? `poster="${poster}"` : ''}
-          ${title ? `title="${title}"` : ''}
-        >
-          <source src="${src}" type="video/mp4">
-          <source src="${src}" type="video/webm">
-          <source src="${src}" type="video/ogg">
-          Ваш браузер не поддерживает видео тег.
-        </video>
-      `
+    if (container) {
+      if (src) {
+        console.log('Showing fallback player for:', src)
+        container.innerHTML = `
+          <video 
+            controls 
+            style="width: 100%; height: 100%; object-fit: contain;"
+            ${poster ? `poster="${poster}"` : ''}
+            ${title ? `title="${title}"` : ''}
+            onerror="console.error('Video load error:', this.error)"
+            onloadstart="console.log('Video loading started')"
+            oncanplay="console.log('Video can play')"
+          >
+            <source src="${src}" type="video/mp4">
+            <source src="${src}" type="video/webm">
+            <source src="${src}" type="video/ogg">
+            Ваш браузер не поддерживает видео тег.
+          </video>
+        `
+      } else {
+        container.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center;">
+            <div>
+              <p style="font-size: 18px; margin-bottom: 10px;">Нет видео для воспроизведения</p>
+              <p style="font-size: 14px; color: #ccc;">URL видео не указан</p>
+            </div>
+          </div>
+        `
+      }
     }
   }
 
