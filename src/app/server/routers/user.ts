@@ -62,7 +62,7 @@ export const userRouter = router({
         })
       }
 
-      await ctx.db.user.create({
+      return await ctx.db.user.create({
         data: {
           name: input.name,
           email: input.email,
@@ -74,7 +74,11 @@ export const userRouter = router({
       .input(z.object({ userId: z.string() }))
       .query(async ({ input, ctx }) => {
         const user = await ctx.db.user.findUnique({
-          where: { id: input.userId }
+          where: { id: input.userId },
+          include: {
+            videos: true,
+            episodes: true
+          }
         })
 
         if (!user) {
@@ -85,5 +89,17 @@ export const userRouter = router({
         }
 
         return user
+      }),
+  updateUserAvatar: publicProcedure
+    .input(z.object({ 
+      userId: z.string(),
+      image: z.string()
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.db.user.update({
+        where: { id: input.userId },
+        data: { image: input.image }
       })
+      return user
+    })
 })

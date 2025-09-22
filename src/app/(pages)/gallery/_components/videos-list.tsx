@@ -12,7 +12,15 @@ export const VideosList = async () => {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {videos.map((video) => {
         return (
-          <VideoCard key={video.id} id={video.id} title={video.title} views={video.views} uploadedAt={formatDateShort(video.createdAt)} />
+          <VideoCard 
+            key={video.id} 
+            id={video.id} 
+            title={video.title} 
+            views={video.views} 
+            uploadedAt={formatDateShort(video.createdAt)}
+            type={video.type}
+            image={video.image}
+          />
         )
       })}
     </div>

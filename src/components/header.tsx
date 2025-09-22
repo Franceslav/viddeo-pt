@@ -1,12 +1,11 @@
 import Link from 'next/link'
-import { Tv, Video } from 'lucide-react'
 
 import Container from './container'
 import LoginBtn from './login-btn'
 import UserMenu from './user-menu'
+import MobileMenu from './mobile-menu'
 import { auth } from '@/auth'
-import { cn } from '@/lib/utils'
-import { buttonVariants } from './ui/button'
+import { trpc } from '@/app/server/routers/_app'
 
 
 interface NavItem {
@@ -16,47 +15,72 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    title: 'Gallery',
+    title: 'Главная',
+    href: '/',
+  },
+  {
+    title: 'Навигация',
     href: '/gallery',
   },
   {
-    title: 'Pricing',
-    href: '/#',
+    title: 'Персонажи',
+    href: '/characters',
   },
   {
-    title: 'Support',
-    href: '/#',
+    title: 'Комментарии',
+    href: '/comments',
   }
 ]
 
 const Header = async () => {
 
   const session = await auth()
+  
+  // Получаем данные пользователя для аватарки
+  let userImage = null
+  if (session?.user?.id) {
+    try {
+      const user = await trpc.user.getUserById({ userId: session.user.id })
+      userImage = user.image
+    } catch {
+      // Игнорируем ошибки получения пользователя
+    }
+  }
 
   return (
-    <header className='py-6'>
-      <Container className='flex items-center justify-between md:!px-12'>
-        <Link href='/' className='flex items-center gap-2'>
-          <Video className='size-6' />
-          <span className='text-lg font-bold'>Viddeo</span>
+    <header className='relative py-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 border-b-4 border-black shadow-lg overflow-visible z-50'>
+      <Container className='flex items-center justify-between md:!px-12 overflow-visible relative z-50'>
+        <Link href='/' className='flex items-center gap-2 group'>
+          <img 
+            src="/assets/KennyMcCormick.webp"
+            alt="South Park Logo" 
+            className="h-10 w-auto object-contain transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 drop-shadow-lg bg-transparent"
+          />
+          <span className='text-2xl font-black text-black transform group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300' style={{ textShadow: '3px 3px 0px #ff0000, 6px 6px 0px #000000' }}>
+            ЮЖНЫЙ ПАРК
+          </span>
         </Link>
         <div className='flex-1 flex items-center justify-end gap-2 '>
           <nav className='flex-1 justify-center hidden md:flex'>
             <ul className='flex items-center gap-6'>
-              {navItems.map(({ title, href }) => (
-                <li key={title}>
-                  <Link href={href} className='text-sm font-normal'>{title}</Link>
+              {navItems.map(({ title, href }, index) => (
+                <li key={title} className={`transform hover:scale-110 hover:-rotate-2 transition-all duration-300 ${index % 2 === 0 ? 'hover:rotate-2' : 'hover:-rotate-2'}`}>
+                  <Link 
+                    href={href} 
+                    className='text-sm font-black text-black bg-white px-3 py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300'
+                    style={{ textShadow: '1px 1px 0px #000000' }}
+                  >
+                    {title}
+                  </Link>
                 </li>
               ))}
             </ul>
           </nav>
           <div className='flex items-center justify-end gap-2'>
-            <div className='flex md:hidden'>
-              <Link href='/gallery' className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }))}>
-                <Tv className='size-6' />
-              </Link>
+            <MobileMenu />
+            <div className="transform hover:scale-105 transition-transform duration-300">
+              {session?.user ? <UserMenu name={session.user.name} image={userImage} /> : <LoginBtn />}
             </div>
-            {session?.user ? <UserMenu name={session.user.name} /> : <LoginBtn />}
           </div>
         </div>
       </Container>

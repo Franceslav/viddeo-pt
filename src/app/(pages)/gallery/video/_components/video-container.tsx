@@ -34,7 +34,7 @@ const VideoContainer: FC<Props> = async ({ id }) => {
           </div>
           <div className="flex items-center space-x-2">
             <Suspense fallback={<div>Loading...</div>}>
-              <LikeButton videoId={video.id} />
+              <LikeButton videoId={video.id} type="video" />
             </Suspense>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { TRPCProvider } from "./_trpc/Provider";
+import { SessionProvider } from "next-auth/react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import "@/styles/globals.css";
@@ -28,16 +29,18 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
-        <TRPCProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <div className="flex-1 flex">
-              {children}
+        <SessionProvider>
+          <TRPCProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <div className="flex-1 flex">
+                {children}
+              </div>
+              <Footer />
             </div>
-            <Footer />
-          </div>
-          <Toaster richColors />
-        </TRPCProvider>
+            <Toaster richColors />
+          </TRPCProvider>
+        </SessionProvider>
       </body>
     </html>
   );

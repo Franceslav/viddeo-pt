@@ -10,28 +10,45 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { getInitials } from "@/lib/utils"
 import { FC } from "react"
 import LogoutBtn from "./logout-btn"
+import Link from "next/link"
+import Image from "next/image"
 
 interface Props {
   name: string | null | undefined
+  image?: string | null
 }
 
-const UserMenu: FC<Props> = ({ name }) => {
+const UserMenu: FC<Props> = ({ name, image }) => {
 
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger>
         <Avatar className='shadow-md'>
-          <AvatarFallback>{name ? getInitials(name) : "U"}</AvatarFallback>
+          {image ? (
+            <Image
+              src={image}
+              alt={name || 'Avatar'}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <AvatarFallback>{name ? getInitials(name) : "U"}</AvatarFallback>
+          )}
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>Мой аккаунт</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem disabled>
-          Profile
+        <DropdownMenuItem asChild>
+          <Link href="/profile">
+            Профиль
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem disabled>Billing</DropdownMenuItem>
-        <DropdownMenuItem disabled>Subscription</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/comments">
+            Мои комментарии
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <LogoutBtn />
       </DropdownMenuContent>

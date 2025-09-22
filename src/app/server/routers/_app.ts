@@ -7,12 +7,22 @@ import { userRouter } from "./user";
 import { videoRouter } from "./video";
 import { makeQueryClient } from "@/app/_trpc/query-client";
 import { likesRouter } from './likes';
+import { seasonRouter } from './season';
+import { episodeRouter } from './episode';
+import { commentRouter } from './comment';
+import { characterRouter } from './character';
+import { characterCommentRouter } from './character-comment';
 
 export const appRouter = router({
   auth: authRouter,
   user: userRouter,
   video: videoRouter,
-  likes: likesRouter
+  likes: likesRouter,
+  season: seasonRouter,
+  episode: episodeRouter,
+  comment: commentRouter,
+  character: characterRouter,
+  characterComment: characterCommentRouter
 });
 
 export const getQueryClient = cache(makeQueryClient);

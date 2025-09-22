@@ -10,17 +10,31 @@ interface VideoCardProps {
   title: string
   views: number
   uploadedAt: string
+  type?: 'video' | 'episode'
+  image?: string | null
 }
 
-export function VideoCard({ id, title, views, uploadedAt }: VideoCardProps) {
+export function VideoCard({ id, title, views, uploadedAt, type = 'video', image }: VideoCardProps) {
 
   const router = useRouter()
 
+  const handleClick = () => {
+    if (type === 'episode') {
+      router.push(`/gallery/episode/${id}`)
+    } else {
+      router.push(`/gallery/video/${id}`)
+    }
+  }
+
   return (
-    <Card className="w-full group cursor-pointer" onClick={() => router.push(`/gallery/video/${id}`)}>
+    <Card className="w-full group cursor-pointer" onClick={handleClick}>
       <CardContent className="p-0">
         <div className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden">
-          <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
+          {image ? (
+            <Image src={image} alt={title} fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
+          ) : (
+            <Image src="/assets/placeholder-small.webp" alt="Video Thumbnail" fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" priority />
+          )}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-xl">
             <PlayCircle className="w-12 h-12 text-white opacity-80" />
           </div>
@@ -31,6 +45,11 @@ export function VideoCard({ id, title, views, uploadedAt }: VideoCardProps) {
             <p className="text-sm text-muted-foreground">
               {views.toLocaleString()} views • {uploadedAt}
             </p>
+            {type === 'episode' && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-1 w-fit">
+                Эпизод
+              </span>
+            )}
           </div>
         </div>
       </CardContent>

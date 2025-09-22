@@ -5,7 +5,7 @@ import { Video } from '@prisma/client';
 import VideoControls from './video-controls';
 
 interface Props {
-  video: Video
+  video: Video & { image?: string | null }
 }
 
 const VideoPLayer: FC<Props> = ({ video }) => {
@@ -17,7 +17,7 @@ const VideoPLayer: FC<Props> = ({ video }) => {
     <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden group">
       <video
         className="w-full h-full object-cover cld-video-player cld-video-player-skin-dark cld-fluid"
-        poster="/assets/placeholder-medium.webp"
+        poster={video.image || "/assets/placeholder-medium.webp"}
         controls={false}
         ref={videoRef}
       >
