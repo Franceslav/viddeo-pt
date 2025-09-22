@@ -91,12 +91,29 @@ export async function scrapeVidLink(url: string): Promise<VidLinkResponse> {
       throw new Error('Invalid response: too short or empty HTML');
     }
 
+    console.log(`HTML length: ${html.length}`);
+    console.log(`HTML preview: ${html.substring(0, 500)}...`);
+
     // Парсим данные из встроенного JSON в script тегах
     const seriesData = extractSeriesData(html);
     const episodes = extractEpisodes(html, parseInt(seasonNumber), parseInt(episodeNumber));
 
     if (!seriesData) {
-      throw new Error('Could not extract series data from page');
+      console.log('Could not extract series data, creating fallback data...');
+      // Создаем базовые данные на основе URL
+      seriesData = {
+        id: seriesId,
+        name: 'Unknown Series',
+        overview: 'Series imported from VidLink',
+        posterPath: '',
+        backdropPath: '',
+        firstAirDate: '',
+        lastAirDate: '',
+        numberOfSeasons: 0,
+        numberOfEpisodes: 0,
+        genres: [],
+        seasons: [],
+      };
     }
 
     return {
