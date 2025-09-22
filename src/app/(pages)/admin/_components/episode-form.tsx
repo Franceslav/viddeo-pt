@@ -28,6 +28,8 @@ const EpisodeForm = ({ episode, onClose, userId }: EpisodeFormProps) => {
         seasonId: "",
         image: "",
     })
+    const isHls = formData.url.trim().toLowerCase().endsWith('.m3u8')
+    const [isTesting, setIsTesting] = useState(false)
 
     const utils = trpc.useUtils()
 
@@ -171,9 +173,34 @@ const EpisodeForm = ({ episode, onClose, userId }: EpisodeFormProps) => {
                                 type="url"
                                 value={formData.url}
                                 onChange={(e) => handleChange("url", e.target.value)}
-                                placeholder="https://example.com/video.mp4"
+                                placeholder="https://cdn.example.com/episodes/s01e01/master.m3u8"
                                 required
                             />
+                            {isHls ? (
+                                <p className="text-xs text-green-600">Определён формат HLS (.m3u8). Плеер использует hls.js.</p>
+                            ) : (
+                                <p className="text-xs text-yellow-600">Рекомендуется HLS (.m3u8) для стабильного воспроизведения.</p>
+                            )}
+                            <div className="flex gap-2">
+                                <Button type="button" variant="outline" size="sm" disabled={isTesting || !formData.url} onClick={async () => {
+                                    try {
+                                        setIsTesting(true)
+                                        const r = await fetch(formData.url, { method: 'HEAD' })
+                                        if (r.ok) {
+                                            toast.success(`URL доступен (${r.status})`)
+                                        } else {
+                                            toast.error(`Проверка неудачна: ${r.status}`)
+                                        }
+                                    } catch (e:any) {
+                                        toast.error(e?.message || 'Не удалось проверить')
+                                    } finally {
+                                        setIsTesting(false)
+                                    }
+                                }}>Проверить HLS</Button>
+                                {isHls && (
+                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">HLS</span>
+                                )}
+                            </div>
                         </div>
 
                         <FileUpload
