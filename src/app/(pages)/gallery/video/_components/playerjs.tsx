@@ -36,9 +36,12 @@ export default function PlayerJS({ src, poster, title }: Props) {
       script.src = 'https://playerjs.com/static/player.js'
       document.head.appendChild(script)
       
-      await new Promise<void>((resolve, reject) => {
+      await new Promise<void>((resolve) => {
         script.addEventListener('load', () => resolve())
-        script.addEventListener('error', () => reject(new Error('Failed to load PlayerJS')))
+        script.addEventListener('error', () => {
+          console.warn('Failed to load PlayerJS from CDN, trying fallback')
+          resolve() // Don't reject, just continue
+        })
         // fallback timeout
         setTimeout(() => resolve(), 5000)
       })
@@ -75,7 +78,8 @@ export default function PlayerJS({ src, poster, title }: Props) {
             console.log('PlayerJS initialized successfully with file:', src)
           }
         } else {
-          console.error('PlayerJS not available on window object after loading')
+          console.warn('PlayerJS not available, showing fallback video player')
+          showFallbackPlayer()
         }
       } catch (error) {
         console.error('Failed to initialize PlayerJS:', error)
@@ -91,6 +95,25 @@ export default function PlayerJS({ src, poster, title }: Props) {
       }
     }
   }, [containerId, src, poster, title])
+
+  const showFallbackPlayer = () => {
+    const container = document.getElementById(containerId)
+    if (container && src) {
+      container.innerHTML = `
+        <video 
+          controls 
+          style="width: 100%; height: 100%; object-fit: contain;"
+          ${poster ? `poster="${poster}"` : ''}
+          ${title ? `title="${title}"` : ''}
+        >
+          <source src="${src}" type="video/mp4">
+          <source src="${src}" type="video/webm">
+          <source src="${src}" type="video/ogg">
+          Ваш браузер не поддерживает видео тег.
+        </video>
+      `
+    }
+  }
 
   return (
     <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
