@@ -84,7 +84,7 @@ async function getRezkaVideo(url: string) {
   
   // Ищем скрипты с видео данными
   const scripts = $('script').toArray()
-  let videoUrls = []
+    const videoUrls = []
   
   for (const script of scripts) {
     const scriptContent = $(script).html()

@@ -2,10 +2,24 @@
 
 import { useEffect, useId, useRef, useState } from 'react'
 
+interface PlayerJSInstance {
+  destroy: () => void
+  play: () => void
+  pause: () => void
+  seek: (time: number) => void
+  setVolume: (volume: number) => void
+  getDuration: () => number
+}
+
 declare global {
   interface Window {
-    Playerjs?: any
-    PlayerjsAsync?: any
+    Playerjs?: new (config: {
+      id: string
+      file: string
+      poster?: string
+      title?: string
+    }) => PlayerJSInstance
+    PlayerjsAsync?: unknown
   }
 }
 
@@ -15,7 +29,7 @@ interface VideoSource {
   type?: 'mp4' | 'webm' | 'hls' | 'dash'
 }
 
-interface Props {
+interface PlayerJSProps {
   src: string
   poster?: string | null
   title?: string
@@ -33,120 +47,181 @@ export default function PlayerJS({
   showPlayerSelector = false,
   showLightToggle = true,
   showFullscreen = true
-}: Props) {
+}: PlayerJSProps) {
   const containerId = useId().replace(/:/g, '')
-  const playerSelectorId = `${containerId}-selector`
   const initializedRef = useRef(false)
-  const playerRef = useRef<any>(null)
+  const playerRef = useRef<PlayerJSInstance | null>(null)
   const currentSourceRef = useRef(src)
   const [isLightOff, setIsLightOff] = useState(false)
+
+
+  const showFallbackPlayer = (videoSrc: string = currentSourceRef.current) => {
+    const container = document.getElementById(containerId)
+    if (container) {
+      if (videoSrc) {
+        console.log('Showing HTML5 fallback player for:', videoSrc)
+        
+        // Создаем HTML5 видео плеер с контролами
+        const videoElement = document.createElement('video')
+        videoElement.controls = true
+        videoElement.style.width = '100%'
+        videoElement.style.height = '100%'
+        videoElement.style.objectFit = 'contain'
+        
+        if (poster) {
+          videoElement.poster = poster
+        }
+        
+        if (title) {
+          videoElement.title = title
+        }
+        
+        // Добавляем источники видео
+        const source = document.createElement('source')
+        source.src = videoSrc
+        
+        // Определяем тип видео по расширению
+        if (videoSrc.includes('.m3u8')) {
+          source.type = 'application/x-mpegURL'
+          // Для HLS добавляем специальные атрибуты
+          videoElement.setAttribute('data-hls', 'true')
+        } else if (videoSrc.includes('.webm')) {
+          source.type = 'video/webm'
+        } else if (videoSrc.includes('.ogg')) {
+          source.type = 'video/ogg'
+        } else {
+          source.type = 'video/mp4'
+        }
+        
+        videoElement.appendChild(source)
+        
+        // Для HTML страниц показываем специальное сообщение
+        if (videoSrc.includes('.html') || videoSrc.includes('rezka.ag')) {
+          container.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; background: #1a1a1a;">
+              <div>
+                <p style="font-size: 18px; margin-bottom: 10px;">Это HTML страница, а не видео файл</p>
+                <p style="font-size: 14px; color: #ccc; margin-bottom: 15px;">URL: ${videoSrc}</p>
+                <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Для воспроизведения нужна прямая ссылка на видео файл (.mp4, .m3u8, .webm)</p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                  <button onclick="window.open('${videoSrc}', '_blank')" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Открыть страницу
+                  </button>
+                  <button onclick="location.reload()" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Перезагрузить
+                  </button>
+                </div>
+              </div>
+            </div>
+          `
+          return
+        }
+
+        // Для HLS файлов добавляем сообщение о том, что нужен HLS плеер
+        if (videoSrc.includes('.m3u8')) {
+          videoElement.addEventListener('error', (e) => {
+            console.log('HLS video error, showing HLS info:', e)
+            container.innerHTML = `
+              <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; background: #1a1a1a;">
+                <div>
+                  <p style="font-size: 18px; margin-bottom: 10px;">HLS видео требует специальный плеер</p>
+                  <p style="font-size: 14px; color: #ccc; margin-bottom: 15px;">URL: ${videoSrc}</p>
+                  <p style="font-size: 12px; color: #888;">Попробуйте открыть в другом браузере или используйте HLS плеер</p>
+                  <button onclick="window.open('${videoSrc}', '_blank')" style="margin-top: 10px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Открыть в новом окне
+                  </button>
+                </div>
+              </div>
+            `
+          })
+        }
+        
+        // Добавляем сообщение об ошибке
+        videoElement.addEventListener('error', (e) => {
+          console.error('Video load error:', e)
+          container.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; background: #1a1a1a;">
+              <div>
+                <p style="font-size: 18px; margin-bottom: 10px;">Ошибка загрузки видео</p>
+                <p style="font-size: 14px; color: #ccc;">URL: ${videoSrc}</p>
+                <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                  Перезагрузить
+                </button>
+              </div>
+            </div>
+          `
+        })
+        
+        // Очищаем контейнер и добавляем видео
+        container.innerHTML = ''
+        container.appendChild(videoElement)
+        
+        // Пытаемся загрузить видео
+        videoElement.load()
+        
+      } else {
+        container.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; background: #1a1a1a;">
+            <div>
+              <p style="font-size: 18px; margin-bottom: 10px;">Нет видео для воспроизведения</p>
+              <p style="font-size: 14px; color: #ccc;">URL видео не указан</p>
+            </div>
+          </div>
+        `
+      }
+    }
+  }
+
+  const createPlayer = async (videoSrc: string) => {
+    try {
+      console.log('Creating HTML5 player with src:', videoSrc)
+      
+      // Если это HTML страница (не видео файл), пытаемся извлечь прямую ссылку на видео
+      let actualVideoUrl = videoSrc
+      
+      if (videoSrc.includes('.html') || videoSrc.includes('rezka.ag')) {
+        console.log('Detected HTML page, extracting video URL...')
+        try {
+          const response = await fetch('/api/rezka/video-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: videoSrc })
+          })
+          
+          if (response.ok) {
+            const data = await response.json()
+            if (data.videoUrl) {
+              actualVideoUrl = data.videoUrl
+              console.log('Extracted video URL:', actualVideoUrl)
+            } else {
+              console.warn('No video URL found, using original URL')
+            }
+          } else {
+            console.warn('Failed to extract video URL, using original URL')
+          }
+        } catch (error) {
+          console.warn('Error extracting video URL:', error)
+        }
+      }
+      
+      // Показываем HTML5 плеер с правильным URL
+      showFallbackPlayer(actualVideoUrl)
+      
+      // Mark as initialized
+      initializedRef.current = true
+      console.log('HTML5 player created successfully')
+      
+    } catch (error) {
+      console.error('Failed to create HTML5 player:', error)
+      showFallbackPlayer(videoSrc)
+    }
+  }
 
   useEffect(() => {
     let cancelled = false
 
-    const ensureScript = async () => {
-      if (window.Playerjs) return
-      
-      // Check if script already exists
-      const existingScript = document.querySelector('script[src*="playerjs"]')
-      if (existingScript) return
-      
-      // Load PlayerJS from CDN (synchronously as recommended)
-      const script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.src = 'https://playerjs.com/static/player.js'
-      document.head.appendChild(script)
-      
-      await new Promise<void>((resolve) => {
-        script.addEventListener('load', () => {
-          console.log('PlayerJS script loaded')
-          resolve()
-        })
-        script.addEventListener('error', () => {
-          console.warn('Failed to load PlayerJS from CDN')
-          resolve() // Don't reject, just continue
-        })
-        // fallback timeout
-        setTimeout(() => resolve(), 3000)
-      })
-    }
-
-    const createPlayer = async (videoSrc: string) => {
-      if (cancelled) return
-      
-      try {
-        console.log('Creating PlayerJS with src:', videoSrc)
-        
-        await ensureScript()
-        if (cancelled) return
-        
-        // Wait for PlayerJS to be available
-        let attempts = 0
-        while (!window.Playerjs && attempts < 50) {
-          await new Promise(resolve => setTimeout(resolve, 100))
-          attempts++
-        }
-        
-        console.log('PlayerJS available after', attempts, 'attempts:', !!window.Playerjs)
-        
-        if (window.Playerjs) {
-          const container = document.getElementById(containerId)
-          if (container && !cancelled) {
-            // Clear container first
-            container.innerHTML = ''
-            
-            console.log('Creating PlayerJS instance with:', {
-              id: containerId,
-              file: videoSrc,
-              poster: poster,
-              title: title
-            })
-            
-            try {
-              // Create PlayerJS instance with correct API
-              const playerConfig = {
-                id: containerId,
-                file: videoSrc,
-                poster: poster || undefined,
-                title: title || undefined,
-              }
-              
-              console.log('Creating PlayerJS with config:', playerConfig)
-              
-              playerRef.current = new window.Playerjs(playerConfig)
-              
-              // Mark as initialized immediately
-              initializedRef.current = true
-              console.log('PlayerJS instance created successfully')
-              
-            } catch (playerError) {
-              console.error('PlayerJS creation failed:', playerError)
-              showFallbackPlayer(videoSrc)
-            }
-          } else {
-            console.error('Container not found:', containerId)
-            showFallbackPlayer(videoSrc)
-          }
-        } else {
-          console.warn('PlayerJS not available, showing fallback video player')
-          showFallbackPlayer(videoSrc)
-        }
-      } catch (error) {
-        console.error('Failed to initialize PlayerJS:', error)
-        showFallbackPlayer(videoSrc)
-      }
-    }
-
     const init = async () => {
       if (initializedRef.current || cancelled) return
-      
-      // Fallback timeout - if PlayerJS doesn't work, show HTML5 player
-      setTimeout(() => {
-        if (!initializedRef.current) {
-          console.log('PlayerJS timeout, forcing fallback')
-          showFallbackPlayer(currentSourceRef.current)
-        }
-      }, 3000)
       
       await createPlayer(currentSourceRef.current)
     }
@@ -159,39 +234,7 @@ export default function PlayerJS({
         playerRef.current.destroy()
       }
     }
-  }, [containerId, src, poster, title])
-
-  const showFallbackPlayer = (videoSrc: string = currentSourceRef.current) => {
-    const container = document.getElementById(containerId)
-    if (container) {
-      if (videoSrc) {
-        console.log('Showing fallback player for:', videoSrc)
-        
-        // Try iframe PlayerJS first
-        const iframeUrl = `https://playerjs.com/player.html?file=${encodeURIComponent(videoSrc)}${poster ? `&poster=${encodeURIComponent(poster)}` : ''}${title ? `&title=${encodeURIComponent(title)}` : ''}`
-        
-        container.innerHTML = `
-          <iframe 
-            src="${iframeUrl}"
-            style="width: 100%; height: 100%; border: none;"
-            frameborder="0"
-            allowfullscreen
-            allow="autoplay; fullscreen; picture-in-picture;"
-            onerror="console.error('Iframe PlayerJS failed, showing HTML5'); this.parentElement.innerHTML='<video controls style=\\"width: 100%; height: 100%; object-fit: contain;\\" ${poster ? `poster=\\"${poster}\\"` : ''} ${title ? `title=\\"${title}\\"` : ''}><source src=\\"${videoSrc}\\" type=\\"video/mp4\\"><source src=\\"${videoSrc}\\" type=\\"video/webm\\"><source src=\\"${videoSrc}\\" type=\\"video/ogg\\">Ваш браузер не поддерживает видео тег.</video>'"
-          ></iframe>
-        `
-      } else {
-        container.innerHTML = `
-          <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center;">
-            <div>
-              <p style="font-size: 18px; margin-bottom: 10px;">Нет видео для воспроизведения</p>
-              <p style="font-size: 14px; color: #ccc;">URL видео не указан</p>
-            </div>
-          </div>
-        `
-      }
-    }
-  }
+  }, [containerId, src, poster, title, createPlayer, showFallbackPlayer])
 
   const handlePlayerChange = async (newSrc: string) => {
     currentSourceRef.current = newSrc
@@ -202,11 +245,11 @@ export default function PlayerJS({
       playerRef.current.destroy()
     }
     
-    // Create new player
+    // Создать новый плеер
     await createPlayer(newSrc)
   }
 
-  // Create all sources including the main src
+  // Создать все источники, включая основной src
   const allSources = [
     { url: src, label: 'Плеер 1', type: src.includes('.m3u8') ? 'hls' : 'mp4' as const },
     ...sources

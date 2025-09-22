@@ -1,6 +1,6 @@
 import { trpc } from '@/app/server/routers/_app'
 import { FC, Suspense } from 'react'
-import VideoPLayer from './video-player';
+// import VideoPLayer from './video-player' // Removed - using PlayerJS instead;
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDateShort, getInitials } from '@/lib/utils';
 import LikeButton from './like-button';

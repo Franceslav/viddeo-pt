@@ -191,8 +191,8 @@ const EpisodeForm = ({ episode, onClose, userId }: EpisodeFormProps) => {
                                         } else {
                                             toast.error(`Проверка неудачна: ${r.status}`)
                                         }
-                                    } catch (e:any) {
-                                        toast.error(e?.message || 'Не удалось проверить')
+                                    } catch (e: unknown) {
+                                        toast.error((e as Error)?.message || 'Не удалось проверить')
                                     } finally {
                                         setIsTesting(false)
                                     }

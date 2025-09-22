@@ -13,15 +13,19 @@ export default function TestSimplePage() {
   const testRezka = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/rezka/episodes', {
+      const response = await fetch('/api/rezka/json', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url })
       })
       const data = await response.json()
       setResult(data)
-    } catch (error) {
-      setResult({ error: error.message })
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setResult({ error: error.message })
+      } else {
+        setResult({ error: String(error) })
+      }
     } finally {
       setLoading(false)
     }
@@ -33,8 +37,12 @@ export default function TestSimplePage() {
       const response = await fetch('/api/search/rezka?q=южный парк')
       const data = await response.json()
       setResult(data)
-    } catch (error) {
-      setResult({ error: error.message })
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setResult({ error: error.message })
+      } else {
+        setResult({ error: String(error) })
+      }
     } finally {
       setLoading(false)
     }

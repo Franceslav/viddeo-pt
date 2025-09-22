@@ -73,14 +73,8 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
             }
             setIsImporting(true)
             
-            // Определяем, какой API использовать на основе URL
-            let apiEndpoint = '/api/scrape/kinogo' // по умолчанию
-            
-            if (importUrl.includes('vidlink.pro')) {
-                apiEndpoint = '/api/scrape/vidlink'
-            } else if (importUrl.includes('rezka.ag')) {
-                apiEndpoint = '/api/rezka/episodes'
-            }
+            // Используем только HDRezka API
+            const apiEndpoint = '/api/rezka/json'
             
             const res = await fetch(apiEndpoint, {
                 method: 'POST',
@@ -95,16 +89,13 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
             let items: Array<{ title: string; url: string; seasonNumber?: number; episodeNumber?: number; }> = []
             
             if (data.episodes && Array.isArray(data.episodes)) {
-                // Rezka формат
-                items = data.episodes.map((ep: any) => ({
+                // HDRezka формат
+                items = data.episodes.map((ep: { title: string; url: string; seasonNumber: number; episodeNumber: number }) => ({
                     title: ep.title,
                     url: ep.url,
                     seasonNumber: ep.seasonNumber,
                     episodeNumber: ep.episodeNumber
                 }))
-            } else if (data.results && Array.isArray(data.results)) {
-                // Kinogo/VidLink формат
-                items = data.results
             }
             
             if (!items.length) {
@@ -126,7 +117,7 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
                         userId
                     })
                     created++
-                } catch (e: any) {
+                } catch (e: unknown) {
                     // продолжаем импорт остальных
                     console.error(e)
                 }
@@ -134,8 +125,8 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
 
             await utils.episode.getEpisodes.invalidate()
             toast.success(`Импорт завершен: создано ${created} из ${items.length}`)
-        } catch (e: any) {
-            toast.error(e?.message || 'Не удалось импортировать')
+        } catch (e: unknown) {
+            toast.error((e as Error)?.message || 'Не удалось импортировать')
         } finally {
             setIsImporting(false)
         }
@@ -159,12 +150,12 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Импорт серий по URL</CardTitle>
-                        <CardDescription>Вставьте ссылку на страницу (VidLink.pro, Kinogo или HDRezka) и выберите сезон. Серии будут созданы автоматически.</CardDescription>
+                        <CardDescription>Вставьте ссылку на страницу HDRezka и выберите сезон. Серии будут созданы автоматически.</CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-3 md:grid-cols-4">
                         <div className="md:col-span-2">
                             <Label htmlFor="importUrl">URL страницы</Label>
-                            <Input id="importUrl" placeholder="https://vidlink.pro/tv/2190/2/5 или https://kinogo.online/..." value={importUrl} onChange={(e) => setImportUrl(e.target.value)} />
+                            <Input id="importUrl" placeholder="https://rezka.ag/cartoons/comedy/1760-yuzhny-park-1997-latest/87-paramount-comedy.html" value={importUrl} onChange={(e) => setImportUrl(e.target.value)} />
                         </div>
                         <div>
                             <Label>Сезон</Label>
