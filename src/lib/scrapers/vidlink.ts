@@ -95,7 +95,7 @@ export async function scrapeVidLink(url: string): Promise<VidLinkResponse> {
     console.log(`HTML preview: ${html.substring(0, 500)}...`);
 
     // Парсим данные из встроенного JSON в script тегах
-    const seriesData = extractSeriesData(html);
+    let seriesData = extractSeriesData(html);
     const episodes = extractEpisodes(html, parseInt(seasonNumber), parseInt(episodeNumber));
 
     if (!seriesData) {
