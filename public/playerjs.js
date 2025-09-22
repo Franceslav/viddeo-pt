@@ -26,6 +26,8 @@
     this.video.style.width = this.width;
     this.video.style.height = this.height;
     this.video.style.borderRadius = '8px';
+    this.video.style.objectFit = 'contain';
+    this.video.preload = 'metadata';
     
     // Set video source
     if (this.file) {
@@ -58,6 +60,11 @@
     
     this.video.addEventListener('error', (e) => {
       console.error('PlayerJS: Video error', e);
+      // Show error message
+      const errorDiv = document.createElement('div');
+      errorDiv.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 8px;';
+      errorDiv.innerHTML = '<p>Ошибка загрузки видео</p><p style="font-size: 12px; margin-top: 10px;">Проверьте URL или формат файла</p>';
+      this.container.appendChild(errorDiv);
     });
     
     // Append to container
@@ -66,6 +73,8 @@
     }
     
     if (this.container) {
+      // Clear container first
+      this.container.innerHTML = '';
       this.container.appendChild(this.video);
     }
   };
