@@ -10,7 +10,7 @@ export type ScrapedEpisode = {
 
 export async function scrapeKinogo(targetUrl: string): Promise<ScrapedEpisode[]> {
   const httpsProxy = process.env.KINOGO_PROXY
-  const agent = httpsProxy ? (await import('https-proxy-agent')).HttpsProxyAgent(httpsProxy) : undefined
+  const agent = httpsProxy ? new (await import('https-proxy-agent')).HttpsProxyAgent(httpsProxy) : undefined
 
   const fetchHtml = async (url: string) => {
     const res = await axios.get<string>(url, {
