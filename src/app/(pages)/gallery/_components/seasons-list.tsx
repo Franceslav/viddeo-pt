@@ -15,7 +15,7 @@ export const SeasonsList = async () => {
       {seasons.map((season) => {
         return (
           <Card key={season.id} className="w-full overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="relative aspect-video bg-gray-100">
+            <div className="relative aspect-[4/3] bg-gray-100">
               {season.image ? (
                 <Image
                   src={season.image}
@@ -38,7 +38,7 @@ export const SeasonsList = async () => {
               </div>
             </div>
             
-            <CardHeader className="p-4">
+            <CardHeader className="p-3">
               <CardTitle className="text-lg line-clamp-1">
                 {season.title}
               </CardTitle>
@@ -46,14 +46,6 @@ export const SeasonsList = async () => {
                 Сезон {season.seasonNumber} • {season.episodes.length} эпизодов
               </CardDescription>
             </CardHeader>
-            
-            {season.description && (
-              <CardContent className="p-4 pt-0">
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {season.description}
-                </p>
-              </CardContent>
-            )}
           </Card>
         )
       })}

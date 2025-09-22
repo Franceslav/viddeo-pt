@@ -29,7 +29,7 @@ export function VideoCard({ id, title, views, uploadedAt, type = 'video', image 
   return (
     <Card className="w-full group cursor-pointer" onClick={handleClick}>
       <CardContent className="p-0">
-        <div className="relative aspect-video bg-black rounded-xl overflow-hidden">
+        <div className="relative aspect-[4/3] bg-black rounded-xl overflow-hidden">
           {image ? (
             <Image src={image} alt={title} fill className="object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
           ) : (
@@ -39,7 +39,7 @@ export function VideoCard({ id, title, views, uploadedAt, type = 'video', image 
             <PlayCircle className="w-12 h-12 text-white opacity-80" />
           </div>
         </div>
-        <div className="p-4">
+        <div className="p-3">
           <div className="flex flex-col">
             <h3 className="text-base font-semibold line-clamp-2 mb-1">{title}</h3>
             <p className="text-sm text-muted-foreground">
