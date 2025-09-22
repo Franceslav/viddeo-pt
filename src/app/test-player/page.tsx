@@ -26,18 +26,18 @@ export default function TestPlayerPage() {
         </div>
         
         <div>
-          <h2 className="text-lg font-semibold mb-2">Тест с несуществующим видео</h2>
+          <h2 className="text-lg font-semibold mb-2">Тест с YouTube видео</h2>
           <PlayerJS 
-            src="https://example.com/nonexistent-video.mp4"
-            title="Non-existent Video"
+            src="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            title="YouTube Video"
           />
         </div>
         
         <div>
-          <h2 className="text-lg font-semibold mb-2">Тест с CORS ошибкой</h2>
+          <h2 className="text-lg font-semibold mb-2">Тест с Vimeo видео</h2>
           <PlayerJS 
-            src="https://httpbin.org/status/403"
-            title="CORS Error Test"
+            src="https://vimeo.com/148751763"
+            title="Vimeo Video"
           />
         </div>
         

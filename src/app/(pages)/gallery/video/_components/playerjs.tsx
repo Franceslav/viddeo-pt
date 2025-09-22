@@ -4,7 +4,7 @@ import { useEffect, useId, useRef } from 'react'
 
 declare global {
   interface Window {
-    PlayerJS?: any
+    Playerjs?: any
   }
 }
 
@@ -23,22 +23,24 @@ export default function PlayerJS({ src, poster, title }: Props) {
     let cancelled = false
 
     const ensureScript = async () => {
-      if (window.PlayerJS) return
+      if (window.Playerjs) return
       
       // Check if script already exists
-      const existingScript = document.querySelector('script[src*="playerjs.js"]')
+      const existingScript = document.querySelector('script[src*="playerjs"]')
       if (existingScript) return
       
+      // Load PlayerJS from CDN
       const script = document.createElement('script')
-      script.defer = true
-      script.src = process.env.NEXT_PUBLIC_PLAYERJS_SRC || '/playerjs.js'
+      script.type = 'text/javascript'
+      script.async = true
+      script.src = 'https://playerjs.com/static/player.js'
       document.head.appendChild(script)
       
       await new Promise<void>((resolve, reject) => {
         script.addEventListener('load', () => resolve())
         script.addEventListener('error', () => reject(new Error('Failed to load PlayerJS')))
         // fallback timeout
-        setTimeout(() => resolve(), 3000)
+        setTimeout(() => resolve(), 5000)
       })
     }
 
@@ -49,30 +51,31 @@ export default function PlayerJS({ src, poster, title }: Props) {
         await ensureScript()
         if (cancelled) return
         
-        // Wait a bit for the script to initialize
-        await new Promise(resolve => setTimeout(resolve, 100))
+        // Wait for PlayerJS to be available
+        let attempts = 0
+        while (!window.Playerjs && attempts < 50) {
+          await new Promise(resolve => setTimeout(resolve, 100))
+          attempts++
+        }
         
-        if (window.PlayerJS) {
+        if (window.Playerjs) {
           const container = document.getElementById(containerId)
           if (container && !cancelled) {
             // Clear container first
             container.innerHTML = ''
             
-            // Create new player instance
-            playerRef.current = new window.PlayerJS({
-              container: container,
+            // Create PlayerJS instance with correct API
+            playerRef.current = new window.Playerjs({
+              id: containerId,
               file: src,
               poster: poster || undefined,
               title: title || undefined,
-              width: '100%',
-              height: '100%',
-              controls: true,
             })
             initializedRef.current = true
-            console.log('PlayerJS initialized successfully')
+            console.log('PlayerJS initialized successfully with file:', src)
           }
         } else {
-          console.error('PlayerJS not available on window object')
+          console.error('PlayerJS not available on window object after loading')
         }
       } catch (error) {
         console.error('Failed to initialize PlayerJS:', error)
