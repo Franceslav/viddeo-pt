@@ -94,7 +94,7 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
             const data = await res.json()
             let items: Array<{ title: string; url: string; seasonNumber?: number; episodeNumber?: number; }> = []
             
-            if (data.episodes) {
+            if (data.episodes && Array.isArray(data.episodes)) {
                 // Rezka формат
                 items = data.episodes.map((ep: any) => ({
                     title: ep.title,
@@ -102,7 +102,7 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
                     seasonNumber: ep.seasonNumber,
                     episodeNumber: ep.episodeNumber
                 }))
-            } else if (data.results) {
+            } else if (data.results && Array.isArray(data.results)) {
                 // Kinogo/VidLink формат
                 items = data.results
             }

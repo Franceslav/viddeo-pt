@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 declare global {
   interface Window {
@@ -21,14 +21,25 @@ interface Props {
   title?: string
   sources?: VideoSource[]
   showPlayerSelector?: boolean
+  showLightToggle?: boolean
+  showFullscreen?: boolean
 }
 
-export default function PlayerJS({ src, poster, title, sources = [], showPlayerSelector = false }: Props) {
+export default function PlayerJS({ 
+  src, 
+  poster, 
+  title, 
+  sources = [], 
+  showPlayerSelector = false,
+  showLightToggle = true,
+  showFullscreen = true
+}: Props) {
   const containerId = useId().replace(/:/g, '')
   const playerSelectorId = `${containerId}-selector`
   const initializedRef = useRef(false)
   const playerRef = useRef<any>(null)
   const currentSourceRef = useRef(src)
+  const [isLightOff, setIsLightOff] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -230,6 +241,32 @@ export default function PlayerJS({ src, poster, title, sources = [], showPlayerS
       {/* Player Container */}
       <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
         <div id={containerId} className="w-full h-full" />
+        
+        {/* Light Toggle Button */}
+        {showLightToggle && (
+          <button
+            onClick={() => setIsLightOff(!isLightOff)}
+            className="absolute top-2 left-2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white px-3 py-1 rounded text-sm transition-all"
+          >
+            {isLightOff ? 'Включить свет' : 'Выключить свет'}
+          </button>
+        )}
+        
+        {/* Fullscreen Button */}
+        {showFullscreen && (
+          <button
+            onClick={() => {
+              const container = document.getElementById(containerId)
+              if (container?.requestFullscreen) {
+                container.requestFullscreen()
+              }
+            }}
+            className="absolute top-2 right-2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white px-3 py-1 rounded text-sm transition-all"
+          >
+            Полный экран
+          </button>
+        )}
+        
         {!src && (
           <div className="absolute inset-0 flex items-center justify-center text-white">
             <div className="text-center">
@@ -239,11 +276,16 @@ export default function PlayerJS({ src, poster, title, sources = [], showPlayerS
           </div>
         )}
         {src && src.includes('.m3u8') && (
-          <div className="absolute top-2 right-2 bg-yellow-600 text-white px-2 py-1 rounded text-xs">
+          <div className="absolute bottom-2 right-2 bg-yellow-600 text-white px-2 py-1 rounded text-xs">
             HLS
           </div>
         )}
       </div>
+      
+      {/* Light Overlay */}
+      {isLightOff && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 pointer-events-none" />
+      )}
     </div>
   )
 }

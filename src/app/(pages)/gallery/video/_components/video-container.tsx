@@ -25,6 +25,8 @@ const VideoContainer: FC<Props> = async ({ id }) => {
         poster={video.image} 
         title={video.title}
         showPlayerSelector={true}
+        showLightToggle={true}
+        showFullscreen={true}
         sources={[
           {
             url: video.url,

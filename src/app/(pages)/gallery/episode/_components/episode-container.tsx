@@ -39,6 +39,8 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
               poster={episode.image} 
               title={episode.title}
               showPlayerSelector={true}
+              showLightToggle={true}
+              showFullscreen={true}
               sources={[
                 {
                   url: episode.url,
