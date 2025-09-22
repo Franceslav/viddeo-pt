@@ -1,7 +1,6 @@
 import { trpc } from '@/app/server/routers/_app'
 import { FC, Suspense } from 'react'
-import dynamic from 'next/dynamic'
-const PlayerJS = dynamic(() => import('../../video/_components/playerjs'), { ssr: false })
+import PlayerJS from '../../video/_components/playerjs'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

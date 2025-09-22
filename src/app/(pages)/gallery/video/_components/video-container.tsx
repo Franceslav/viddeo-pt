@@ -4,8 +4,7 @@ import VideoPLayer from './video-player';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDateShort, getInitials } from '@/lib/utils';
 import LikeButton from './like-button';
-import dynamic from 'next/dynamic'
-const PlayerJS = dynamic(() => import('./playerjs'), { ssr: false })
+import PlayerJS from './playerjs'
 
 interface Props {
   id: string;
