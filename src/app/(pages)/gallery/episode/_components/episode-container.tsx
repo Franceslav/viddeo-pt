@@ -1,6 +1,7 @@
 import { trpc } from '@/app/server/routers/_app'
 import { FC, Suspense } from 'react'
-import VideoPLayer from '../../video/_components/video-player';
+import dynamic from 'next/dynamic'
+const PlayerJS = dynamic(() => import('../../video/_components/playerjs'), { ssr: false })
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -34,7 +35,7 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
         </Button>
       </div>
 
-      <VideoPLayer video={episode} />
+      <PlayerJS src={episode.url} poster={episode.image} title={episode.title} />
       
       <div className="mt-4">
         <div className="flex items-center gap-2 mb-2">

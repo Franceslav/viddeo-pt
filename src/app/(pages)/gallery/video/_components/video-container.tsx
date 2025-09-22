@@ -4,6 +4,8 @@ import VideoPLayer from './video-player';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { formatDateShort, getInitials } from '@/lib/utils';
 import LikeButton from './like-button';
+import dynamic from 'next/dynamic'
+const PlayerJS = dynamic(() => import('./playerjs'), { ssr: false })
 
 interface Props {
   id: string;
@@ -19,7 +21,7 @@ const VideoContainer: FC<Props> = async ({ id }) => {
 
   return (
     <>
-      <VideoPLayer video={video} />
+      <PlayerJS src={video.url} poster={video.image} title={video.title} />
       <div className="">
         <h1 className="text-2xl font-bold mb-4">{video.title}</h1>
         <div className="flex items-center justify-between flex-wrap gap-4">
