@@ -74,8 +74,13 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
             setIsImporting(true)
             
             // Определяем, какой API использовать на основе URL
-            const isVidLink = importUrl.includes('vidlink.pro')
-            const apiEndpoint = isVidLink ? '/api/scrape/vidlink' : '/api/scrape/kinogo'
+            let apiEndpoint = '/api/scrape/kinogo' // по умолчанию
+            
+            if (importUrl.includes('vidlink.pro')) {
+                apiEndpoint = '/api/scrape/vidlink'
+            } else if (importUrl.includes('rezka.ag')) {
+                apiEndpoint = '/api/rezka/episodes'
+            }
             
             const res = await fetch(apiEndpoint, {
                 method: 'POST',
@@ -87,7 +92,21 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
                 throw new Error(err.error || `Ошибка запроса: ${res.status}`)
             }
             const data = await res.json()
-            const items: Array<{ title: string; url: string; seasonNumber?: number; episodeNumber?: number; }> = data.episodes || []
+            let items: Array<{ title: string; url: string; seasonNumber?: number; episodeNumber?: number; }> = []
+            
+            if (data.episodes) {
+                // Rezka формат
+                items = data.episodes.map((ep: any) => ({
+                    title: ep.title,
+                    url: ep.url,
+                    seasonNumber: ep.seasonNumber,
+                    episodeNumber: ep.episodeNumber
+                }))
+            } else if (data.results) {
+                // Kinogo/VidLink формат
+                items = data.results
+            }
+            
             if (!items.length) {
                 toast.warning("Эпизоды не найдены по указанному URL")
                 return
@@ -140,7 +159,7 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Импорт серий по URL</CardTitle>
-                        <CardDescription>Вставьте ссылку на страницу (VidLink.pro или Kinogo) и выберите сезон. Серии будут созданы автоматически.</CardDescription>
+                        <CardDescription>Вставьте ссылку на страницу (VidLink.pro, Kinogo или HDRezka) и выберите сезон. Серии будут созданы автоматически.</CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-3 md:grid-cols-4">
                         <div className="md:col-span-2">
