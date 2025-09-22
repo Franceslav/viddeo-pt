@@ -41,10 +41,13 @@ export default function PlayerJS({ src, poster, title }: Props) {
       if (window.Playerjs) {
         // eslint-disable-next-line no-new
         new window.Playerjs({
-          id: containerId,
+          container: `#${containerId}`,
           file: src,
           poster: poster || undefined,
           title: title || undefined,
+          width: '100%',
+          height: '100%',
+          controls: true,
         })
         initializedRef.current = true
       }
