@@ -26,10 +26,11 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
   return (
     <>
       <div className="mb-4">
-        <Button variant="outline" size="sm" asChild className="bg-gray-800 border-yellow-400 text-white hover:bg-gray-700">
+        <Button variant="outline" size="sm" asChild className="bg-gray-800 border-yellow-400 text-white hover:bg-gray-700 w-full sm:w-auto">
           <Link href={`/gallery/season/${episode.seasonId}`}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Назад к сезону
+            <span className="hidden sm:inline">Назад к сезону</span>
+            <span className="sm:hidden">Назад</span>
           </Link>
         </Button>
       </div>

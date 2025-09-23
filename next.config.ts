@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  // Настройка для статических файлов
+  trailingSlash: false,
+  generateEtags: false,
   // Настройка заголовков для статических файлов
   async headers() {
     return [
