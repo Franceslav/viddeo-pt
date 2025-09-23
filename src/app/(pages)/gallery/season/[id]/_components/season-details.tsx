@@ -71,61 +71,62 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
         ) : (
           <div className="grid gap-4">
             {season.episodes.map((episode) => (
-              <Card key={episode.id} className="overflow-hidden hover:shadow-lg transition-shadow bg-gray-800 border-2 border-yellow-400">
-                <div className="flex h-32">
-                  {episode.image ? (
-                    <div className="relative w-48 h-full overflow-hidden flex-shrink-0 border-2 border-yellow-400">
-                      <Image
-                        src={episode.image}
-                        alt={episode.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-48 h-full bg-gray-700 flex items-center justify-center flex-shrink-0 border-2 border-yellow-400">
-                      <ImageIcon className="w-12 h-12 text-gray-300" />
-                    </div>
-                  )}
-                  
-                  <div className="flex-1 p-4 flex flex-col justify-between">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-1">
-                        <CardTitle className="text-lg text-white">
-                          {episode.title}
-                        </CardTitle>
-                        <CardDescription className="text-white">
-                          Эпизод {episode.episodeNumber}
-                        </CardDescription>
-                        <p className="text-sm text-white line-clamp-2">
-                          {episode.description}
-                        </p>
+              <Card key={episode.id} className="overflow-hidden hover:shadow-lg transition-shadow bg-gray-800 border-2 border-yellow-400 cursor-pointer group">
+                <Link href={`/gallery/episode/${episode.id}`} className="block">
+                  <div className="flex h-32">
+                    {episode.image ? (
+                      <div className="relative w-48 h-full overflow-hidden flex-shrink-0 border-2 border-yellow-400">
+                        <Image
+                          src={episode.image}
+                          alt={episode.title}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
-                      
-                      <Button asChild className="bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold">
-                        <Link href={`/gallery/episode/${episode.id}`}>
+                    ) : (
+                      <div className="w-48 h-full bg-gray-700 flex items-center justify-center flex-shrink-0 border-2 border-yellow-400">
+                        <ImageIcon className="w-12 h-12 text-gray-300" />
+                      </div>
+                    )}
+                    
+                    <div className="flex-1 p-4 flex flex-col justify-between">
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-1 flex-1 mr-4">
+                          <CardTitle className="text-lg text-white group-hover:text-yellow-300 transition-colors">
+                            {episode.title}
+                          </CardTitle>
+                          <CardDescription className="text-white">
+                            Эпизод {episode.episodeNumber}
+                          </CardDescription>
+                          <p className="text-sm text-white line-clamp-2">
+                            {episode.description}
+                          </p>
+                        </div>
+                        
+                        {/* Кнопка видна только на десктопе */}
+                        <Button className="bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold hidden md:flex items-center">
                           <Play className="w-4 h-4 mr-2" />
                           Смотреть
-                        </Link>
-                      </Button>
-                    </div>
-                    
-                    <div className="flex items-center gap-4 mt-3 text-sm text-white">
-                      <div className="flex items-center gap-1">
-                        <Eye className="w-4 h-4" />
-                        {episode.views} просмотров
+                        </Button>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Heart className="w-4 h-4" />
-                        {episode.likes.length} лайков
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        {formatDateShort(episode.createdAt)}
+                      
+                      <div className="flex items-center gap-4 mt-3 text-sm text-white">
+                        <div className="flex items-center gap-1">
+                          <Eye className="w-4 h-4" />
+                          {episode.views} просмотров
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Heart className="w-4 h-4" />
+                          {episode.likes.length} лайков
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {formatDateShort(episode.createdAt)}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </Card>
             ))}
           </div>

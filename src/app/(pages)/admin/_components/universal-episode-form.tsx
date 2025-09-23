@@ -51,8 +51,12 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
             setUrl(episode.url)
             setEpisodeNumber(episode.episodeNumber)
             setSeasonId(episode.seasonId)
-            setImage(episode.image || "")
+            // Если нет изображения, используем заглушку
+            setImage(episode.image || "/assets/placeholder-medium.webp")
             setActiveTab("manual")
+        } else {
+            // При создании нового эпизода устанавливаем заглушку
+            setImage("/assets/placeholder-medium.webp")
         }
     }, [episode])
 
@@ -94,7 +98,8 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
                     setRutubeMetadata(data)
                     setTitle(data.title || "")
                     setDescription(data.description || "")
-                    setImage(data.thumbnail || "")
+                    // Если нет thumbnail, используем заглушку
+                    setImage(data.thumbnail || "/assets/placeholder-medium.webp")
                 }
             }
         } catch (error) {
@@ -128,6 +133,10 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
                     const data = await response.json()
                     
                     if (data.success) {
+                        setTitle(data.title || "")
+                        setDescription(data.description || "")
+                        // Если нет thumbnail, используем заглушку
+                        setImage(data.thumbnail || "/assets/placeholder-medium.webp")
                         toast.success(`RUTUBE видео: ${data.title}`)
                     } else {
                         toast.error("Не удалось получить информацию о видео")
@@ -162,13 +171,19 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
 
         setIsLoading(true)
         try {
+            // Если нет изображения, используем заглушку
+            let finalImage = image
+            if (!finalImage) {
+                finalImage = "/assets/placeholder-medium.webp"
+            }
+
             const episodeData = {
                 title,
                 description,
                 url: isRutubeUrl(url) ? convertToEmbedUrl(url) : url,
                 episodeNumber,
                 seasonId,
-                image: image || undefined, // image уже содержит URL загруженного файла
+                image: finalImage, // Всегда устанавливаем изображение
                 userId
             }
 

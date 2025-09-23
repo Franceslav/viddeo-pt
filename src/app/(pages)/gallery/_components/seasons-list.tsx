@@ -14,38 +14,41 @@ export const SeasonsList = async () => {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {seasons.map((season) => {
         return (
-          <Card key={season.id} className="w-full overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="relative aspect-video bg-gray-100">
-              {season.image ? (
-                <Image
-                  src={season.image}
-                  alt={season.title}
-                  fill
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <ImageIcon className="w-12 h-12 text-gray-400" />
-                </div>
-              )}
-              <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-100 md:opacity-0 md:hover:opacity-100 transition-opacity pointer-events-none md:pointer-events-auto">
-                <Button size="sm" asChild className="pointer-events-auto">
-                  <Link href={`/gallery/season/${season.id}`}>
+          <Card key={season.id} className="w-full overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+            <Link href={`/gallery/season/${season.id}`} className="block">
+              <div className="relative aspect-video bg-gray-100">
+                {season.image ? (
+                  <Image
+                    src={season.image}
+                    alt={season.title}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <ImageIcon className="w-12 h-12 text-gray-400" />
+                  </div>
+                )}
+                {/* Кнопка видна только на десктопе */}
+                <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 md:group-hover:opacity-100 transition-opacity">
+                  <Button size="sm" className="pointer-events-auto bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold">
                     <Play className="w-4 h-4 mr-2" />
                     Смотреть
-                  </Link>
-                </Button>
+                  </Button>
+                </div>
               </div>
-            </div>
+            </Link>
             
-            <CardHeader className="p-4">
-              <CardTitle className="text-lg line-clamp-1">
-                {season.title} 
-              </CardTitle>
-              <CardDescription>
-              {season.episodes.length} эпизодов
-              </CardDescription>
-            </CardHeader>
+            <Link href={`/gallery/season/${season.id}`} className="block">
+              <CardHeader className="p-4">
+                <CardTitle className="text-lg line-clamp-1 group-hover:text-yellow-600 transition-colors">
+                  {season.title} 
+                </CardTitle>
+                <CardDescription>
+                {season.episodes.length} эпизодов
+                </CardDescription>
+              </CardHeader>
+            </Link>
           </Card>
         )
       })}
