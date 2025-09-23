@@ -258,7 +258,45 @@ const CommentsForum = () => {
                                       {reply.commentLikes.filter(like => like.type === 'dislike').length}
                                     </button>
                                   </div>
+                                  <button
+                                    onClick={() => handleReplyToggle(reply.id)}
+                                    className="flex items-center gap-1 hover:text-blue-500 transition-colors"
+                                    disabled={!session?.user?.id}
+                                  >
+                                    <Reply className="w-3 h-3" /> Ответить
+                                  </button>
                                 </div>
+                                {replyOpenForId === reply.id && (
+                                  <div className="mt-2 space-y-2">
+                                    <Textarea
+                                      value={replyTextById[reply.id] || ''}
+                                      onChange={(e) => handleReplyChange(reply.id, e.target.value)}
+                                      placeholder={session?.user ? 'Напишите ответ...' : 'Войдите, чтобы ответить'}
+                                      disabled={!session?.user?.id || addEpisodeReplyMutation.isPending || addCharacterReplyMutation.isPending}
+                                    />
+                                    <div className="flex gap-2">
+                                      <Button
+                                        size="sm"
+                                        onClick={() => handleReplySubmit({
+                                          parentId: reply.id,
+                                          commentType: comment.type,
+                                          episodeId: comment.type === 'episode' ? comment.episode?.id : undefined,
+                                          characterId: comment.type === 'character' ? comment.character?.id : undefined
+                                        })}
+                                        disabled={!session?.user?.id || (replyTextById[reply.id]?.trim()?.length ?? 0) === 0}
+                                      >
+                                        Ответить
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="secondary"
+                                        onClick={() => setReplyOpenForId(null)}
+                                      >
+                                        Отмена
+                                      </Button>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           ))}

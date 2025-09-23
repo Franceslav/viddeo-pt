@@ -28,7 +28,16 @@ export const commentRouter = router({
               user: {
                 select: { name: true, email: true, image: true }
               },
-              commentLikes: true
+              commentLikes: true,
+              replies: {
+                include: {
+                  user: {
+                    select: { name: true, email: true, image: true }
+                  },
+                  commentLikes: true
+                },
+                orderBy: { createdAt: 'asc' }
+              }
             },
             orderBy: { createdAt: 'asc' }
           }
@@ -54,7 +63,16 @@ export const commentRouter = router({
               user: {
                 select: { name: true, email: true, image: true }
               },
-              characterCommentLikes: true
+              characterCommentLikes: true,
+              replies: {
+                include: {
+                  user: {
+                    select: { name: true, email: true, image: true }
+                  },
+                  characterCommentLikes: true
+                },
+                orderBy: { createdAt: 'asc' }
+              }
             },
             orderBy: { createdAt: 'asc' }
           }
@@ -70,7 +88,11 @@ export const commentRouter = router({
           commentLikes: comment.commentLikes,
           replies: comment.replies.map(reply => ({
             ...reply,
-            commentLikes: reply.commentLikes
+            commentLikes: reply.commentLikes,
+            replies: reply.replies?.map(r2 => ({
+              ...r2,
+              commentLikes: r2.commentLikes
+            })) ?? []
           }))
         })),
         ...characterComments.map(comment => ({
@@ -79,7 +101,11 @@ export const commentRouter = router({
           commentLikes: comment.characterCommentLikes,
           replies: comment.replies.map(reply => ({
             ...reply,
-            commentLikes: reply.characterCommentLikes
+            commentLikes: reply.characterCommentLikes,
+            replies: reply.replies?.map(r2 => ({
+              ...r2,
+              commentLikes: r2.characterCommentLikes
+            })) ?? []
           }))
         }))
       ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
