@@ -22,7 +22,6 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
     const utils = trpc.useUtils()
 
     const { data: episodes, isLoading } = trpc.episode.getEpisodes.useQuery()
-    const { data: seasons } = trpc.season.getSeasons.useQuery()
     const { mutate: deleteEpisode } = trpc.episode.deleteEpisode.useMutation({
         onSuccess: () => {
             utils.episode.getEpisodes.invalidate()

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { prisma } from '@/config/prisma'
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
     console.log('Starting cleanup of all episodes and related data...')
     
@@ -56,7 +56,7 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Получаем статистику
     const episodeCount = await prisma.episode.count()

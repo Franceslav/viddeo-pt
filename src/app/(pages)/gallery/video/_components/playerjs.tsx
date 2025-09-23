@@ -19,12 +19,8 @@ interface PlayerJSProps {
 
 export default function PlayerJS({ 
   src, 
-  poster, 
-  title,
   sources = [], 
-  showPlayerSelector = false,
-  showLightToggle = true,
-  showFullscreen = true
+  showPlayerSelector = false
 }: PlayerJSProps) {
   const [currentSource, setCurrentSource] = useState(src)
 

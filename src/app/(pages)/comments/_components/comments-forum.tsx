@@ -1,6 +1,6 @@
 'use client'
 
-import { MessageCircle, Heart, Reply, User, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { MessageCircle, Reply, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
