@@ -4,21 +4,43 @@ import { MessageCircle, Reply, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import { trpc } from '@/app/_trpc/client'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
+import { useState } from 'react'
 
 const CommentsForum = () => {
   const { data: comments, isLoading, refetch } = trpc.comment.getAllComments.useQuery()
   const { data: session } = useSession()
-  
+
+  const [replyOpenForId, setReplyOpenForId] = useState<string | null>(null)
+  const [replyTextById, setReplyTextById] = useState<Record<string, string>>({})
+
   const likeCommentMutation = trpc.comment.likeComment.useMutation({
     onSuccess: () => refetch()
   })
   
   const likeCharacterCommentMutation = trpc.comment.likeCharacterComment.useMutation({
     onSuccess: () => refetch()
+  })
+
+  const addEpisodeReplyMutation = trpc.comment.addComment.useMutation({
+    onSuccess: () => {
+      setReplyTextById((prev) => ({ ...prev, [replyOpenForId || '']: '' }))
+      setReplyOpenForId(null)
+      refetch()
+    }
+  })
+
+  const addCharacterReplyMutation = trpc.characterComment.addCharacterComment.useMutation({
+    onSuccess: () => {
+      setReplyTextById((prev) => ({ ...prev, [replyOpenForId || '']: '' }))
+      setReplyOpenForId(null)
+      refetch()
+    }
   })
 
   const handleLike = (commentId: string, type: 'like' | 'dislike', commentType: 'episode' | 'character') => {
@@ -28,6 +50,37 @@ const CommentsForum = () => {
       likeCommentMutation.mutate({ commentId, userId: session.user.id, type })
     } else {
       likeCharacterCommentMutation.mutate({ commentId, userId: session.user.id, type })
+    }
+  }
+
+  const handleReplyToggle = (commentId: string) => {
+    if (!session?.user?.id) return
+    setReplyOpenForId((current) => (current === commentId ? null : commentId))
+  }
+
+  const handleReplyChange = (commentId: string, value: string) => {
+    setReplyTextById((prev) => ({ ...prev, [commentId]: value }))
+  }
+
+  const handleReplySubmit = (params: { parentId: string; commentType: 'episode' | 'character'; episodeId?: string; characterId?: string }) => {
+    if (!session?.user?.id) return
+    const text = replyTextById[params.parentId]?.trim()
+    if (!text) return
+
+    if (params.commentType === 'episode' && params.episodeId) {
+      addEpisodeReplyMutation.mutate({
+        episodeId: params.episodeId,
+        content: text,
+        userId: session.user.id,
+        parentId: params.parentId
+      })
+    } else if (params.commentType === 'character' && params.characterId) {
+      addCharacterReplyMutation.mutate({
+        characterId: params.characterId,
+        content: text,
+        userId: session.user.id,
+        parentId: params.parentId
+      })
     }
   }
 
@@ -75,7 +128,7 @@ const CommentsForum = () => {
                           {new Date(comment.createdAt).toLocaleDateString('ru-RU')}
                         </Badge>
                         {comment.type === 'episode' && comment.episode && (
-                          <Link href={`/gallery/video/${comment.episode.id}`}>
+                          <Link href={`/gallery/episode/${comment.episode.id}`}>
                             <div className="cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition-colors inline-block">
                               <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
                                 📺 {comment.episode.title}
@@ -124,11 +177,46 @@ const CommentsForum = () => {
                             {comment.commentLikes.filter(like => like.type === 'dislike').length}
                           </button>
                         </div>
-                        <button className="flex items-center gap-1 hover:text-blue-500 transition-colors">
+                        <button 
+                          onClick={() => handleReplyToggle(comment.id)}
+                          className="flex items-center gap-1 hover:text-blue-500 transition-colors"
+                          disabled={!session?.user?.id}
+                        >
                           <Reply className="w-4 h-4" />
                           {comment.replies.length}
                         </button>
                       </div>
+                      {replyOpenForId === comment.id && (
+                        <div className="mt-3 space-y-2">
+                          <Textarea
+                            value={replyTextById[comment.id] || ''}
+                            onChange={(e) => handleReplyChange(comment.id, e.target.value)}
+                            placeholder={session?.user ? 'Напишите ответ...' : 'Войдите, чтобы ответить'}
+                            disabled={!session?.user?.id || addEpisodeReplyMutation.isPending || addCharacterReplyMutation.isPending}
+                          />
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => handleReplySubmit({
+                                parentId: comment.id,
+                                commentType: comment.type,
+                                episodeId: comment.type === 'episode' ? comment.episode?.id : undefined,
+                                characterId: comment.type === 'character' ? comment.character?.id : undefined
+                              })}
+                              disabled={!session?.user?.id || (replyTextById[comment.id]?.trim()?.length ?? 0) === 0}
+                            >
+                              Ответить
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() => setReplyOpenForId(null)}
+                            >
+                              Отмена
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                       
                       {/* Ответы на комментарий */}
                       {comment.replies && comment.replies.length > 0 && (
