@@ -73,7 +73,52 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
             {season.episodes.map((episode) => (
               <Card key={episode.id} className="overflow-hidden hover:shadow-lg transition-shadow bg-gray-800 border-2 border-yellow-400 cursor-pointer group">
                 <Link href={`/gallery/episode/${episode.id}`} className="block">
-                  <div className="flex h-32">
+                  {/* Мобильная версия - вертикальная карточка */}
+                  <div className="md:hidden">
+                    <div className="flex flex-col">
+                      {episode.image ? (
+                        <div className="relative w-full h-32 overflow-hidden border-2 border-yellow-400">
+                          <Image
+                            src={episode.image}
+                            alt={episode.title}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-full h-32 bg-gray-700 flex items-center justify-center border-2 border-yellow-400">
+                          <ImageIcon className="w-12 h-12 text-gray-300" />
+                        </div>
+                      )}
+                      
+                      <div className="p-4 space-y-2">
+                        <CardTitle className="text-lg text-white group-hover:text-yellow-300 transition-colors">
+                          {episode.title}
+                        </CardTitle>
+                        <CardDescription className="text-white">
+                          Эпизод {episode.episodeNumber}
+                        </CardDescription>
+                        
+                        <div className="flex items-center gap-4 text-sm text-white">
+                          <div className="flex items-center gap-1">
+                            <Eye className="w-4 h-4" />
+                            {episode.views} просмотров
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Heart className="w-4 h-4" />
+                            {episode.likes.length} лайков
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            {formatDateShort(episode.createdAt)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Десктопная версия - горизонтальная карточка */}
+                  <div className="hidden md:flex h-32">
                     {episode.image ? (
                       <div className="relative w-48 h-full overflow-hidden flex-shrink-0 border-2 border-yellow-400">
                         <Image
@@ -104,7 +149,7 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
                         </div>
                         
                         {/* Кнопка видна только на десктопе */}
-                        <Button className="bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold hidden md:flex items-center">
+                        <Button className="bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold flex items-center">
                           <Play className="w-4 h-4 mr-2" />
                           Смотреть
                         </Button>

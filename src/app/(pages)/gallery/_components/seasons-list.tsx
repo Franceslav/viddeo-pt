@@ -41,7 +41,7 @@ export const SeasonsList = async () => {
             
             <Link href={`/gallery/season/${season.id}`} className="block">
               <CardHeader className="p-4">
-                <CardTitle className="text-lg line-clamp-1 group-hover:text-yellow-600 transition-colors">
+                <CardTitle className="text-lg line-clamp-2 sm:line-clamp-1 group-hover:text-yellow-600 transition-colors">
                   {season.title} 
                 </CardTitle>
                 <CardDescription>
