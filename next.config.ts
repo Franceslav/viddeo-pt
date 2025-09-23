@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
     fetches: {
       fullUrl: true,
     }
+  },
+  images: {
+    // Отключаем оптимизацию, чтобы локальные файлы из public/uploads отдавались без прокси _next/image
+    unoptimized: true,
   }
 };
 
