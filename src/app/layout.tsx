@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import { Toaster } from "sonner";
 
@@ -8,11 +7,6 @@ import { SessionProvider } from "next-auth/react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import "@/styles/globals.css";
-
-const inter = Inter({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin-ext"],
-});
 
 export const metadata: Metadata = {
   title: "Viddeo",
@@ -27,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} antialiased`}
+        className="font-sans antialiased"
       >
         <SessionProvider>
           <TRPCProvider>

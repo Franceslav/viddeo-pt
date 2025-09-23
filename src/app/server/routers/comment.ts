@@ -3,10 +3,11 @@ import { TRPCError } from "@trpc/server"
 import { publicProcedure, router } from "../trpc"
 
 export const commentRouter = router({
-  // Получить все комментарии для форума
+  // Получить все комментарии
   getAllComments: publicProcedure
     .query(async ({ ctx }) => {
-      return await ctx.db.comment.findMany({
+      // Получаем комментарии к эпизодам
+      const episodeComments = await ctx.db.comment.findMany({
         where: {
           parentId: { isSet: false } // Только родительские комментарии
         },
@@ -18,14 +19,72 @@ export const commentRouter = router({
             include: {
               season: {
                 select: { title: true, seasonNumber: true }
-              },
-              likes: true
+              }
             }
           },
-          commentLikes: true
+          commentLikes: true,
+          replies: {
+            include: {
+              user: {
+                select: { name: true, email: true, image: true }
+              },
+              commentLikes: true
+            },
+            orderBy: { createdAt: 'asc' }
+          }
         },
         orderBy: { createdAt: 'desc' }
       })
+
+      // Получаем комментарии к персонажам
+      const characterComments = await ctx.db.characterComment.findMany({
+        where: {
+          parentId: { isSet: false } // Только родительские комментарии
+        },
+        include: {
+          user: {
+            select: { name: true, email: true, image: true }
+          },
+          character: {
+            select: { name: true, image: true, id: true }
+          },
+          characterCommentLikes: true,
+          replies: {
+            include: {
+              user: {
+                select: { name: true, email: true, image: true }
+              },
+              characterCommentLikes: true
+            },
+            orderBy: { createdAt: 'asc' }
+          }
+        },
+        orderBy: { createdAt: 'desc' }
+      })
+
+      // Объединяем и сортируем все комментарии
+      const allComments = [
+        ...episodeComments.map(comment => ({
+          ...comment,
+          type: 'episode' as const,
+          commentLikes: comment.commentLikes,
+          replies: comment.replies.map(reply => ({
+            ...reply,
+            commentLikes: reply.commentLikes
+          }))
+        })),
+        ...characterComments.map(comment => ({
+          ...comment,
+          type: 'character' as const,
+          commentLikes: comment.characterCommentLikes,
+          replies: comment.replies.map(reply => ({
+            ...reply,
+            commentLikes: reply.characterCommentLikes
+          }))
+        }))
+      ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
+      return allComments
     }),
 
   // Получить комментарии к эпизоду
@@ -65,7 +124,7 @@ export const commentRouter = router({
       })
     }),
 
-  // Добавить комментарий
+  // Добавить комментарий к эпизоду
   addComment: publicProcedure
     .input(z.object({ 
       episodeId: z.string(),
@@ -178,70 +237,137 @@ export const commentRouter = router({
       })
     }),
 
-  // Лайк/дизлайк комментария
-  likeComment: publicProcedure
-    .input(z.object({
-      commentId: z.string(),
-      userId: z.string(),
-      type: z.enum(['like', 'dislike'])
-    }))
-    .mutation(async ({ input, ctx }) => {
-      // Проверяем, что комментарий существует
-      const comment = await ctx.db.comment.findUnique({
-        where: { id: input.commentId }
-      })
-
-      if (!comment) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'Comment not found'
-        })
-      }
-
-      // Проверяем, что пользователь существует
-      const user = await ctx.db.user.findUnique({
-        where: { id: input.userId }
-      })
-
-      if (!user) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'User not found'
-        })
-      }
-
-      // Ищем существующий лайк
-      const existingLike = await ctx.db.commentLike.findUnique({
-        where: {
-          userId_commentId: {
-            userId: input.userId,
-            commentId: input.commentId
-          }
-        }
-      })
-
-      if (existingLike) {
-        if (existingLike.type === input.type) {
-          // Удаляем лайк если он того же типа
-          return await ctx.db.commentLike.delete({
-            where: { id: existingLike.id }
+      // Лайк/дизлайк комментария к эпизоду
+      likeComment: publicProcedure
+        .input(z.object({
+          commentId: z.string(),
+          userId: z.string(),
+          type: z.enum(['like', 'dislike'])
+        }))
+        .mutation(async ({ input, ctx }) => {
+          // Проверяем, что комментарий существует
+          const comment = await ctx.db.comment.findUnique({
+            where: { id: input.commentId }
           })
-        } else {
-          // Обновляем тип лайка
-          return await ctx.db.commentLike.update({
-            where: { id: existingLike.id },
-            data: { type: input.type }
+
+          if (!comment) {
+            throw new TRPCError({
+              code: 'NOT_FOUND',
+              message: 'Comment not found'
+            })
+          }
+
+          // Проверяем, что пользователь существует
+          const user = await ctx.db.user.findUnique({
+            where: { id: input.userId }
           })
-        }
-      } else {
-        // Создаем новый лайк
-        return await ctx.db.commentLike.create({
-          data: {
-            userId: input.userId,
-            commentId: input.commentId,
-            type: input.type
+
+          if (!user) {
+            throw new TRPCError({
+              code: 'NOT_FOUND',
+              message: 'User not found'
+            })
+          }
+
+          // Ищем существующий лайк
+          const existingLike = await ctx.db.commentLike.findUnique({
+            where: {
+              userId_commentId: {
+                userId: input.userId,
+                commentId: input.commentId
+              }
+            }
+          })
+
+          if (existingLike) {
+            if (existingLike.type === input.type) {
+              // Удаляем лайк если он того же типа
+              return await ctx.db.commentLike.delete({
+                where: { id: existingLike.id }
+              })
+            } else {
+              // Обновляем тип лайка
+              return await ctx.db.commentLike.update({
+                where: { id: existingLike.id },
+                data: { type: input.type }
+              })
+            }
+          } else {
+            // Создаем новый лайк
+            return await ctx.db.commentLike.create({
+              data: {
+                userId: input.userId,
+                commentId: input.commentId,
+                type: input.type
+              }
+            })
+          }
+        }),
+
+      // Лайк/дизлайк комментария к персонажу
+      likeCharacterComment: publicProcedure
+        .input(z.object({
+          commentId: z.string(),
+          userId: z.string(),
+          type: z.enum(['like', 'dislike'])
+        }))
+        .mutation(async ({ input, ctx }) => {
+          // Проверяем, что комментарий существует
+          const comment = await ctx.db.characterComment.findUnique({
+            where: { id: input.commentId }
+          })
+
+          if (!comment) {
+            throw new TRPCError({
+              code: 'NOT_FOUND',
+              message: 'Character comment not found'
+            })
+          }
+
+          // Проверяем, что пользователь существует
+          const user = await ctx.db.user.findUnique({
+            where: { id: input.userId }
+          })
+
+          if (!user) {
+            throw new TRPCError({
+              code: 'NOT_FOUND',
+              message: 'User not found'
+            })
+          }
+
+          // Ищем существующий лайк
+          const existingLike = await ctx.db.characterCommentLike.findUnique({
+            where: {
+              userId_characterCommentId: {
+                userId: input.userId,
+                characterCommentId: input.commentId
+              }
+            }
+          })
+
+          if (existingLike) {
+            if (existingLike.type === input.type) {
+              // Удаляем лайк если он того же типа
+              return await ctx.db.characterCommentLike.delete({
+                where: { id: existingLike.id }
+              })
+            } else {
+              // Обновляем тип лайка
+              return await ctx.db.characterCommentLike.update({
+                where: { id: existingLike.id },
+                data: { type: input.type }
+              })
+            }
+          } else {
+            // Создаем новый лайк
+            return await ctx.db.characterCommentLike.create({
+              data: {
+                userId: input.userId,
+                characterCommentId: input.commentId,
+                type: input.type
+              }
+            })
           }
         })
-      }
-    })
 })

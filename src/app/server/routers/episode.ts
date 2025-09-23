@@ -6,38 +6,49 @@ export const episodeRouter = router({
     // Получить все эпизоды
     getEpisodes: publicProcedure
         .query(async ({ ctx }) => {
-            const episodes = await ctx.db.episode.findMany({
-                orderBy: [
-                    { season: { seasonNumber: 'asc' } },
-                    { episodeNumber: 'asc' }
-                ],
-                include: {
-                    season: true,
-                    user: {
-                        select: { name: true, email: true }
-                    },
-                    likes: true
-                }
-            });
-            return episodes;
+            try {
+                const episodes = await ctx.db.episode.findMany({
+                    orderBy: [
+                        { season: { seasonNumber: 'asc' } },
+                        { episodeNumber: 'asc' }
+                    ],
+                    include: {
+                        season: true,
+                        user: {
+                            select: { name: true, email: true }
+                        },
+                        likes: true
+                    }
+                });
+                return episodes;
+            } catch (error) {
+                console.error('Database connection error:', error);
+                // Возвращаем пустой массив если БД недоступна
+                return [];
+            }
         }),
 
     // Получить эпизоды по сезону
     getEpisodesBySeason: publicProcedure
         .input(z.object({ seasonId: z.string() }))
         .query(async ({ input, ctx }) => {
-            const episodes = await ctx.db.episode.findMany({
-                where: { seasonId: input.seasonId },
-                orderBy: { episodeNumber: 'asc' },
-                include: {
-                    season: true,
-                    user: {
-                        select: { name: true, email: true }
-                    },
-                    likes: true
-                }
-            });
-            return episodes;
+            try {
+                const episodes = await ctx.db.episode.findMany({
+                    where: { seasonId: input.seasonId },
+                    orderBy: { episodeNumber: 'asc' },
+                    include: {
+                        season: true,
+                        user: {
+                            select: { name: true, email: true }
+                        },
+                        likes: true
+                    }
+                });
+                return episodes;
+            } catch (error) {
+                console.error('Database connection error:', error);
+                return [];
+            }
         }),
 
     // Получить эпизод по ID
@@ -77,38 +88,46 @@ export const episodeRouter = router({
             image: z.string().optional(),
         }))
         .mutation(async ({ input, ctx }) => {
-            // Проверяем, существует ли сезон
-            const season = await ctx.db.season.findUnique({
-                where: { id: input.seasonId }
-            });
-
-            if (!season) {
-                throw new TRPCError({
-                    code: 'NOT_FOUND',
-                    message: 'Season not found'
+            try {
+                // Проверяем, существует ли сезон
+                const season = await ctx.db.season.findUnique({
+                    where: { id: input.seasonId }
                 });
-            }
 
-            // Проверяем, не существует ли уже эпизод с таким номером в сезоне
-            const existingEpisode = await ctx.db.episode.findFirst({
-                where: {
-                    seasonId: input.seasonId,
-                    episodeNumber: input.episodeNumber
+                if (!season) {
+                    throw new TRPCError({
+                        code: 'NOT_FOUND',
+                        message: 'Season not found'
+                    });
                 }
-            });
 
-            if (existingEpisode) {
+                // Проверяем, не существует ли уже эпизод с таким номером в сезоне
+                const existingEpisode = await ctx.db.episode.findFirst({
+                    where: {
+                        seasonId: input.seasonId,
+                        episodeNumber: input.episodeNumber
+                    }
+                });
+
+                if (existingEpisode) {
+                    throw new TRPCError({
+                        code: 'CONFLICT',
+                        message: 'Episode with this number already exists in this season'
+                    });
+                }
+
+                const episode = await ctx.db.episode.create({
+                    data: input
+                });
+
+                return episode;
+            } catch (error) {
+                console.error('Database connection error:', error);
                 throw new TRPCError({
-                    code: 'CONFLICT',
-                    message: 'Episode with this number already exists in this season'
+                    code: 'INTERNAL_SERVER_ERROR',
+                    message: 'Database connection failed. Please check your MongoDB connection.'
                 });
             }
-
-            const episode = await ctx.db.episode.create({
-                data: input
-            });
-
-            return episode;
         }),
 
     // Обновить эпизод

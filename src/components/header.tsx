@@ -56,7 +56,8 @@ const Header = async () => {
             alt="South Park Logo" 
             className="h-10 w-auto object-contain transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 drop-shadow-lg bg-transparent"
           />
-          <span className='text-2xl font-black text-black transform group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300' style={{ textShadow: '3px 3px 0px #ff0000, 6px 6px 0px #000000' }}>
+          <span className='text-2xl md:text-3xl font-black text-white transform group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300 relative px-2 py-1 rounded' style={{ textShadow: '2px 2px 0px #000000, 4px 4px 0px #ff0000, 6px 6px 0px #000000, 8px 8px 0px #ff0000' }}>
+            <span className="absolute inset-0 bg-black bg-opacity-30 rounded -z-10"></span>
             ЮЖНЫЙ ПАРК
           </span>
         </Link>

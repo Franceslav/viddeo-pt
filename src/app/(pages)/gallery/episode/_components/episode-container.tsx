@@ -38,16 +38,9 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
               src={episode.url} 
               poster={episode.image} 
               title={episode.title}
-              showPlayerSelector={true}
+              showPlayerSelector={false}
               showLightToggle={true}
               showFullscreen={true}
-              sources={[
-                {
-                  url: episode.url,
-                  label: "Плеер 1",
-                  type: episode.url.includes('.m3u8') ? 'hls' : 'mp4'
-                }
-              ]}
             />
       
       <div className="mt-4">

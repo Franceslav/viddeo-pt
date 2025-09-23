@@ -10,7 +10,7 @@ const Gallery = () => {
 
   return (
     <HydrateClient>
-      <div className="min-h-screen bg-black relative overflow-hidden">
+      <div className="w-full bg-black relative overflow-hidden">
         {/* Персонажи по периферии окружности */}
         <div className="absolute inset-0 pointer-events-none">
           {/* Kyle - верхний левый */}
@@ -96,8 +96,8 @@ const Gallery = () => {
 
         {/* Контент поверх персонажей */}
         <div className="relative z-10">
-          <div className="w-full px-4 md:px-8">
-            <div className="space-y-6 pt-8">
+          <div className="w-full">
+            <div className="space-y-6 pt-8 px-4 md:px-8">
               <div className="text-center">
                 <h1 className="text-5xl md:text-6xl font-black text-white transform -rotate-1 hover:rotate-0 transition-transform duration-300 mb-4" style={{ textShadow: '3px 3px 0px #ff0000, 6px 6px 0px #000000' }}>
                   ГАЛЕРЕЯ
@@ -106,8 +106,10 @@ const Gallery = () => {
                   &quot;OH MY GOD! THEY KILLED KENNY!&quot; - Смотри все сезоны!
                 </p>
               </div>
+            </div>
 
-              <div className="flex flex-col lg:flex-row gap-8">
+            <div className="w-full">
+              <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-8">
                 <div className="lg:w-2/3">
                   <ErrorBoundary fallback={<div>Something went wrong</div>}>
                     <Suspense fallback={<SeasonsListLoading />}>

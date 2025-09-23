@@ -1,53 +1,46 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { MessageCircle, Heart, Reply, User, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { trpc } from '@/app/_trpc/client'
-import { formatDateShort, getInitials } from '@/lib/utils'
-import { MessageCircle, Play, Calendar, Eye, Heart, Trash2 } from 'lucide-react'
-import { toast } from 'sonner'
-import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useSession } from 'next-auth/react'
 
-export const CommentsForum = () => {
-  const { data: comments, isLoading } = trpc.comment.getAllComments.useQuery()
+const CommentsForum = () => {
+  const { data: comments, isLoading, refetch } = trpc.comment.getAllComments.useQuery()
   const { data: session } = useSession()
-  const utils = trpc.useUtils()
-
-  const deleteComment = trpc.comment.deleteComment.useMutation({
-    onSuccess: () => {
-      toast.success('Комментарий удален!')
-      utils.comment.getAllComments.invalidate()
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+  
+  const likeCommentMutation = trpc.comment.likeComment.useMutation({
+    onSuccess: () => refetch()
+  })
+  
+  const likeCharacterCommentMutation = trpc.comment.likeCharacterComment.useMutation({
+    onSuccess: () => refetch()
   })
 
-  const handleDelete = (commentId: string) => {
-    if (window.confirm('Вы уверены, что хотите удалить этот комментарий?')) {
-      deleteComment.mutate({ id: commentId })
+  const handleLike = (commentId: string, type: 'like' | 'dislike', commentType: 'episode' | 'character') => {
+    if (!session?.user?.id) return
+    
+    if (commentType === 'episode') {
+      likeCommentMutation.mutate({ commentId, userId: session.user.id, type })
+    } else {
+      likeCharacterCommentMutation.mutate({ commentId, userId: session.user.id, type })
     }
   }
 
   if (isLoading) {
-    return <CommentsForumLoading />
-  }
-
-  if (!comments || comments.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-8">
-          <MessageCircle className="w-16 h-16 text-yellow-600 mx-auto mb-4" />
-          <h3 className="text-2xl font-black text-yellow-800 mb-2" style={{ textShadow: '2px 2px 0px #000000' }}>
-            &quot;OH MY GOD! THEY KILLED KENNY!&quot;
-          </h3>
-          <p className="text-yellow-700 font-bold text-lg">
-            Пока нет комментариев! Будьте первым, кто оставит комментарий!
-          </p>
+      <div className="space-y-4">
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-20 bg-gray-200 rounded"></div>
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -55,178 +48,153 @@ export const CommentsForum = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-4">
-        <h2 className="text-2xl font-black text-black mb-2" style={{ textShadow: '2px 2px 0px #ff0000' }}>
-          Всего комментариев: {comments.length}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold flex items-center gap-2">
+          <MessageCircle className="w-5 h-5" />
+          Все комментарии ({comments?.length || 0})
         </h2>
-        <p className="text-yellow-800 font-bold">
-          Обсуждаем все эпизоды Южного парка!
-        </p>
-      </div>
 
-      <div className="space-y-4">
-        {comments.map((comment) => (
-          <Card key={comment.id} className="overflow-hidden hover:shadow-lg transition-shadow border-2 border-black">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="w-10 h-10 border-2 border-black">
-                    {comment.user.image ? (
-                      <Image
-                        src={comment.user.image}
-                        alt={comment.user.name || 'Avatar'}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <AvatarFallback className="bg-red-500 text-white font-bold">
-                        {getInitials(comment.user.name ?? 'UN')}
+        {comments && comments.length > 0 ? (
+          <div className="space-y-4">
+            {comments.map((comment) => (
+              <Card key={comment.id}>
+                <CardContent className="pt-6">
+                  <div className="flex gap-3">
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage src={comment.user.image || undefined} alt={comment.user.name || 'Пользователь'} />
+                      <AvatarFallback>
+                        {comment.user.name ? comment.user.name[0].toUpperCase() : 'U'}
                       </AvatarFallback>
-                    )}
-                  </Avatar>
-                  <div>
-                    <CardTitle className="text-lg text-black font-black" style={{ textShadow: '1px 1px 0px #000000' }}>
-                      {comment.user.name}
-                    </CardTitle>
-                    <CardDescription className="text-sm">
-                      {formatDateShort(comment.createdAt)}
-                    </CardDescription>
-                  </div>
-                </div>
-                {session?.user?.id === comment.userId && (
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    className="bg-red-500 hover:bg-red-600 text-white border-2 border-black font-bold"
-                    style={{ textShadow: '1px 1px 0px #000000' }}
-                    onClick={() => handleDelete(comment.id)}
-                  >
-                    <Trash2 className="w-4 h-4 mr-1" /> Удалить
-                  </Button>
-                )}
-              </div>
-            </CardHeader>
-            
-            <CardContent className="space-y-4">
-              <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
-                <p className="text-gray-800 leading-relaxed">{comment.content}</p>
-              </div>
-              
-              {/* Информация об эпизоде */}
-              <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    {comment.episode.image ? (
-                      <div className="relative w-16 h-12 rounded-lg overflow-hidden">
-                        <Image
-                          src={comment.episode.image}
-                          alt={comment.episode.title}
-                          fill
-                          className="object-cover"
-                        />
+                    </Avatar>
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">
+                          {comment.user.name || 'Аноним'}
+                        </span>
+                        <Badge variant="secondary" className="text-xs">
+                          {new Date(comment.createdAt).toLocaleDateString('ru-RU')}
+                        </Badge>
+                        {comment.type === 'episode' && comment.episode && (
+                          <Link href={`/gallery/video/${comment.episode.id}`}>
+                            <div className="cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition-colors inline-block">
+                              <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                                📺 {comment.episode.title}
+                              </Badge>
+                            </div>
+                          </Link>
+                        )}
+                        {comment.type === 'character' && comment.character && (
+                          <Link href={`/characters/${comment.character.id}`}>
+                            <div className="flex items-center gap-2 cursor-pointer hover:bg-green-50 p-2 rounded-lg transition-colors">
+                              {comment.character.image && (
+                                <div className="w-8 h-8 rounded-full overflow-hidden">
+                                  <Image
+                                    src={comment.character.image}
+                                    alt={comment.character.name}
+                                    width={32}
+                                    height={32}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
+                              <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                                👤 {comment.character.name}
+                              </Badge>
+                            </div>
+                          </Link>
+                        )}
                       </div>
-                    ) : (
-                      <div className="w-16 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <Play className="w-6 h-6 text-gray-400" />
+                      <p className="text-gray-700">{comment.content}</p>
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => handleLike(comment.id, 'like', comment.type)}
+                            className="flex items-center gap-1 hover:text-green-500 transition-colors"
+                            disabled={!session?.user?.id}
+                          >
+                            <ThumbsUp className="w-4 h-4" />
+                            {comment.commentLikes.filter(like => like.type === 'like').length}
+                          </button>
+                          <button 
+                            onClick={() => handleLike(comment.id, 'dislike', comment.type)}
+                            className="flex items-center gap-1 hover:text-red-500 transition-colors"
+                            disabled={!session?.user?.id}
+                          >
+                            <ThumbsDown className="w-4 h-4" />
+                            {comment.commentLikes.filter(like => like.type === 'dislike').length}
+                          </button>
+                        </div>
+                        <button className="flex items-center gap-1 hover:text-blue-500 transition-colors">
+                          <Reply className="w-4 h-4" />
+                          {comment.replies.length}
+                        </button>
                       </div>
-                    )}
-                    <div>
-                      <h4 className="font-bold text-black">
-                        {comment.episode.season.title} - Эпизод {comment.episode.episodeNumber}
-                      </h4>
-                      <p className="text-sm text-gray-600 line-clamp-1">
-                        {comment.episode.title}
-                      </p>
+                      
+                      {/* Ответы на комментарий */}
+                      {comment.replies && comment.replies.length > 0 && (
+                        <div className="mt-4 pl-4 border-l-2 border-gray-200 space-y-3">
+                          {comment.replies.map((reply) => (
+                            <div key={reply.id} className="flex gap-2">
+                              <Avatar className="w-8 h-8">
+                                <AvatarImage src={reply.user.image || undefined} alt={reply.user.name || 'Пользователь'} />
+                                <AvatarFallback className="text-xs">
+                                  {reply.user.name ? reply.user.name[0].toUpperCase() : 'U'}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 space-y-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium">
+                                    {reply.user.name || 'Аноним'}
+                                  </span>
+                                  <Badge variant="secondary" className="text-xs">
+                                    {new Date(reply.createdAt).toLocaleDateString('ru-RU')}
+                                  </Badge>
+                                </div>
+                                <p className="text-sm text-gray-600">{reply.content}</p>
+                                <div className="flex items-center gap-4 text-xs text-gray-500">
+                                  <div className="flex items-center gap-2">
+                                    <button 
+                                      onClick={() => handleLike(reply.id, 'like', comment.type)}
+                                      className="flex items-center gap-1 hover:text-green-500 transition-colors"
+                                      disabled={!session?.user?.id}
+                                    >
+                                      <ThumbsUp className="w-3 h-3" />
+                                      {reply.commentLikes.filter(like => like.type === 'like').length}
+                                    </button>
+                                    <button 
+                                      onClick={() => handleLike(reply.id, 'dislike', comment.type)}
+                                      className="flex items-center gap-1 hover:text-red-500 transition-colors"
+                                      disabled={!session?.user?.id}
+                                    >
+                                      <ThumbsDown className="w-3 h-3" />
+                                      {reply.commentLikes.filter(like => like.type === 'dislike').length}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  
-                  <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Eye className="w-4 h-4" />
-                      {comment.episode.views}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Heart className="w-4 h-4" />
-                      {comment.episode.likes.length}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      {formatDateShort(comment.episode.createdAt)}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mt-3">
-                  <Button asChild size="sm" className="bg-red-500 hover:bg-red-600 text-white border-2 border-black font-bold" style={{ textShadow: '1px 1px 0px #000000' }}>
-                    <Link href={`/gallery/episode/${comment.episode.id}`}>
-                      <Play className="w-4 h-4 mr-2" />
-                      Смотреть эпизод
-                    </Link>
-                  </Button>
-                </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center text-gray-500">
+                <MessageCircle className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p>Пока нет комментариев. Будьте первым!</p>
               </div>
             </CardContent>
           </Card>
-        ))}
+        )}
       </div>
     </div>
   )
 }
 
-export const CommentsForumLoading = () => {
-  return (
-    <div className="space-y-6">
-      <div className="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-4">
-        <Skeleton className="h-8 w-64 mb-2" />
-        <Skeleton className="h-6 w-96" />
-      </div>
-
-      <div className="space-y-4">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Card key={index} className="overflow-hidden border-2 border-black">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <Skeleton className="w-10 h-10 rounded-full" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-5 w-32" />
-                    <Skeleton className="h-4 w-24" />
-                  </div>
-                </div>
-                <Skeleton className="h-8 w-20" />
-              </div>
-            </CardHeader>
-            
-            <CardContent className="space-y-4">
-              <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-3/4 mb-2" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
-              
-              <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Skeleton className="w-16 h-12 rounded-lg" />
-                    <div className="space-y-2">
-                      <Skeleton className="h-4 w-48" />
-                      <Skeleton className="h-3 w-32" />
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <Skeleton className="h-4 w-16" />
-                    <Skeleton className="h-4 w-12" />
-                    <Skeleton className="h-4 w-20" />
-                  </div>
-                </div>
-                <div className="mt-3">
-                  <Skeleton className="h-8 w-32" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  )
-}
+export { CommentsForum }

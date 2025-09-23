@@ -24,16 +24,9 @@ const VideoContainer: FC<Props> = async ({ id }) => {
         src={video.url} 
         poster={video.image} 
         title={video.title}
-        showPlayerSelector={true}
+        showPlayerSelector={false}
         showLightToggle={true}
         showFullscreen={true}
-        sources={[
-          {
-            url: video.url,
-            label: "Плеер 1",
-            type: video.url.includes('.m3u8') ? 'hls' : 'mp4'
-          }
-        ]}
       />
       <div className="">
         <h1 className="text-2xl font-bold mb-4">{video.title}</h1>

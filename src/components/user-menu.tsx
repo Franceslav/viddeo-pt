@@ -44,11 +44,6 @@ const UserMenu: FC<Props> = ({ name, image }) => {
             Профиль
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/comments">
-            Мои комментарии
-          </Link>
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <LogoutBtn />
       </DropdownMenuContent>

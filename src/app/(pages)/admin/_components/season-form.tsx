@@ -128,8 +128,11 @@ const SeasonForm = ({ season, onClose }: SeasonFormProps) => {
                                 id="seasonNumber"
                                 type="number"
                                 min="1"
-                                value={formData.seasonNumber}
-                                onChange={(e) => handleChange("seasonNumber", parseInt(e.target.value))}
+                                value={formData.seasonNumber || ''}
+                                onChange={(e) => {
+                                    const value = parseInt(e.target.value)
+                                    handleChange("seasonNumber", isNaN(value) ? 1 : value)
+                                }}
                                 required
                             />
                         </div>
