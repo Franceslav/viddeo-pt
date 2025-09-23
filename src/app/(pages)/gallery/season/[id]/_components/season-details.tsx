@@ -45,9 +45,6 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
                     <p className="text-white">
                       Сезон {season.seasonNumber} • {season.episodes.length} эпизодов
                     </p>
-                    {season.description && (
-                      <SeasonDescription description={season.description} />
-                    )}
                     <div className="flex items-center gap-4 text-sm text-white">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
@@ -56,6 +53,13 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
                     </div>
                   </div>
         </div>
+        
+        {/* Описание сезона на отдельной строке */}
+        {season.description && (
+          <div className="mt-4">
+            <SeasonDescription description={season.description} />
+          </div>
+        )}
       </div>
 
       {/* Эпизоды */}

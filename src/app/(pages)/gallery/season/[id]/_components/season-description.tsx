@@ -8,8 +8,8 @@ const SeasonDescription = ({ description }: { description: string }) => {
   const showToggle = description.length > 140
 
   return (
-    <div>
-      <p className={`text-sm text-white ${expanded ? '' : 'line-clamp-2 md:line-clamp-3'}`}>
+    <div className="w-full">
+      <p className={`text-sm text-white leading-relaxed ${expanded ? '' : 'line-clamp-2 md:line-clamp-3'}`}>
         {description}
       </p>
       {showToggle && (
@@ -17,7 +17,7 @@ const SeasonDescription = ({ description }: { description: string }) => {
           variant="ghost"
           size="sm"
           onClick={() => setExpanded((s) => !s)}
-          className="mt-2 text-yellow-400 hover:text-yellow-300 p-0 h-auto"
+          className="mt-2 text-yellow-400 hover:text-yellow-300 p-0 h-auto font-medium"
           aria-expanded={expanded}
         >
           {expanded ? (
