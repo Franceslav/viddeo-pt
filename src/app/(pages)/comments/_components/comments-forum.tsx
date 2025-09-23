@@ -88,7 +88,7 @@ const CommentsForum = () => {
     return (
       <div className="space-y-4">
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="h-4 bg-black-200 rounded w-1/4 mb-4"></div>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="h-20 bg-gray-200 rounded"></div>
@@ -102,7 +102,7 @@ const CommentsForum = () => {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
+        <h2 className="text-xl font-semibold flex items-center gap-2 text-white">
           <MessageCircle className="w-5 h-5" />
           Все комментарии ({comments?.length || 0})
         </h2>
@@ -110,7 +110,7 @@ const CommentsForum = () => {
         {comments && comments.length > 0 ? (
           <div className="space-y-4">
             {comments.map((comment) => (
-              <Card key={comment.id}>
+              <Card key={comment.id} className="bg-gray-800 border-2 border-yellow-400">
                 <CardContent className="pt-6">
                   <div className="flex gap-3">
                     <Avatar className="w-10 h-10">
@@ -121,10 +121,10 @@ const CommentsForum = () => {
                     </Avatar>
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">
+                        <span className="font-medium text-white">
                           {comment.user.name || 'Аноним'}
                         </span>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary" className="text-xs bg-yellow-400 text-black">
                           {new Date(comment.createdAt).toLocaleDateString('ru-RU')}
                         </Badge>
                         {comment.type === 'episode' && comment.episode && (
@@ -157,8 +157,8 @@ const CommentsForum = () => {
                           </Link>
                         )}
                       </div>
-                      <p className="text-gray-700">{comment.content}</p>
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <p className="text-white">{comment.content}</p>
+                      <div className="flex items-center gap-4 text-sm text-white">
                         <div className="flex items-center gap-2">
                           <button 
                             onClick={() => handleLike(comment.id, 'like', comment.type)}
@@ -220,7 +220,7 @@ const CommentsForum = () => {
                       
                       {/* Ответы на комментарий */}
                       {comment.replies && comment.replies.length > 0 && (
-                        <div className="mt-4 pl-4 border-l-2 border-gray-200 space-y-3">
+                        <div className="mt-4 pl-4 border-l-2 border-yellow-400 space-y-3">
                           {comment.replies.map((reply) => (
                             <div key={reply.id} className="flex gap-2">
                               <Avatar className="w-8 h-8">
@@ -231,15 +231,15 @@ const CommentsForum = () => {
                               </Avatar>
                               <div className="flex-1 space-y-1">
                                 <div className="flex items-center gap-2">
-                                  <span className="text-sm font-medium">
+                                  <span className="text-sm font-medium text-white">
                                     {reply.user.name || 'Аноним'}
                                   </span>
-                                  <Badge variant="secondary" className="text-xs">
+                                  <Badge variant="secondary" className="text-xs bg-yellow-400 text-black">
                                     {new Date(reply.createdAt).toLocaleDateString('ru-RU')}
                                   </Badge>
                                 </div>
-                                <p className="text-sm text-gray-600">{reply.content}</p>
-                                <div className="flex items-center gap-4 text-xs text-gray-500">
+                                <p className="text-sm text-white">{reply.content}</p>
+                                <div className="flex items-center gap-4 text-xs text-white">
                                   <div className="flex items-center gap-2">
                                     <button 
                                       onClick={() => handleLike(reply.id, 'like', comment.type)}
@@ -309,10 +309,10 @@ const CommentsForum = () => {
             ))}
           </div>
         ) : (
-          <Card>
+          <Card className="bg-gray-800 border-2 border-yellow-400">
             <CardContent className="pt-6">
-              <div className="text-center text-gray-500">
-                <MessageCircle className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <div className="text-center text-white">
+                <MessageCircle className="w-12 h-12 mx-auto mb-4 text-yellow-400" />
                 <p>Пока нет комментариев. Будьте первым!</p>
               </div>
             </CardContent>

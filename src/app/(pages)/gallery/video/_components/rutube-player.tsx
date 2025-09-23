@@ -12,6 +12,7 @@ interface RutubePlayerProps {
   skinColor?: string // hex цвет без #
   showTitle?: boolean
   className?: string
+  onError?: (message: string) => void
 }
 
 interface RutubeEmbedData {
@@ -30,7 +31,8 @@ export default function RutubePlayer({
   endTime,
   skinColor,
   showTitle = true,
-  className = ''
+  className = '',
+  onError
 }: RutubePlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [embedData, setEmbedData] = useState<RutubeEmbedData | null>(null)
@@ -178,6 +180,9 @@ export default function RutubePlayer({
         
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Ошибка загрузки видео')
+        try {
+          onError?.(err instanceof Error ? err.message : 'Ошибка загрузки видео')
+        } catch {}
       } finally {
         setIsLoading(false)
       }

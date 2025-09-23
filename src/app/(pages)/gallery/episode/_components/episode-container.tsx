@@ -35,14 +35,14 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
         </Button>
       </div>
 
-            <PlayerJS 
-              src={episode.url} 
-              poster={episode.image} 
-              title={episode.title}
-              showPlayerSelector={false}
-              showLightToggle={true}
-              showFullscreen={true}
-            />
+      <PlayerJS 
+        src={episode.url} 
+        poster={episode.image} 
+        title={episode.title}
+        showPlayerSelector={false}
+        showLightToggle={true}
+        showFullscreen={true}
+      />
       
       <div className="mt-4">
         <div className="flex items-center gap-2 mb-2">
