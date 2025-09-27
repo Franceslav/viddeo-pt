@@ -19,6 +19,8 @@ const SuggestedVideos = async () => {
             views={video.views}
             type={video.type}
             image={video.image}
+            seasonNumber={'seasonId' in video ? undefined : undefined}
+            episodeNumber={'episodeNumber' in video ? video.episodeNumber : undefined}
           />
         ))}
       </div>

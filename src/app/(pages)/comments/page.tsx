@@ -1,4 +1,11 @@
 import { CommentsForum } from './_components/comments-forum'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Комментарии Южного парка | Обсуждения и отзывы",
+  description: "Читайте комментарии и обсуждения эпизодов Южного парка. Делитесь мнениями о любимых сериях и персонажах.",
+  keywords: "комментарии южного парка, обсуждения, отзывы, мнения, дискуссии"
+}
 
 const CommentsPage = () => {
   return (

@@ -76,6 +76,74 @@ export const episodeRouter = router({
             return episode;
         }),
 
+    // Получить соседние эпизоды
+    getAdjacentEpisodes: publicProcedure
+        .input(z.object({ id: z.string() }))
+        .query(async ({ input, ctx }) => {
+            try {
+                const currentEpisode = await ctx.db.episode.findUnique({
+                    where: { id: input.id },
+                    include: { season: true }
+                });
+
+                if (!currentEpisode) {
+                    return { previous: null, next: null };
+                }
+
+                // Получить все эпизоды для поиска соседних
+                const allEpisodes = await ctx.db.episode.findMany({
+                    orderBy: [
+                        { season: { seasonNumber: 'asc' } },
+                        { episodeNumber: 'asc' }
+                    ],
+                    include: { season: true }
+                });
+
+                const currentIndex = allEpisodes.findIndex(ep => ep.id === currentEpisode.id);
+                
+                return {
+                    previous: currentIndex > 0 ? allEpisodes[currentIndex - 1] : null,
+                    next: currentIndex < allEpisodes.length - 1 ? allEpisodes[currentIndex + 1] : null
+                };
+            } catch (error) {
+                console.error('Error getting adjacent episodes:', error);
+                return { previous: null, next: null };
+            }
+        }),
+
+    // Получить эпизод по номеру сезона и эпизода
+    getEpisodeByNumbers: publicProcedure
+        .input(z.object({ 
+            seasonNumber: z.number(),
+            episodeNumber: z.number()
+        }))
+        .query(async ({ input, ctx }) => {
+            const episode = await ctx.db.episode.findFirst({
+                where: {
+                    season: {
+                        seasonNumber: input.seasonNumber
+                    },
+                    episodeNumber: input.episodeNumber
+                },
+                include: {
+                    season: true,
+                    user: {
+                        select: { name: true, email: true }
+                    },
+                    likes: true
+                }
+            });
+
+            if (!episode) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'Episode not found'
+                });
+            }
+
+            return episode;
+        }),
+
     // Создать новый эпизод
     createEpisode: publicProcedure
         .input(z.object({

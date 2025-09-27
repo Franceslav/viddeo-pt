@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { ErrorBoundary } from "react-error-boundary"
 import { Suspense } from "react"
 import { SessionProvider } from 'next-auth/react'
+import { Metadata } from 'next'
 
 import { CharacterDetails, CharacterDetailsLoading } from "./_components/character-details"
 import { Button } from "@/components/ui/button"
@@ -9,6 +10,42 @@ import { HydrateClient } from "@/app/server/routers/_app"
 import { trpc } from '@/app/server/routers/_app'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+
+export async function generateMetadata({ params }: CharacterPageProps): Promise<Metadata> {
+  const { id } = await params
+  
+  try {
+    const character = await trpc.character.getCharacter({ id })
+    
+    return {
+      title: `${character.name} | Персонажи Южного парка`,
+      description: character.description || `Узнайте больше о персонаже ${character.name} из Южного парка. Биография, интересные факты и комментарии.`,
+      keywords: `южный парк, ${character.name}, персонаж, биография, интересные факты`,
+      openGraph: {
+        title: `${character.name} | Персонажи Южного парка`,
+        description: character.description || `Узнайте больше о персонаже ${character.name} из Южного парка.`,
+        type: "profile",
+        images: character.image ? [{
+          url: character.image,
+          width: 1200,
+          height: 630,
+          alt: character.name
+        }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${character.name} | Персонажи Южного парка`,
+        description: character.description || `Узнайте больше о персонаже ${character.name} из Южного парка.`,
+        images: character.image ? [character.image] : [],
+      }
+    }
+  } catch {
+    return {
+      title: "Персонаж не найден | Южный парк онлайн",
+      description: "Запрашиваемый персонаж Южного парка не найден."
+    }
+  }
+}
 
 interface CharacterPageProps {
   params: Promise<{ id: string }>

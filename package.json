@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start -p 3000 -H 0.0.0.0",
     "postinstall": "prisma generate",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clear-db": "npx tsx scripts/clear-database.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",

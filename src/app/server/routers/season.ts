@@ -46,6 +46,32 @@ export const seasonRouter = router({
             return season;
         }),
 
+    // Получить сезон по номеру
+    getSeasonByNumber: publicProcedure
+        .input(z.object({ seasonNumber: z.number() }))
+        .query(async ({ input, ctx }) => {
+            const season = await ctx.db.season.findFirst({
+                where: { seasonNumber: input.seasonNumber },
+                include: {
+                    episodes: {
+                        orderBy: { episodeNumber: 'asc' },
+                        include: {
+                            likes: true
+                        }
+                    }
+                }
+            });
+
+            if (!season) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'Season not found'
+                });
+            }
+
+            return season;
+        }),
+
     // Создать новый сезон
     createSeason: publicProcedure
         .input(z.object({

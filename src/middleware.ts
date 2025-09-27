@@ -7,6 +7,7 @@ const protectedRoutes = ["/profile"]
 export default async function middleware(req: NextRequest) {
   const session = await auth()
 
+  // Проверяем защищенные маршруты
   const isProtected = protectedRoutes.some((route) =>
     req.nextUrl.pathname.startsWith(route)
   );
@@ -15,6 +16,7 @@ export default async function middleware(req: NextRequest) {
     const absoluteUrl = new URL("/", req.nextUrl.origin);
     return NextResponse.redirect(absoluteUrl.toString());
   }
+
 
   return NextResponse.next();
 }

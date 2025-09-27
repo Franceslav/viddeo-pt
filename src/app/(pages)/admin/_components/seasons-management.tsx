@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Edit, Trash2, Eye, EyeOff, Image as ImageIcon } from "lucide-react"
+import { Plus, Edit, Trash2, Eye, EyeOff, Image as ImageIcon, Link, Copy } from "lucide-react"
 import { trpc } from "@/app/_trpc/client"
 import { toast } from "sonner"
 import SeasonForm from "./season-form"
@@ -104,6 +104,23 @@ const SeasonsManagement = () => {
                                         <CardDescription>
                                             Сезон {season.seasonNumber} • {season.episodes.length} эпизодов
                                         </CardDescription>
+                                        <div className="mt-2 flex items-center gap-2">
+                                            <Link className="w-4 h-4 text-muted-foreground" />
+                                            <span className="text-xs text-muted-foreground font-mono">
+                                                /gallery/season/{season.id}
+                                            </span>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-6 w-6 p-0"
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(`/gallery/season/${season.id}`)
+                                                    toast.success("URL скопирован в буфер обмена")
+                                                }}
+                                            >
+                                                <Copy className="w-3 h-3" />
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex gap-2">

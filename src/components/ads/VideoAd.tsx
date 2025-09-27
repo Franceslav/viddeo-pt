@@ -11,10 +11,9 @@ interface VideoAdProps {
 
 export default function VideoAd({ 
   partnerId, 
-  vastUrl,
   className = '',
   showForLoggedIn = false
-}: VideoAdProps) {
+}: Omit<VideoAdProps, 'vastUrl'>) {
   const { data: session } = useSession()
 
   // Скрываем рекламу для авторизованных пользователей
@@ -23,7 +22,7 @@ export default function VideoAd({
   }
 
   // Если не передан VAST URL, используем дефолтный
-  const defaultVastUrl = vastUrl || `https://partner.1xbet.com/vast?tag=${partnerId}`
+  // const _defaultVastUrl = vastUrl || `https://partner.1xbet.com/vast?tag=${partnerId}`
 
   return (
     <div className={`video-ad ${className}`}>

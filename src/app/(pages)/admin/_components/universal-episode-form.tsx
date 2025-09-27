@@ -8,11 +8,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { trpc } from "@/app/_trpc/client"
 import { EpisodeWithSeasonFromRouter } from "@/types/admin"
-import { X, Play, Upload, CheckCircle, Image as ImageIcon } from "lucide-react"
+import { X, Play, Upload, CheckCircle } from "lucide-react"
 import FileUpload from "./file-upload"
 
 interface UniversalEpisodeFormProps {
@@ -28,7 +27,7 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
     const [episodeNumber, setEpisodeNumber] = useState(1)
     const [seasonId, setSeasonId] = useState("")
     const [image, setImage] = useState("")
-    const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+    const [, setUploadedFile] = useState<File | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const [activeTab, setActiveTab] = useState("manual")
     
@@ -36,7 +35,7 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
     // Для RUTUBE
     const [rutubeUrl, setRutubeUrl] = useState("")
     const [isRutubeLoading, setIsRutubeLoading] = useState(false)
-    const [rutubeMetadata, setRutubeMetadata] = useState<any>(null)
+    const [rutubeMetadata, setRutubeMetadata] = useState<Record<string, unknown> | null>(null)
 
     const utils = trpc.useUtils()
     const { data: seasons } = trpc.season.getSeasons.useQuery()
@@ -142,7 +141,7 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
                         toast.error("Не удалось получить информацию о видео")
                     }
                 }
-            } catch (error) {
+            } catch {
                 toast.error("Ошибка проверки RUTUBE видео")
             }
         } else {
@@ -154,7 +153,7 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
                 } else {
                     toast.warning(`URL недоступен (${response.status})`)
                 }
-            } catch (error) {
+            } catch {
                 toast.error("URL недоступен")
             }
         }
@@ -197,8 +196,9 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
 
             utils.episode.getEpisodes.invalidate()
             onClose()
-        } catch (error: any) {
-            toast.error(error.message || "Ошибка сохранения")
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Ошибка сохранения"
+            toast.error(errorMessage)
         } finally {
             setIsLoading(false)
         }
@@ -360,9 +360,9 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
                                             <span className="font-medium">Метаданные получены</span>
                                         </div>
                                         <div className="text-sm space-y-1">
-                                            <div><strong>Название:</strong> {rutubeMetadata.title}</div>
-                                            <div><strong>Автор:</strong> {rutubeMetadata.author}</div>
-                                            <div><strong>Длительность:</strong> {rutubeMetadata.duration}</div>
+                                            <div><strong>Название:</strong> {String(rutubeMetadata.title || '')}</div>
+                                            <div><strong>Автор:</strong> {String(rutubeMetadata.author || '')}</div>
+                                            <div><strong>Длительность:</strong> {String(rutubeMetadata.duration || '')}</div>
                                         </div>
                                     </div>
                                 )}

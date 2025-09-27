@@ -35,17 +35,17 @@ export default function PlayerJS({
   const [mode, setMode] = useState<'rutube' | 'html5'>('rutube')
 
   // Проверяем, является ли URL RUTUBE видео
-  const isRutubeUrl = (url: string): boolean => {
-    try {
-      const urlObj = new URL(url)
-      return urlObj.hostname === 'rutube.ru' && 
-             (urlObj.pathname.startsWith('/video/') || 
-              urlObj.pathname.startsWith('/shorts/') ||
-              urlObj.pathname.startsWith('/play/embed/'))
-    } catch {
-      return false
-    }
-  }
+  // const _isRutubeUrl = (url: string): boolean => {
+  //   try {
+  //     const urlObj = new URL(url)
+  //     return urlObj.hostname === 'rutube.ru' && 
+  //            (urlObj.pathname.startsWith('/video/') || 
+  //             urlObj.pathname.startsWith('/shorts/') ||
+  //             urlObj.pathname.startsWith('/play/embed/'))
+  //   } catch {
+  //     return false
+  //   }
+  // }
 
   // Обработка смены плеера
   const handlePlayerChange = (newSrc: string) => {
