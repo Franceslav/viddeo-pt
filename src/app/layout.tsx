@@ -15,6 +15,19 @@ export const metadata: Metadata = {
   authors: [{ name: "Viddeo Team" }],
   creator: "Viddeo",
   publisher: "Viddeo",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/KennyMcCormick.webp", type: "image/webp" }
+    ],
+    apple: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" }
+    ],
+    other: [
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" }
+    ]
+  },
   robots: {
     index: true,
     follow: true,
@@ -63,6 +76,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#FFD700" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="South Park" />
+      </head>
       <body
         className="font-sans antialiased"
       >
