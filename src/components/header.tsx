@@ -48,27 +48,27 @@ const Header = async () => {
   }
 
   return (
-    <header className='relative py-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 border-b-4 border-black shadow-lg overflow-visible z-50'>
+    <header className='relative py-4 sm:py-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 border-b-4 border-black shadow-lg overflow-visible z-50'>
       <Container className='flex items-center justify-between md:!px-12 overflow-visible relative z-50'>
-        <Link href='/' className='flex items-center gap-2 group'>
+        <Link href='/' className='flex items-center gap-1 sm:gap-2 group'>
           <img 
             src="/assets/KennyMcCormick.webp"
             alt="South Park Logo" 
-            className="h-10 w-auto object-contain transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 drop-shadow-lg bg-transparent"
+            className="h-8 sm:h-10 w-auto object-contain transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 drop-shadow-lg bg-transparent"
           />
-          <span className='text-2xl md:text-3xl font-black text-white transform group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300 relative px-2 py-1 rounded' style={{ textShadow: '2px 2px 0px #000000, 4px 4px 0px #ff0000, 6px 6px 0px #000000, 8px 8px 0px #ff0000' }}>
+          <span className='text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-white transform group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300 relative px-1 sm:px-2 py-1 rounded' style={{ textShadow: '1px 1px 0px #000000, 2px 2px 0px #ff0000, 3px 3px 0px #000000, 4px 4px 0px #ff0000' }}>
             <span className="absolute inset-0 bg-black bg-opacity-30 rounded -z-10"></span>
             ЮЖНЫЙ ПАРК
           </span>
         </Link>
-        <div className='flex-1 flex items-center justify-end gap-2 '>
+        <div className='flex-1 flex items-center justify-end gap-1 sm:gap-2 '>
           <nav className='flex-1 justify-center hidden md:flex'>
-            <ul className='flex items-center gap-6'>
+            <ul className='flex items-center gap-4 lg:gap-6'>
               {navItems.map(({ title, href }, index) => (
                 <li key={title} className={`transform hover:scale-110 hover:-rotate-2 transition-all duration-300 ${index % 2 === 0 ? 'hover:rotate-2' : 'hover:-rotate-2'}`}>
                   <Link 
                     href={href} 
-                    className='text-sm font-black text-black bg-white px-3 py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300'
+                    className='text-xs lg:text-sm font-black text-black bg-white px-2 lg:px-3 py-1 lg:py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300'
                     style={{ textShadow: '1px 1px 0px #000000' }}
                   >
                     {title}
@@ -77,7 +77,7 @@ const Header = async () => {
               ))}
             </ul>
           </nav>
-          <div className='flex items-center justify-end gap-2'>
+          <div className='flex items-center justify-end gap-1 sm:gap-2'>
             <MobileMenu />
             <div className="transform hover:scale-105 transition-transform duration-300">
               {session?.user ? <UserMenu name={session.user.name} image={userImage} /> : <LoginBtn />}

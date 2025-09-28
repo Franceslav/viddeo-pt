@@ -73,14 +73,14 @@ const SeasonPage = async ({ params }: SeasonPageProps) => {
   return (
     <HydrateClient>
       <div className="min-h-screen w-full bg-black">
-        <div className="w-full px-4 py-8">
+        <div className="w-full px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
           <Breadcrumbs
             items={[
               { name: "South Park", href: "/south-park" },
               { name: `Season ${seasonData.seasonNumber}`, href: `/south-park/${season}` }
             ]}
           />
-          <ErrorBoundary fallback={<div>Ошибка загрузки деталей сезона</div>}>
+          <ErrorBoundary fallback={<div className="text-white text-center p-4">Ошибка загрузки деталей сезона</div>}>
             <Suspense fallback={<SeasonDetailsLoading />}>
               <SeasonDetails seasonId={seasonData.id} />
             </Suspense>

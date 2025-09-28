@@ -22,12 +22,12 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Заголовок сезона */}
-      <div className="space-y-4">
-        <div className="flex items-start gap-6">
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
                   {season.image ? (
-                    <div className="relative w-48 h-32 rounded-lg overflow-hidden flex-shrink-0 border-2 border-yellow-400">
+                    <div className="relative w-full sm:w-48 h-48 sm:h-32 rounded-lg overflow-hidden flex-shrink-0 border-2 border-yellow-400">
                       <Image
                         src={season.image}
                         alt={season.title}
@@ -36,19 +36,19 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
                       />
                     </div>
                   ) : (
-                    <div className="w-48 h-32 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 border-2 border-yellow-400">
+                    <div className="w-full sm:w-48 h-48 sm:h-32 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 border-2 border-yellow-400">
                       <ImageIcon className="w-12 h-12 text-gray-300" />
                     </div>
                   )}
                   
                   <div className="flex-1 space-y-2">
-                    <h1 className="text-3xl font-bold text-white">{season.title}</h1>
-                    <p className="text-white">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-white">{season.title}</h1>
+                    <p className="text-white text-sm sm:text-base">
                       Сезон {season.seasonNumber} • {season.episodes.length} эпизодов
                     </p>
-                    <div className="flex items-center gap-4 text-sm text-white">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white">
                       <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
+                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                         Создан {formatDateShort(season.createdAt)}
                       </div>
                     </div>
@@ -64,8 +64,8 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
       </div>
 
       {/* Эпизоды */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold text-white">Эпизоды</h2>
+      <div className="space-y-3 sm:space-y-4">
+        <h2 className="text-xl sm:text-2xl font-semibold text-white">Эпизоды</h2>
         
         {season.episodes.length === 0 ? (
           <Card className="bg-gray-800 border-2 border-yellow-400">
@@ -74,7 +74,7 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid gap-3 sm:gap-4">
             {season.episodes.map((episode) => (
                      <Card key={episode.id} className="overflow-hidden hover:shadow-lg transition-shadow bg-gray-800 border-2 border-yellow-400 cursor-pointer group">
                        <Link href={createEpisodeUrlWithSeason(episode.id)} className="block">
@@ -82,7 +82,7 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
                   <div className="md:hidden">
                     <div className="flex flex-col">
                       {episode.image ? (
-                        <div className="relative w-full h-32 overflow-hidden border-2 border-yellow-400">
+                        <div className="relative w-full h-40 sm:h-32 overflow-hidden border-2 border-yellow-400">
                           <Image
                             src={episode.image}
                             alt={episode.title}
@@ -91,30 +91,30 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
                           />
                         </div>
                       ) : (
-                        <div className="w-full h-32 bg-gray-700 flex items-center justify-center border-2 border-yellow-400">
-                          <ImageIcon className="w-12 h-12 text-gray-300" />
+                        <div className="w-full h-40 sm:h-32 bg-gray-700 flex items-center justify-center border-2 border-yellow-400">
+                          <ImageIcon className="w-8 h-8 sm:w-12 sm:h-12 text-gray-300" />
                         </div>
                       )}
                       
-                      <div className="p-4 space-y-2">
-                        <CardTitle className="text-lg text-white group-hover:text-yellow-300 transition-colors">
+                      <div className="p-3 sm:p-4 space-y-2">
+                        <CardTitle className="text-base sm:text-lg text-white group-hover:text-yellow-300 transition-colors">
                           {episode.title}
                         </CardTitle>
-                        <CardDescription className="text-white">
+                        <CardDescription className="text-white text-sm">
                           Эпизод {episode.episodeNumber}
                         </CardDescription>
                         
-                        <div className="flex items-center gap-4 text-sm text-white">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white">
                           <div className="flex items-center gap-1">
-                            <Eye className="w-4 h-4" />
+                            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                             {episode.views} просмотров
                           </div>
                           <div className="flex items-center gap-1">
-                            <Heart className="w-4 h-4" />
+                            <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
                             {episode.likes.length} лайков
                           </div>
                           <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
+                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                             {formatDateShort(episode.createdAt)}
                           </div>
                         </div>

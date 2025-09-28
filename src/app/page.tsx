@@ -104,8 +104,8 @@ const Home = () => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <div className="flex-1 min-h-screen bg-black relative overflow-hidden">
-        {/* Персонажи по периферии окружности */}
-        <div className="absolute inset-0 pointer-events-none">
+        {/* Персонажи по периферии окружности - скрыты на мобильных */}
+        <div className="absolute inset-0 pointer-events-none hidden sm:block">
           {/* Kyle - верхний левый */}
           <div className="absolute top-8 left-8 w-24 h-24 transform -rotate-12 hover:rotate-0 transition-transform duration-500">
             <Image 
@@ -220,31 +220,86 @@ const Home = () => {
             />
           </div>
         </div>
+
+        {/* Мобильные персонажи - только основные */}
+        <div className="absolute inset-0 pointer-events-none sm:hidden">
+          {/* Kyle - верхний левый */}
+          <div className="absolute top-4 left-4 w-16 h-16 transform -rotate-12">
+            <Image 
+              src="/assets/Kyle-broflovski.webp" 
+              alt="Кайл Брофловски" 
+              width={64}
+              height={64}
+              className="w-full h-full object-contain drop-shadow-lg"
+              loading="lazy"
+              priority={false}
+            />
+          </div>
+          
+          {/* Cartman - верхний правый */}
+          <div className="absolute top-4 right-4 w-16 h-16 transform rotate-12">
+            <Image 
+              src="/assets/Eric-cartman.webp"
+              alt="Эрик Картман" 
+              width={64}
+              height={64}
+              className="w-full h-full object-contain drop-shadow-lg"
+              loading="lazy"
+              priority={false}
+            />
+          </div>
+          
+          {/* Stan - нижний левый */}
+          <div className="absolute bottom-4 left-4 w-16 h-16 transform rotate-12">
+            <Image 
+              src="/assets/Stan-marsh-0.webp"
+              alt="Стэн Марш" 
+              width={64}
+              height={64}
+              className="w-full h-full object-contain drop-shadow-lg"
+              loading="lazy"
+              priority={false}
+            />
+          </div>
+          
+          {/* Kenny - нижний правый */}
+          <div className="absolute bottom-4 right-4 w-16 h-16 transform -rotate-12">
+            <Image 
+              src="/assets/KennyMcCormick.webp"
+              alt="Кенни Маккормик" 
+              width={64}
+              height={64}
+              className="w-full h-full object-contain drop-shadow-lg"
+              loading="lazy"
+              priority={false}
+            />
+          </div>
+        </div>
         {/* Контент поверх персонажей */}
         <div className="relative z-10">
         <Container>
-          <main className="flex flex-col items-center px-4 py-16">
+          <main className="flex flex-col items-center px-4 py-8 sm:py-16">
             <div className="w-full flex items-center justify-center">
-              <div className="max-w-md md:max-w-xl flex flex-col items-center gap-6">
-                <h1 className="text-5xl md:text-6xl font-black text-center text-white transform -rotate-1 hover:rotate-0 transition-transform duration-300" style={{ textShadow: '3px 3px 0px #ff0000, 6px 6px 0px #000000, 8px 8px 0px rgba(0,0,0,0.8)' }}>
-                  WATCH AND <span className="text-yellow-400" style={{ textShadow: '3px 3px 0px #ff0000, 6px 6px 0px #000000, 8px 8px 0px rgba(0,0,0,0.8)' }}>SCREAM</span> LIKE CARTMAN!
+              <div className="max-w-sm sm:max-w-md md:max-w-xl flex flex-col items-center gap-4 sm:gap-6">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center text-white transform -rotate-1 hover:rotate-0 transition-transform duration-300 leading-tight" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>
+                  WATCH AND <span className="text-yellow-400" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>SCREAM</span> LIKE CARTMAN!
                 </h1>
-                         <Link href='/south-park' className={cn("w-full max-w-48 font-black text-lg py-4 px-8 bg-red-500 hover:bg-red-600 text-white border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg", buttonVariants({ variant: "default" }))} style={{ textShadow: '2px 2px 0px #000000' }}>
+                         <Link href='/south-park' className={cn("w-full max-w-44 sm:max-w-48 font-black text-base sm:text-lg py-3 sm:py-4 px-6 sm:px-8 bg-red-500 hover:bg-red-600 text-white border-3 sm:border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg", buttonVariants({ variant: "default" }))} style={{ textShadow: '1px 1px 0px #000000' }}>
                            <span>СМОТРЕТЬ ЮЖНЫЙ ПАРК!</span>
                          </Link>
               </div>
             </div>
           </main>
           
-          <div className="mt-12 space-y-6">
+          <div className="mt-8 sm:mt-12 space-y-4 sm:space-y-6">
             {/* Описание сайта - теперь первое */}
             
             {/* Список сезонов - теперь второе */}
-            <div className="text-center">
-              <h2 className="text-4xl font-black mb-4 text-white transform -rotate-1" style={{ textShadow: '3px 3px 0px #ff0000, 6px 6px 0px #000000, 8px 8px 0px rgba(0,0,0,0.8)' }}>
+            <div className="text-center px-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 text-white transform -rotate-1" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>
                 ЛУЧШИЕ СЕЗОНЫ ЮЖНОГО ПАРКА!
               </h2>
-              <p className="text-xl font-bold text-white bg-yellow-400 bg-opacity-90 p-3 rounded-lg border-2 border-black inline-block transform rotate-1 hover:rotate-0 transition-transform duration-300" style={{ textShadow: '2px 2px 0px #000000' }}>
+              <p className="text-lg sm:text-xl font-bold text-white bg-yellow-400 bg-opacity-90 p-2 sm:p-3 rounded-lg border-2 border-black inline-block transform rotate-1 hover:rotate-0 transition-transform duration-300" style={{ textShadow: '1px 1px 0px #000000' }}>
                 &quot;OH MY GOD! THEY KILLED KENNY!&quot; - Смотри все сезоны!
               </p>
             </div>
@@ -258,21 +313,21 @@ const Home = () => {
         </Container>
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-8 sm:mt-12 px-4">
               <div className="max-w-2xl mx-auto">
-                <div className="bg-gray-900 bg-opacity-80 p-6 rounded-lg border-2 border-yellow-400 text-left">
-                  <h3 className="text-2xl font-bold text-yellow-400 mb-4">О Южном парке</h3>
-                  <p className="text-white text-lg leading-relaxed mb-4">
+                <div className="bg-gray-900 bg-opacity-80 p-4 sm:p-6 rounded-lg border-2 border-yellow-400 text-left">
+                  <h3 className="text-xl sm:text-2xl font-bold text-yellow-400 mb-3 sm:mb-4">О Южном парке</h3>
+                  <p className="text-white text-base sm:text-lg leading-relaxed mb-3 sm:mb-4">
                     <strong>Южный парк</strong> — культовый американский анимационный сериал, созданный Треем Паркером и Мэттом Стоуном. 
                     История рассказывает о приключениях четырех друзей: <strong>Стэна Марша</strong>, <strong>Кайла Брофловски</strong>, 
                     <strong>Эрика Картмана</strong> и <strong>Кенни Маккормика</strong> в вымышленном городе Южный парк, штат Колорадо.
                   </p>
-                  <p className="text-white text-lg leading-relaxed mb-4">
+                  <p className="text-white text-base sm:text-lg leading-relaxed mb-3 sm:mb-4">
                     Сериал известен своей сатирой, черным юмором и критикой социальных проблем. Каждый эпизод — это уникальная история, 
                     которая заставляет задуматься и одновременно смеяться. От политических тем до поп-культуры — 
                     <strong>Южный парк</strong> не оставляет равнодушным никого.
                   </p>
-                  <p className="text-white text-lg leading-relaxed">
+                  <p className="text-white text-base sm:text-lg leading-relaxed">
                     На нашем сайте вы можете <strong>смотреть все серии Южного парка онлайн бесплатно</strong> в хорошем качестве. 
                     Полная коллекция всех сезонов с русской озвучкой и субтитрами. Присоединяйтесь к приключениям наших любимых героев!
                   </p>

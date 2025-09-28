@@ -98,14 +98,14 @@ const MobileMenu = () => {
       </Button>
       
       {isOpen && (
-        <div className="fixed top-20 right-4 w-72 sm:w-80 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 border-4 border-black shadow-2xl rounded-lg z-50 max-h-96 overflow-y-auto transform transition-all duration-300 ease-out animate-in slide-in-from-right-4 fade-in">
-          <div className="px-4 py-4 space-y-2">
+        <div className="fixed top-16 sm:top-20 right-2 sm:right-4 w-64 sm:w-72 md:w-80 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 border-3 sm:border-4 border-black shadow-2xl rounded-lg z-50 max-h-80 sm:max-h-96 overflow-y-auto transform transition-all duration-300 ease-out animate-in slide-in-from-right-4 fade-in">
+          <div className="px-3 sm:px-4 py-3 sm:py-4 space-y-1 sm:space-y-2">
             {navItems.map(({ title, href, icon }, index) => (
               <Link
                 key={title}
                 href={href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center gap-2 w-full text-sm font-black text-black bg-white px-3 py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 ${
+                className={`flex items-center gap-2 w-full text-xs sm:text-sm font-black text-black bg-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 ${
                   index % 2 === 0 ? 'hover:rotate-1' : 'hover:-rotate-1'
                 }`}
                 style={{ textShadow: '1px 1px 0px #000000' }}
@@ -116,7 +116,7 @@ const MobileMenu = () => {
             ))}
             
             {/* Разделитель */}
-            <div className="border-t-2 border-black my-2"></div>
+            <div className="border-t-2 border-black my-1 sm:my-2"></div>
             
             {/* Кнопки профиля и выхода */}
             {session?.user ? (
@@ -124,18 +124,18 @@ const MobileMenu = () => {
                 <Link
                   href="/profile"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-2 w-full text-sm font-black text-black bg-white px-3 py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:rotate-1"
+                  className="flex items-center gap-2 w-full text-xs sm:text-sm font-black text-black bg-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:rotate-1"
                   style={{ textShadow: '1px 1px 0px #000000' }}
                 >
-                  <User className="w-4 h-4" />
+                  <User className="w-3 h-3 sm:w-4 sm:h-4" />
                   Профиль
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 w-full text-sm font-black text-black bg-white px-3 py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:-rotate-1"
+                  className="flex items-center gap-2 w-full text-xs sm:text-sm font-black text-black bg-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:-rotate-1"
                   style={{ textShadow: '1px 1px 0px #000000' }}
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
                   Выйти
                 </button>
               </>
@@ -143,10 +143,10 @@ const MobileMenu = () => {
               <Link
                 href="/auth"
                 onClick={() => setIsOpen(false)}
-                className="flex items-center gap-2 w-full text-sm font-black text-black bg-white px-3 py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:rotate-1"
+                className="flex items-center gap-2 w-full text-xs sm:text-sm font-black text-black bg-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:rotate-1"
                 style={{ textShadow: '1px 1px 0px #000000' }}
               >
-                <User className="w-4 h-4" />
+                <User className="w-3 h-3 sm:w-4 sm:h-4" />
                 Войти
               </Link>
             )}
