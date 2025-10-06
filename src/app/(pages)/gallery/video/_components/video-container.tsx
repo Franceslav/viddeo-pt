@@ -27,6 +27,7 @@ const VideoContainer: FC<Props> = async ({ id }) => {
         showPlayerSelector={false}
         showLightToggle={true}
         showFullscreen={true}
+        fallbackSources={[]}
       />
       <div className="">
         <h1 className="text-2xl font-bold mb-4">{video.title}</h1>

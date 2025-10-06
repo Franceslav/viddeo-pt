@@ -68,6 +68,10 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
         return /rutube\.ru\/play\/embed/.test(url)
     }
 
+    const isGoogleDriveUrl = (url: string) => {
+        return /drive\.google\.com/.test(url)
+    }
+
     // Обработка RUTUBE URL
     const handleRutubeUrlChange = async (newUrl: string) => {
         setRutubeUrl(newUrl)
@@ -143,6 +147,14 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
                 }
             } catch {
                 toast.error("Ошибка проверки RUTUBE видео")
+            }
+        } else if (isGoogleDriveUrl(url)) {
+            // Для Google Drive просто проверяем формат URL
+            const fileIdMatch = url.match(/\/file\/d\/([^\/]+)/)
+            if (fileIdMatch) {
+                toast.success("Google Drive ссылка определена")
+            } else {
+                toast.warning("Неверный формат Google Drive ссылки")
             }
         } else {
             // Для других URL просто проверяем доступность
@@ -281,7 +293,7 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
                                             id="url"
                                             value={url}
                                             onChange={(e) => setUrl(e.target.value)}
-                                            placeholder="https://example.com/video.mp4 или RUTUBE ссылка"
+                                            placeholder="https://example.com/video.mp4, RUTUBE или Google Drive ссылка"
                                             className="flex-1"
                                             required
                                         />

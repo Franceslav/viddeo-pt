@@ -32,32 +32,93 @@ export default function PlayerJS({
   showPlayerSelector = false
 }: PlayerJSProps) {
   const [currentSource, setCurrentSource] = useState(src)
-  const [mode, setMode] = useState<'rutube' | 'html5'>('rutube')
 
   // Проверяем, является ли URL RUTUBE видео
-  // const _isRutubeUrl = (url: string): boolean => {
-  //   try {
-  //     const urlObj = new URL(url)
-  //     return urlObj.hostname === 'rutube.ru' && 
-  //            (urlObj.pathname.startsWith('/video/') || 
-  //             urlObj.pathname.startsWith('/shorts/') ||
-  //             urlObj.pathname.startsWith('/play/embed/'))
-  //   } catch {
-  //     return false
-  //   }
-  // }
+  const isRutubeUrl = (url: string): boolean => {
+    try {
+      const urlObj = new URL(url)
+      return urlObj.hostname === 'rutube.ru' && 
+             (urlObj.pathname.startsWith('/video/') || 
+              urlObj.pathname.startsWith('/shorts/') ||
+              urlObj.pathname.startsWith('/play/embed/'))
+    } catch {
+      return false
+    }
+  }
+
+  // Проверяем, является ли URL Google Drive видео
+  const isGoogleDriveUrl = (url: string): boolean => {
+    try {
+      const urlObj = new URL(url)
+      return urlObj.hostname === 'drive.google.com' && 
+             (urlObj.pathname.includes('/file/d/') || 
+              urlObj.searchParams.has('id'))
+    } catch {
+      return false
+    }
+  }
+
+  // Преобразуем Google Drive URL в прямую ссылку
+  const convertGoogleDriveUrl = (url: string): string => {
+    try {
+      const urlObj = new URL(url)
+      if (urlObj.hostname === 'drive.google.com') {
+        // Извлекаем ID файла
+        let fileId = ''
+        
+        // Для ссылок вида /file/d/ID/view
+        const match = urlObj.pathname.match(/\/file\/d\/([^\/]+)/)
+        if (match) {
+          fileId = match[1]
+        }
+        
+        // Для ссылок с параметром id
+        if (!fileId && urlObj.searchParams.has('id')) {
+          fileId = urlObj.searchParams.get('id') || ''
+        }
+        
+        if (fileId) {
+          // Возвращаем прямую ссылку для скачивания
+          return `https://drive.google.com/uc?export=download&id=${fileId}`
+        }
+      }
+      return url
+    } catch {
+      return url
+    }
+  }
+
+  // Определяем режим плеера на основе URL
+  const getInitialMode = (url: string): 'rutube' | 'html5' => {
+    if (isRutubeUrl(url)) return 'rutube'
+    if (isGoogleDriveUrl(url)) return 'html5'
+    return 'html5'
+  }
+
+  const initialMode = getInitialMode(src)
+  const [mode, setMode] = useState<'rutube' | 'html5'>(initialMode)
 
   // Обработка смены плеера
   const handlePlayerChange = (newSrc: string) => {
     setCurrentSource(newSrc)
+    setMode(getInitialMode(newSrc))
+  }
+
+  // Получаем URL для воспроизведения
+  const getPlaybackUrl = (url: string): string => {
+    if (isGoogleDriveUrl(url)) {
+      return convertGoogleDriveUrl(url)
+    }
+    return url
   }
 
   // Создаем список всех источников (включая основной src) + фолбэки
   const allSources = useMemo(() => ([
     {
       url: src,
-      label: 'RUTUBE',
-      type: 'rutube' as const
+      label: isRutubeUrl(src) ? 'RUTUBE' : 
+             isGoogleDriveUrl(src) ? 'Google Drive' : 'Прямая ссылка',
+      type: isRutubeUrl(src) ? 'rutube' as const : 'mp4' as const
     },
     ...sources.filter(source => source.url !== src),
     ...fallbackSources
@@ -81,7 +142,6 @@ export default function PlayerJS({
               key={index}
               onClick={() => {
                 handlePlayerChange(source.url)
-                setMode(source.type === 'rutube' ? 'rutube' : 'html5')
               }}
               className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
                 currentSource === source.url
@@ -114,10 +174,10 @@ export default function PlayerJS({
             controls
             playsInline
             poster={poster ?? undefined}
-            src={currentSource}
+            src={getPlaybackUrl(currentSource)}
             data-vast-url={vastUrl}
           >
-            <source src={currentSource} />
+            <source src={getPlaybackUrl(currentSource)} />
             Ваш браузер не поддерживает воспроизведение видео.
           </video>
         </div>

@@ -189,6 +189,7 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
                 showPlayerSelector={false}
                 showLightToggle={true}
                 showFullscreen={true}
+                fallbackSources={[]}
             />
 
             {/* Навигация между эпизодами */}
