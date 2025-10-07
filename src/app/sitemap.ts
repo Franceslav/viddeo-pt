@@ -3,7 +3,7 @@ import { trpc } from '@/app/server/routers/_app'
 import { createEpisodeSeoUrl } from '@/lib/transliteration'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'
   
   // Статические страницы
   const staticPages = [
