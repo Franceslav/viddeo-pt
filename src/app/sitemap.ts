@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 import { trpc } from '@/app/server/routers/_app'
-import { createEpisodeUrl } from '@/lib/transliteration'
+import { createEpisodeUrl, createEpisodeSeoUrl } from '@/lib/transliteration'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'
@@ -52,7 +52,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Динамические страницы эпизодов (SEO URL)
     const episodes = await trpc.episode.getEpisodes()
     const episodePages = episodes.map((episode) => ({
-      url: `${baseUrl}${createEpisodeUrl(episode.id)}`,
+      url: `${baseUrl}${createEpisodeSeoUrl({
+        id: episode.id,
+        title: episode.title,
+        seasonNumber: episode.season.seasonNumber,
+        episodeNumber: episode.episodeNumber
+      })}`,
       lastModified: new Date(episode.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.7,

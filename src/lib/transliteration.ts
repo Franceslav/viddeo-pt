@@ -42,6 +42,12 @@ export function createEpisodeUrl(episodeId: string): string {
   return `/gallery/episode/${episodeId}`
 }
 
+// Функция для создания SEO-дружественного URL эпизода с данными
+export function createEpisodeSeoUrl(episode: { id: string; title: string; seasonNumber: number; episodeNumber: number }): string {
+  const slug = createSlug(episode.title)
+  return `/yuzhnyy-park/sezon-${episode.seasonNumber}/seria-${episode.episodeNumber}-${slug}`
+}
+
 // Функция для создания URL эпизода с названием сезона
 export function createEpisodeUrlWithSeason(episodeId: string): string {
   return `/gallery/episode/${episodeId}`
