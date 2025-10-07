@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
 
 interface AdBannerProps {
   partnerId: string
@@ -82,13 +83,13 @@ export default function AdBanner({
         rel="noopener noreferrer"
         className="block"
       >
-        <img
+        <Image
           src={`https://partner-cdn.1xbet.com/banner-${size}.gif`}
           alt="1xBet - Ставки на спорт"
           width={dimensions.width}
           height={dimensions.height}
           className="max-w-full h-auto"
-          loading="lazy"
+          unoptimized
         />
       </a>
       

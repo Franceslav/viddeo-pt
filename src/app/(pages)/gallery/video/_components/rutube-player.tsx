@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 
 interface RutubePlayerProps {
   videoUrl: string
@@ -38,6 +38,10 @@ export default function RutubePlayer({
   const [embedData, setEmbedData] = useState<RutubeEmbedData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const handleError = useCallback((errorMessage: string) => {
+    onError?.(errorMessage)
+  }, [onError])
 
   // Извлекаем ID видео из URL
   const extractVideoId = (url: string): string | null => {
@@ -79,7 +83,7 @@ export default function RutubePlayer({
   }
 
   // Строим embed URL с параметрами
-  const buildEmbedUrl = (videoId: string, existingUrl?: string): string => {
+  const buildEmbedUrl = useCallback((videoId: string, existingUrl?: string): string => {
     // Если URL уже является embed ссылкой, используем его как основу
     if (existingUrl && isEmbedUrl(existingUrl)) {
       const baseUrl = existingUrl.split('?')[0] // Убираем существующие параметры
@@ -133,7 +137,7 @@ export default function RutubePlayer({
       const queryString = params.toString()
       return queryString ? `${baseUrl}?${queryString}` : baseUrl
     }
-  }
+  }, [autoplay, startTime, endTime, skinColor])
 
   // Получаем метаданные видео через API
   const fetchVideoMetadata = async (videoId: string) => {
@@ -181,7 +185,7 @@ export default function RutubePlayer({
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Ошибка загрузки видео')
         try {
-          onError?.(err instanceof Error ? err.message : 'Ошибка загрузки видео')
+          handleError(err instanceof Error ? err.message : 'Ошибка загрузки видео')
         } catch {}
       } finally {
         setIsLoading(false)
@@ -191,7 +195,7 @@ export default function RutubePlayer({
     if (videoUrl) {
       initializePlayer()
     }
-  }, [videoUrl, autoplay, startTime, endTime, skinColor])
+  }, [videoUrl, autoplay, startTime, endTime, skinColor, buildEmbedUrl, handleError])
 
   if (isLoading) {
     return (

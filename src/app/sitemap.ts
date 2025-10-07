@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 import { trpc } from '@/app/server/routers/_app'
-import { createEpisodeUrl, createEpisodeSeoUrl } from '@/lib/transliteration'
+import { createEpisodeSeoUrl } from '@/lib/transliteration'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'

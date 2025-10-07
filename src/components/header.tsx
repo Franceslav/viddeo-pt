@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 import Container from './container'
 import LoginBtn from './login-btn'
@@ -51,9 +52,11 @@ const Header = async () => {
     <header className='relative py-4 sm:py-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 border-b-4 border-black shadow-lg overflow-visible z-50'>
       <Container className='flex items-center justify-between md:!px-12 overflow-visible relative z-50'>
         <Link href='/' className='flex items-center gap-1 sm:gap-2 group'>
-          <img 
+          <Image 
             src="/assets/KennyMcCormick.webp"
             alt="South Park Logo" 
+            width={40}
+            height={40}
             className="h-8 sm:h-10 w-auto object-contain transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 drop-shadow-lg bg-transparent"
           />
           <span className='text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-white transform group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300 relative px-1 sm:px-2 py-1 rounded' style={{ textShadow: '1px 1px 0px #000000, 2px 2px 0px #ff0000, 3px 3px 0px #000000, 4px 4px 0px #ff0000' }}>
