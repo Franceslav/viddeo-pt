@@ -17,7 +17,7 @@ interface EpisodeSchemaProps {
 }
 
 export default function EpisodeSchema({ episode }: EpisodeSchemaProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'
   
   const episodeSchema = {
     "@context": "https://schema.org",

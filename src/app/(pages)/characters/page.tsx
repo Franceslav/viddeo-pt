@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     images: ["/assets/hero.png"]
   },
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'}/characters`
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}/characters`
   }
 }
 

@@ -30,12 +30,12 @@ export const metadata: Metadata = {
     images: ["/assets/hero.png"]
   },
   alternates: {
-    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'}/south-park`
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}/south-park`
   }
 }
 
 const SouthParkPage = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru"
   const pageUrl = `${baseUrl}/south-park`
 
   // TVSeries schema

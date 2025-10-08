@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Южный парк онлайн | Смотреть все серии бесплатно",
     description: "Смотрите все серии Южного парка онлайн бесплатно в хорошем качестве. Все сезоны от 1 до последнего. Приключения Стэна, Кайла, Картмана и Кенни в вымышленном городе Южный парк.",
     type: "website",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru",
     siteName: "Южный парк онлайн",
     images: [{
       url: "/assets/hero.png",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     images: ["/assets/hero.png"]
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru"
   }
 }
 
@@ -88,7 +88,7 @@ const Home = () => {
       "name": "Comedy Central"
     },
     "dateCreated": "1997-08-13",
-    "url": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    "url": process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru",
     "image": "/assets/hero.png",
     "sameAs": [
       "https://www.southpark.com/",

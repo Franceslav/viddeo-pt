@@ -9,6 +9,7 @@ import Footer from "@/components/footer";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'),
   title: "Южный парк онлайн | Смотреть все серии бесплатно в хорошем качестве",
   description: "Смотрите все серии Южного парка онлайн бесплатно в хорошем качестве. Все сезоны от 1 до последнего. Приключения Стэна, Кайла, Картмана и Кенни в вымышленном городе Южный парк. Полная коллекция эпизодов с русской озвучкой.",
   keywords: "южный парк, south park, смотреть онлайн, все серии, бесплатно, хорошее качество, анимация, комедия, стэн марш, кайл брофловски, эрик картман, кенни маккормик, русская озвучка, hd качество",
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ru_RU",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://viddeo-pt-sp.vercel.app",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru",
     siteName: "Южный парк онлайн",
     title: "Южный парк онлайн | Смотреть все серии бесплатно",
     description: "Смотрите все серии Южного парка онлайн бесплатно в хорошем качестве. Все сезоны от 1 до последнего. Приключения Стэна, Кайла, Картмана и Кенни в вымышленном городе Южный парк.",
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
     creator: "@viddeo"
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_URL || "https://viddeo-pt-sp.vercel.app"
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru"
   },
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,

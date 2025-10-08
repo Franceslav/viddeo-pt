@@ -16,7 +16,7 @@ interface SeasonSchemaProps {
 }
 
 export default function SeasonSchema({ season }: SeasonSchemaProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'
   
   const seasonSchema = {
     "@context": "https://schema.org",

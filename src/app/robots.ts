@@ -14,6 +14,6 @@ export default function robots(): MetadataRoute.Robots {
         '/test-player-simple/'
       ],
     },
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'}/sitemap.xml`,
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}/sitemap.xml`,
   }
 }

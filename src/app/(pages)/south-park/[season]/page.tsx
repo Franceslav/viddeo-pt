@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: SeasonPageProps): Promise<Met
         images: seasonData.image ? [seasonData.image] : ["/assets/hero.png"],
       },
       alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'}/south-park/${season}`
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}/south-park/${season}`
       }
     }
   } catch {

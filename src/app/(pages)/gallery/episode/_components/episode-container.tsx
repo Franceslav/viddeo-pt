@@ -31,7 +31,7 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
     await trpc.episode.increaseViews({ id: episode.id })
 
     // === SEO helpers ===
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'
     const pageUrl = `${baseUrl}/yuzhnyy-park/sezon-${episode.season.seasonNumber}/seria-${episode.episodeNumber}`
     const seasonUrl = `${baseUrl}/yuzhnyy-park/sezon-${episode.season.seasonNumber}`
     const galleryUrl = `${baseUrl}/yuzhnyy-park`

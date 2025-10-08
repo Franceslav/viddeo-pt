@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
         images: episode.image ? [episode.image] : ["/assets/hero.png"],
       },
       alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'}/gallery/episode/${id}`
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}/gallery/episode/${id}`
       }
     }
   } catch {

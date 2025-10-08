@@ -24,7 +24,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
       "@type": "ListItem",
       "position": index + 1,
       "name": item.name,
-      "item": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://viddeo-pt-sp.vercel.app'}${item.href}`
+      "item": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}${item.href}`
     }))
   }
 
