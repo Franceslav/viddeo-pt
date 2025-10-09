@@ -1,13 +1,13 @@
 import { redirect } from 'next/navigation'
 import { trpc } from '@/app/server/routers/_app'
 
-type Params = Promise<{ season: string; episode: string }>
+type Params = Promise<{ season: string; slug: string[] }>
 
 const Page = async ({ params }: { params: Params }) => {
-  const { season, episode } = await params
+  const { season, slug } = await params
   
   try {
-    console.log('SEO URL Debug:', { season, episode })
+    console.log('SEO URL Debug:', { season, slug })
     
     // Проверяем, что season передается
     if (!season) {
@@ -24,8 +24,11 @@ const Page = async ({ params }: { params: Params }) => {
     
     const seasonNumber = parseInt(seasonMatch[1])
     
-    // Извлекаем номер эпизода из episode (например, "1" из "seria-1-ne-bez-moego-anusa")
-    const episodeMatch = episode.match(/seria-(\d+)/)
+    // Парсим slug: ["seria-1-ne-bez-moego-anusa"]
+    const slugString = slug.join('-')
+    
+    // Извлекаем номер эпизода из slug
+    const episodeMatch = slugString.match(/seria-(\d+)/)
     if (!episodeMatch) {
       console.log('No episode number found, redirecting to season')
       redirect(`/south-park/season-${seasonNumber}`)
