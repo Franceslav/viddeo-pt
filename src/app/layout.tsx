@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   title: "Южный парк онлайн | Смотреть все серии бесплатно в хорошем качестве",
   description: "Смотрите все серии Южного парка онлайн бесплатно в хорошем качестве. Все сезоны от 1 до последнего. Приключения Стэна, Кайла, Картмана и Кенни в вымышленном городе Южный парк. Полная коллекция эпизодов с русской озвучкой.",
   keywords: "южный парк, south park, смотреть онлайн, все серии, бесплатно, хорошее качество, анимация, комедия, стэн марш, кайл брофловски, эрик картман, кенни маккормик, русская озвучка, hd качество",
-  authors: [{ name: "Viddeo Team" }],
-  creator: "Viddeo",
-  publisher: "Viddeo",
+  authors: [{ name: "South Park Online Team" }],
+  creator: "South Park Online",
+  publisher: "South Park Online",
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     title: "Южный парк онлайн | Смотреть все серии бесплатно",
     description: "Смотрите все серии Южного парка онлайн бесплатно в хорошем качестве. Все сезоны от 1 до последнего.",
     images: ["/assets/hero.png"],
-    creator: "@viddeo"
+    creator: "@southpark-online"
   },
   alternates: {
     canonical: process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru"
