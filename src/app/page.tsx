@@ -284,8 +284,8 @@ const Home = () => {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center text-white transform -rotate-1 hover:rotate-0 transition-transform duration-300 leading-tight" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>
                   WATCH AND <span className="text-yellow-400" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>SCREAM</span> LIKE CARTMAN!
                 </h1>
-                         <Link href='/south-park' className={cn("w-full max-w-44 sm:max-w-48 font-black text-base sm:text-lg py-3 sm:py-4 px-6 sm:px-8 bg-red-500 hover:bg-red-600 text-white border-3 sm:border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg", buttonVariants({ variant: "default" }))} style={{ textShadow: '1px 1px 0px #000000' }}>
-                           <span>СМОТРЕТЬ ЮЖНЫЙ ПАРК!</span>
+                         <Link href='/south-park' className={cn("w-full max-w-56 sm:max-w-64 md:max-w-72 font-black text-sm sm:text-base md:text-lg py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-red-500 hover:bg-red-600 text-white border-3 sm:border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg text-center", buttonVariants({ variant: "default" }))} style={{ textShadow: '1px 1px 0px #000000' }}>
+                           <span className="whitespace-nowrap">СМОТРЕТЬ ЮЖНЫЙ ПАРК!</span>
                          </Link>
               </div>
             </div>
