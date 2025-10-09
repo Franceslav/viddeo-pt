@@ -7,7 +7,7 @@ const Page = async ({ params }: { params: Params }) => {
   const { seasonNumber, slug } = await params
   
   try {
-    // Парсим slug: ["seria-1-ne-bez-moego-anusa"] или ["seria", "1", "ne-bez-moego-anusa"]
+    // Парсим slug: ["seria-1-ne-bez-moego-anusa"]
     const slugString = slug.join('-')
     
     // Извлекаем номер эпизода из slug
@@ -17,6 +17,8 @@ const Page = async ({ params }: { params: Params }) => {
     }
     
     const episodeNumber = parseInt(episodeMatch[1])
+    
+    console.log('SEO URL Debug:', { seasonNumber, slug, slugString, episodeNumber })
     
     // Получаем все эпизоды
     const episodes = await trpc.episode.getEpisodes()
