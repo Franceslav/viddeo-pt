@@ -8,7 +8,7 @@ import { buttonVariants } from "@/components/ui/button"
 
 import { cn } from "@/lib/utils"
 import Container from "@/components/container"
-import { SeasonsList, SeasonsListLoading } from "./(pages)/gallery/_components/seasons-list"
+import { SeasonsList } from "./(pages)/gallery/_components/seasons-list"
 import { HydrateClient } from "@/app/server/routers/_app"
 import FAQSection from "@/components/faq-section"
 
@@ -114,8 +114,7 @@ const Home = () => {
               width={96}
               height={96}
               className="w-full h-full object-contain drop-shadow-lg"
-              loading="lazy"
-              priority={false}
+              priority={true}
             />
           </div>
           
@@ -127,8 +126,7 @@ const Home = () => {
               width={96}
               height={96}
               className="w-full h-full object-contain drop-shadow-lg"
-              loading="lazy"
-              priority={false}
+              priority={true}
             />
           </div>
           
@@ -284,6 +282,12 @@ const Home = () => {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center text-white transform -rotate-1 hover:rotate-0 transition-transform duration-300 leading-tight" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>
                   WATCH AND <span className="text-yellow-400" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>SCREAM</span> LIKE CARTMAN!
                 </h1>
+                
+                {/* SEO-дружественный текст для поисковиков */}
+                <div className="text-center text-white text-sm sm:text-base opacity-90 max-w-md">
+                  <p>Смотрите все серии Южного парка онлайн бесплатно в HD качестве. Полная коллекция всех сезонов с русской озвучкой и субтитрами.</p>
+                </div>
+                
                          <Link href='/south-park' className={cn("w-full max-w-56 sm:max-w-64 md:max-w-72 font-black text-sm sm:text-base md:text-lg py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-red-500 hover:bg-red-600 text-white border-3 sm:border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg text-center", buttonVariants({ variant: "default" }))} style={{ textShadow: '1px 1px 0px #000000' }}>
                            <span className="whitespace-nowrap">СМОТРЕТЬ ЮЖНЫЙ ПАРК!</span>
                          </Link>
@@ -304,8 +308,32 @@ const Home = () => {
               </p>
             </div>
             
-            <ErrorBoundary fallback={<div>Something went wrong loading seasons</div>}>
-              <Suspense fallback={<SeasonsListLoading />}>
+            <ErrorBoundary fallback={
+              <div className="text-center text-white p-4">
+                <h3 className="text-lg font-bold mb-2">Доступные сезоны Южного парка</h3>
+                <p>Загружаем список сезонов...</p>
+              </div>
+            }>
+              <Suspense fallback={
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 px-2 sm:px-0">
+                  <div className="text-center text-white p-4 bg-gray-800 rounded-lg">
+                    <h3 className="text-lg font-bold mb-2">Сезон 1</h3>
+                    <p className="text-sm">13 эпизодов</p>
+                  </div>
+                  <div className="text-center text-white p-4 bg-gray-800 rounded-lg">
+                    <h3 className="text-lg font-bold mb-2">Сезон 2</h3>
+                    <p className="text-sm">18 эпизодов</p>
+                  </div>
+                  <div className="text-center text-white p-4 bg-gray-800 rounded-lg">
+                    <h3 className="text-lg font-bold mb-2">Сезон 3</h3>
+                    <p className="text-sm">17 эпизодов</p>
+                  </div>
+                  <div className="text-center text-white p-4 bg-gray-800 rounded-lg">
+                    <h3 className="text-lg font-bold mb-2">И другие...</h3>
+                    <p className="text-sm">Все сезоны доступны</p>
+                  </div>
+                </div>
+              }>
                 <SeasonsList />
               </Suspense>
             </ErrorBoundary>
@@ -331,6 +359,26 @@ const Home = () => {
                     На нашем сайте вы можете <strong>смотреть все серии Южного парка онлайн бесплатно</strong> в хорошем качестве. 
                     Полная коллекция всех сезонов с русской озвучкой и субтитрами. Присоединяйтесь к приключениям наших любимых героев!
                   </p>
+                  
+                  <div className="mt-4 text-white text-sm sm:text-base">
+                    <h4 className="font-bold text-yellow-400 mb-2">Популярные персонажи:</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li><strong>Стэн Марш</strong> - лидер группы, всегда готовый к приключениям</li>
+                      <li><strong>Кайл Брофловски</strong> - умный и рассудительный еврейский мальчик</li>
+                      <li><strong>Эрик Картман</strong> - толстый и эгоистичный, но очень харизматичный</li>
+                      <li><strong>Кенни Маккормик</strong> - загадочный мальчик в оранжевой парке</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="mt-4 text-white text-sm sm:text-base">
+                    <h4 className="font-bold text-yellow-400 mb-2">Что вас ждет:</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Все сезоны от 1 до последнего в HD качестве</li>
+                      <li>Русская озвучка и субтитры</li>
+                      <li>Быстрая загрузка и удобный плеер</li>
+                      <li>Мобильная версия для просмотра на телефоне</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
