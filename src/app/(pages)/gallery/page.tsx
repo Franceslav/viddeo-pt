@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import Image from "next/image"
 import { Metadata } from "next"
 
-import { SeasonsList, SeasonsListLoading } from "./_components/seasons-list"
+import { SeasonsList } from "./_components/seasons-list"
 import { HydrateClient } from "@/app/server/routers/_app"
 import SuggestedVideos from "./video/_components/suggested-videos"
 import JsonLd from "@/components/seo/JsonLD"
@@ -214,19 +214,67 @@ const Gallery = () => {
               <div className="w-full">
                 <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-8">
                   <div className="lg:w-2/3">
-                    <ErrorBoundary fallback={<div>Something went wrong</div>}>
-                      <Suspense fallback={<SeasonsListLoading />}>
-                        <SeasonsList />
-                      </Suspense>
-                    </ErrorBoundary>
+            <ErrorBoundary fallback={
+              <div className="text-center text-white p-4">
+                <h3 className="text-lg font-bold mb-2">Доступные сезоны Южного парка</h3>
+                <p>Загружаем список сезонов...</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                  <div className="bg-gray-800 p-4 rounded-lg">
+                    <h4 className="font-bold">Сезон 1</h4>
+                    <p className="text-sm">13 эпизодов</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg">
+                    <h4 className="font-bold">Сезон 2</h4>
+                    <p className="text-sm">18 эпизодов</p>
+                  </div>
+                </div>
+              </div>
+            }>
+              <Suspense fallback={
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Сезон 1</h3>
+                    <p className="text-sm">13 эпизодов</p>
+                    <p className="text-xs mt-2">Загружаем...</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Сезон 2</h3>
+                    <p className="text-sm">18 эпизодов</p>
+                    <p className="text-xs mt-2">Загружаем...</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Сезон 3</h3>
+                    <p className="text-sm">17 эпизодов</p>
+                    <p className="text-xs mt-2">Загружаем...</p>
+                  </div>
+                </div>
+              }>
+                <SeasonsList />
+              </Suspense>
+            </ErrorBoundary>
                   </div>
 
                   <div className="lg:w-1/3">
-                    <ErrorBoundary fallback={<div>Something went wrong with suggested videos</div>}>
-                      <Suspense fallback={<div>Loading suggested videos...</div>}>
-                        <SuggestedVideos />
-                      </Suspense>
-                    </ErrorBoundary>
+            <ErrorBoundary fallback={
+              <div className="text-white p-4 bg-gray-800 rounded-lg">
+                <h3 className="font-bold mb-2">Рекомендуемые эпизоды</h3>
+                <p className="text-sm">Загружаем рекомендации...</p>
+              </div>
+            }>
+              <Suspense fallback={
+                <div className="space-y-4">
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Рекомендуемые эпизоды</h3>
+                    <div className="space-y-2">
+                      <div className="bg-gray-700 p-2 rounded text-sm">Загружаем популярные эпизоды...</div>
+                      <div className="bg-gray-700 p-2 rounded text-sm">Загружаем новые серии...</div>
+                    </div>
+                  </div>
+                </div>
+              }>
+                <SuggestedVideos />
+              </Suspense>
+            </ErrorBoundary>
                   </div>
                 </div>
               </div>

@@ -1,9 +1,30 @@
 import { ErrorBoundary } from "react-error-boundary"
 import { Suspense } from "react"
 import { SessionProvider } from 'next-auth/react'
+import { Metadata } from "next"
 
-import { ProfileContent, ProfileLoading } from "./_components/profile-content"
+import { ProfileContent } from "./_components/profile-content"
 import { HydrateClient } from "@/app/server/routers/_app"
+
+export const metadata: Metadata = {
+  title: "Профиль пользователя | Южный парк онлайн",
+  description: "Управляйте своим профилем, просматривайте историю просмотров и статистику на сайте Южного парка онлайн.",
+  keywords: "профиль пользователя, статистика просмотров, история, южный парк онлайн",
+  openGraph: {
+    title: "Профиль пользователя | Южный парк онлайн",
+    description: "Управляйте своим профилем, просматривайте историю просмотров и статистику на сайте Южного парка онлайн.",
+    type: "website",
+    images: [{
+      url: "/assets/hero.png",
+      width: 1200,
+      height: 630,
+      alt: "Профиль пользователя Южного парка"
+    }]
+  },
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}/profile`
+  }
+}
 
 function ProfilePage() {
   return (
@@ -21,8 +42,27 @@ function ProfilePage() {
             </div>
 
             <SessionProvider>
-              <ErrorBoundary fallback={<div className="text-white">Something went wrong loading profile</div>}>
-                <Suspense fallback={<ProfileLoading />}>
+              <ErrorBoundary fallback={
+                <div className="text-center text-white p-4">
+                  <h3 className="text-lg font-bold mb-2">Профиль пользователя</h3>
+                  <p>Загружаем данные профиля...</p>
+                  <div className="bg-gray-800 p-4 rounded-lg mt-4">
+                    <p className="text-sm">Произошла ошибка при загрузке профиля</p>
+                  </div>
+                </div>
+              }>
+                <Suspense fallback={
+                  <div className="space-y-4">
+                    <div className="bg-gray-800 p-4 rounded-lg text-white">
+                      <h3 className="font-bold mb-2">Профиль пользователя</h3>
+                      <div className="space-y-2">
+                        <div className="bg-gray-700 p-2 rounded text-sm">Загружаем информацию о пользователе...</div>
+                        <div className="bg-gray-700 p-2 rounded text-sm">Загружаем статистику просмотров...</div>
+                        <div className="bg-gray-700 p-2 rounded text-sm">Загружаем комментарии...</div>
+                      </div>
+                    </div>
+                  </div>
+                }>
                   <ProfileContent />
                 </Suspense>
               </ErrorBoundary>

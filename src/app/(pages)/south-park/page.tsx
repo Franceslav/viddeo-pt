@@ -2,7 +2,7 @@ import { ErrorBoundary } from "react-error-boundary"
 import { Suspense } from "react"
 import { Metadata } from "next"
 
-import { SeasonsList, SeasonsListLoading } from "../gallery/_components/seasons-list"
+import { SeasonsList } from "../gallery/_components/seasons-list"
 import { HydrateClient } from "@/app/server/routers/_app"
 import SuggestedVideos from "../gallery/video/_components/suggested-videos"
 import JsonLd from "@/components/seo/JsonLD"
@@ -88,14 +88,62 @@ const SouthParkPage = () => {
               </p>
             </div>
 
-            <ErrorBoundary fallback={<div className="text-white">Something went wrong loading seasons</div>}>
-              <Suspense fallback={<SeasonsListLoading />}>
+            <ErrorBoundary fallback={
+              <div className="text-center text-white p-4">
+                <h3 className="text-lg font-bold mb-2">South Park Seasons Available</h3>
+                <p>Loading seasons list...</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                  <div className="bg-gray-800 p-4 rounded-lg">
+                    <h4 className="font-bold">Season 1</h4>
+                    <p className="text-sm">13 episodes</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg">
+                    <h4 className="font-bold">Season 2</h4>
+                    <p className="text-sm">18 episodes</p>
+                  </div>
+                </div>
+              </div>
+            }>
+              <Suspense fallback={
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Season 1</h3>
+                    <p className="text-sm">13 episodes</p>
+                    <p className="text-xs mt-2">Loading...</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Season 2</h3>
+                    <p className="text-sm">18 episodes</p>
+                    <p className="text-xs mt-2">Loading...</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Season 3</h3>
+                    <p className="text-sm">17 episodes</p>
+                    <p className="text-xs mt-2">Loading...</p>
+                  </div>
+                </div>
+              }>
                 <SeasonsList />
               </Suspense>
             </ErrorBoundary>
 
-            <ErrorBoundary fallback={<div className="text-white">Something went wrong loading suggested videos</div>}>
-              <Suspense fallback={<div className="text-white">Loading suggested videos...</div>}>
+            <ErrorBoundary fallback={
+              <div className="text-white p-4 bg-gray-800 rounded-lg">
+                <h3 className="font-bold mb-2">Suggested Episodes</h3>
+                <p className="text-sm">Loading recommendations...</p>
+              </div>
+            }>
+              <Suspense fallback={
+                <div className="space-y-4">
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Popular Episodes</h3>
+                    <div className="space-y-2">
+                      <div className="bg-gray-700 p-2 rounded text-sm">Loading popular episodes...</div>
+                      <div className="bg-gray-700 p-2 rounded text-sm">Loading new episodes...</div>
+                    </div>
+                  </div>
+                </div>
+              }>
                 <SuggestedVideos />
               </Suspense>
             </ErrorBoundary>

@@ -3,7 +3,7 @@ import { ErrorBoundary } from "react-error-boundary"
 import { Suspense } from "react"
 import { Metadata } from 'next'
 
-import { SeasonDetails, SeasonDetailsLoading } from "../../gallery/season/[id]/_components/season-details"
+import { SeasonDetails } from "../../gallery/season/[id]/_components/season-details"
 import { HydrateClient } from "@/app/server/routers/_app"
 import { trpc } from '@/app/server/routers/_app'
 import Breadcrumbs from "@/components/breadcrumbs"
@@ -80,8 +80,27 @@ const SeasonPage = async ({ params }: SeasonPageProps) => {
               { name: `Season ${seasonData.seasonNumber}`, href: `/south-park/${season}` }
             ]}
           />
-          <ErrorBoundary fallback={<div className="text-white text-center p-4">Ошибка загрузки деталей сезона</div>}>
-            <Suspense fallback={<SeasonDetailsLoading />}>
+          <ErrorBoundary fallback={
+            <div className="text-white text-center p-4">
+              <h3 className="text-lg font-bold mb-2">South Park Season {seasonData.seasonNumber}</h3>
+              <p>Ошибка загрузки деталей сезона</p>
+              <div className="bg-gray-800 p-4 rounded-lg mt-4">
+                <p className="text-sm">Произошла ошибка при загрузке информации о сезоне</p>
+              </div>
+            </div>
+          }>
+            <Suspense fallback={
+              <div className="space-y-4">
+                <div className="bg-gray-800 p-4 rounded-lg text-white">
+                  <h3 className="font-bold mb-2">South Park Season {seasonData.seasonNumber}</h3>
+                  <div className="space-y-2">
+                    <div className="bg-gray-700 p-2 rounded text-sm">Загружаем информацию о сезоне...</div>
+                    <div className="bg-gray-700 p-2 rounded text-sm">Загружаем список эпизодов...</div>
+                    <div className="bg-gray-700 p-2 rounded text-sm">Загружаем детали...</div>
+                  </div>
+                </div>
+              </div>
+            }>
               <SeasonDetails seasonId={seasonData.id} />
             </Suspense>
           </ErrorBoundary>

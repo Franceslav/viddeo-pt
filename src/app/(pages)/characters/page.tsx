@@ -2,7 +2,7 @@ import { ErrorBoundary } from "react-error-boundary"
 import { Suspense } from "react"
 import { Metadata } from "next"
 
-import { CharactersList, CharactersListLoading } from "./_components/characters-list"
+import { CharactersList } from "./_components/characters-list"
 import { HydrateClient } from "@/app/server/routers/_app"
 import Breadcrumbs from "@/components/breadcrumbs"
 
@@ -52,8 +52,46 @@ const CharactersPage = () => {
               </p>
             </div>
 
-            <ErrorBoundary fallback={<div>Something went wrong loading characters</div>}>
-              <Suspense fallback={<CharactersListLoading />}>
+            <ErrorBoundary fallback={
+              <div className="text-center text-white p-4">
+                <h3 className="text-lg font-bold mb-2">Персонажи Южного парка</h3>
+                <p>Загружаем список персонажей...</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                  <div className="bg-gray-800 p-4 rounded-lg">
+                    <h4 className="font-bold">Стэн Марш</h4>
+                    <p className="text-sm">Лидер группы друзей</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg">
+                    <h4 className="font-bold">Кайл Брофловски</h4>
+                    <p className="text-sm">Умный и рассудительный</p>
+                  </div>
+                </div>
+              </div>
+            }>
+              <Suspense fallback={
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Стэн Марш</h3>
+                    <p className="text-sm">Лидер группы друзей</p>
+                    <p className="text-xs mt-2">Загружаем...</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Кайл Брофловски</h3>
+                    <p className="text-sm">Умный и рассудительный</p>
+                    <p className="text-xs mt-2">Загружаем...</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Эрик Картман</h3>
+                    <p className="text-sm">Толстый и эгоистичный</p>
+                    <p className="text-xs mt-2">Загружаем...</p>
+                  </div>
+                  <div className="bg-gray-800 p-4 rounded-lg text-white">
+                    <h3 className="font-bold mb-2">Кенни Маккормик</h3>
+                    <p className="text-sm">Загадочный мальчик</p>
+                    <p className="text-xs mt-2">Загружаем...</p>
+                  </div>
+                </div>
+              }>
                 <CharactersList />
               </Suspense>
             </ErrorBoundary>
