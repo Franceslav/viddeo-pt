@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { trpc } from '@/app/server/routers/_app'
 import { formatDateShort } from '@/lib/utils'
 import SeasonDescription from './season-description'
-import { createSimpleEpisodeSeoUrl } from '@/lib/transliteration'
 
 interface SeasonDetailsProps {
   seasonId: string
@@ -77,11 +76,7 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
           <div className="grid gap-3 sm:gap-4">
             {season.episodes.map((episode) => (
                      <Card key={episode.id} className="overflow-hidden hover:shadow-lg transition-shadow bg-gray-800 border-2 border-yellow-400 cursor-pointer group">
-                       <Link href={createSimpleEpisodeSeoUrl({
-                           title: episode.title,
-                           seasonNumber: season.seasonNumber,
-                           episodeNumber: episode.episodeNumber
-                       })} className="block">
+                       <Link href={`/gallery/episode/${episode.id}`} className="block">
                   {/* Мобильная версия - вертикальная карточка */}
                   <div className="md:hidden">
                     <div className="flex flex-col">
