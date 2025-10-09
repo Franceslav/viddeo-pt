@@ -48,6 +48,12 @@ export function createEpisodeSeoUrl(episode: { id: string; title: string; season
   return `/yuzhnyy-park/sezon-${episode.seasonNumber}/seria-${episode.episodeNumber}-${slug}`
 }
 
+// Функция для создания простого SEO URL (без транслитерации)
+export function createSimpleEpisodeSeoUrl(episode: { title: string; seasonNumber: number; episodeNumber: number }): string {
+  const slug = episode.title.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-')
+  return `/yuzhnyy-park/sezon-${episode.seasonNumber}/seria-${episode.episodeNumber}-${slug}`
+}
+
 // Функция для создания URL эпизода с названием сезона
 export function createEpisodeUrlWithSeason(episodeId: string): string {
   return `/gallery/episode/${episodeId}`

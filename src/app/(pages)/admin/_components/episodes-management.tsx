@@ -10,6 +10,7 @@ import { toast } from "sonner"
 import UniversalEpisodeForm from "./universal-episode-form"
 import Image from "next/image"
 import { EpisodeWithSeasonFromRouter } from "@/types/admin"
+import { createSimpleEpisodeSeoUrl } from "@/lib/transliteration"
 
 interface EpisodesManagementProps {
     userId: string
@@ -95,7 +96,11 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
                                         <div className="mt-2 flex items-center gap-2">
                                             <Link className="w-4 h-4 text-muted-foreground" />
                                             <span className="text-xs text-muted-foreground font-mono">
-                                                /gallery/episode/{episode.id}
+                                                {createSimpleEpisodeSeoUrl({
+                                                    title: episode.title,
+                                                    seasonNumber: episode.season.seasonNumber,
+                                                    episodeNumber: episode.episodeNumber
+                                                })}
                                             </span>
                                             <Button
                                                 variant="ghost"
