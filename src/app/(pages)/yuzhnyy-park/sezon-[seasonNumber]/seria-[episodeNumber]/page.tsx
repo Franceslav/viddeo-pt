@@ -1,16 +1,36 @@
-import { Suspense } from "react"
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 
-import EpisodeContainer from "../_components/episode-container";
-import EpisodeContainerLoading from "../_components/episode-container-loading";
 import { trpc } from '@/app/server/routers/_app'
-import { createEpisodeSeoUrl } from '@/lib/transliteration'
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { id } = await params
+  const { seasonNumber, episodeNumber } = await params
   
   try {
-    const episode = await trpc.episode.getEpisode({ id })
+    // Получаем сезон по номеру
+    const seasons = await trpc.season.getSeasons()
+    const season = seasons.find(s => s.seasonNumber === parseInt(seasonNumber))
+    
+    if (!season) {
+      return {
+        title: "Сезон не найден | Южный парк онлайн",
+        description: "Запрашиваемый сезон Южного парка не найден."
+      }
+    }
+
+    // Получаем эпизод по номеру в сезоне
+    const episodes = await trpc.episode.getEpisodes()
+    const episode = episodes.find(e => 
+      e.season.seasonNumber === parseInt(seasonNumber) && 
+      e.episodeNumber === parseInt(episodeNumber)
+    )
+    
+    if (!episode) {
+      return {
+        title: "Эпизод не найден | Южный парк онлайн",
+        description: "Запрашиваемый эпизод Южного парка не найден."
+      }
+    }
     
     return {
       title: `${episode.title} | Южный парк онлайн - Сезон ${episode.season.seasonNumber}, Эпизод ${episode.episodeNumber}`,
@@ -39,12 +59,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
         images: episode.image ? [episode.image] : ["/assets/hero.png"],
       },
       alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}${createEpisodeSeoUrl({
-          id,
-          title: episode.title,
-          seasonNumber: episode.season.seasonNumber,
-          episodeNumber: episode.episodeNumber
-        })}`
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}/yuzhnyy-park/sezon-${seasonNumber}/seria-${episodeNumber}`
       }
     }
   } catch {
@@ -55,20 +70,36 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   }
 }
 
-type Params = Promise<{ id: string }>
+type Params = Promise<{ seasonNumber: string; episodeNumber: string }>
 
 const Page = async ({ params }: { params: Params }) => {
-  const { id } = await params
+  const { seasonNumber, episodeNumber } = await params
 
-  return (
-    <div className="min-h-screen bg-black w-screen">
-      <div className="w-full py-8 px-4">
-        <Suspense fallback={<EpisodeContainerLoading />}>
-          <EpisodeContainer id={id} />
-        </Suspense>
-      </div>
-    </div>
-  )
+  try {
+    // Получаем сезон по номеру
+    const seasons = await trpc.season.getSeasons()
+    const season = seasons.find(s => s.seasonNumber === parseInt(seasonNumber))
+    
+    if (!season) {
+      redirect('/south-park')
+    }
+
+    // Получаем эпизод по номеру в сезоне
+    const episodes = await trpc.episode.getEpisodes()
+    const episode = episodes.find(e => 
+      e.season.seasonNumber === parseInt(seasonNumber) && 
+      e.episodeNumber === parseInt(episodeNumber)
+    )
+    
+    if (!episode) {
+      redirect(`/south-park/season-${seasonNumber}`)
+    }
+
+    // Перенаправляем на оригинальный URL с ID
+    redirect(`/gallery/episode/${episode.id}`)
+  } catch {
+    redirect('/south-park')
+  }
 }
 
 export default Page

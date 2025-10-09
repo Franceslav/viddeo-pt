@@ -11,6 +11,7 @@ import EpisodeLikeButton from './episode-like-button'
 import CommentForm from './comment-form'
 import CommentsList from './comments-list'
 import { formatDateShort, getInitials } from '@/lib/utils'
+import { createEpisodeSeoUrl } from '@/lib/transliteration'
 import JsonLd from "@/components/seo/JsonLD";
 import Breadcrumbs from "@/components/seo/Breadcrumps";
 
@@ -150,7 +151,12 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
                             asChild
                             className="bg-gray-800 border-yellow-400 text-white hover:bg-gray-700 flex-1 sm:flex-none"
                         >
-                            <Link href={`/gallery/episode/${adjacentEpisodes.previous.id}`}>
+                            <Link href={createEpisodeSeoUrl({
+                                id: adjacentEpisodes.previous.id,
+                                title: adjacentEpisodes.previous.title,
+                                seasonNumber: adjacentEpisodes.previous.season.seasonNumber,
+                                episodeNumber: adjacentEpisodes.previous.episodeNumber
+                            })}>
                                 <ChevronLeft className="w-4 h-4" />
                                 <span className="hidden sm:inline ml-1">Пред.</span>
                             </Link>
@@ -164,7 +170,12 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
                             asChild
                             className="bg-gray-800 border-yellow-400 text-white hover:bg-gray-700 flex-1 sm:flex-none"
                         >
-                            <Link href={`/gallery/episode/${adjacentEpisodes.next.id}`}>
+                            <Link href={createEpisodeSeoUrl({
+                                id: adjacentEpisodes.next.id,
+                                title: adjacentEpisodes.next.title,
+                                seasonNumber: adjacentEpisodes.next.season.seasonNumber,
+                                episodeNumber: adjacentEpisodes.next.episodeNumber
+                            })}>
                                 <span className="hidden sm:inline mr-1">След.</span>
                                 <ChevronRight className="w-4 h-4" />
                             </Link>
