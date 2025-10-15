@@ -1,0 +1,59 @@
+From 612a3601695243a490266e5a78637c36c987b046 Mon Sep 17 00:00:00 2001
+From: Franceslav <107437303+Franceslav@users.noreply.github.com>
+Date: Wed, 15 Oct 2025 14:20:10 +0200
+Subject: [PATCH] Add Yandex Metrika counter to layout
+
+---
+ src/app/layout.tsx | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index 8995343..f22572b 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -1,5 +1,6 @@
+ import type { Metadata } from "next";
+ import { Inter } from "next/font/google";
++import Script from "next/script";
+ 
+ import { Toaster } from "sonner";
+ 
+@@ -26,6 +27,35 @@ export default function RootLayout({
+ }>) {
+   return (
+     <html lang="en">
++      <head>
++        {/* Yandex.Metrika counter */}
++        <Script
++          id="yandex-metrika"
++          strategy="afterInteractive"
++          dangerouslySetInnerHTML={{
++            __html: `
++              (function(m,e,t,r,i,k,a){
++                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
++                m[i].l=1*new Date();
++                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
++                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
++              })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104652080', 'ym');
++
++              ym(104652080, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
++            `,
++          }}
++        />
++        <noscript>
++          <div>
++            <img 
++              src="https://mc.yandex.ru/watch/104652080" 
++              style={{position: 'absolute', left: '-9999px'}} 
++              alt="" 
++            />
++          </div>
++        </noscript>
++        {/* /Yandex.Metrika counter */}
++      </head>
+       <body
+         className={`${inter.className} antialiased`}
+       >
+-- 
+2.39.3 (Apple Git-146)
+
