@@ -346,7 +346,13 @@ export const ProfileContent = () => {
                               </p>
                             </div>
                             <Button asChild size="sm" className="bg-red-500 hover:bg-red-600 text-white border-2 border-black font-bold text-xs">
-                              <Link href={`/gallery/episode/${comment.episode.id}`}>
+                              <Link 
+                                href={`/gallery/episode/${comment.episode.id}`}
+                                data-analytics="watch_comment_button"
+                                data-season={comment.episode.season.seasonNumber}
+                                data-episode={comment.episode.episodeNumber}
+                                data-episode-title={comment.episode.title}
+                              >
                                 <Play className="w-3 h-3 mr-1" />
                                 Смотреть
                               </Link>

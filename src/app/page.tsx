@@ -13,12 +13,12 @@ import { HydrateClient } from "@/app/server/routers/_app"
 import FAQSection from "@/components/faq-section"
 
 export const metadata: Metadata = {
-  title: "Южный парк онлайн | Смотреть все серии бесплатно в хорошем качестве",
-  description: "Смотрите все серии Южного парка онлайн бесплатно в хорошем качестве. Все сезоны от 1 до последнего. Приключения Стэна, Кайла, Картмана и Кенни в вымышленном городе Южный парк. Полная коллекция эпизодов с русской озвучкой.",
-  keywords: "южный парк, south park, смотреть онлайн, все серии, бесплатно, хорошее качество, анимация, комедия, стэн марш, кайл брофловски, эрик картман, кенни маккормик, русская озвучка, hd качество",
+  title: "Южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке | Все серии",
+  description: "Смотрите Южный парк онлайн бесплатно в хорошем качестве на русском языке. Все серии и сезоны от 1 до 27 бесплатно в HD качестве с русской озвучкой. Полная коллекция эпизодов Южного парка без регистрации.",
+  keywords: "южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке, южный парк смотреть, южный парк онлайн, южный парк бесплатно, южный парк все серии, южный парк русская озвучка, южный парк hd качество, south park online",
   openGraph: {
-    title: "Южный парк онлайн | Смотреть все серии бесплатно",
-    description: "Смотрите все серии Южного парка онлайн бесплатно в хорошем качестве. Все сезоны от 1 до последнего. Приключения Стэна, Кайла, Картмана и Кенни в вымышленном городе Южный парк.",
+    title: "Южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке | Все серии",
+    description: "Смотрите Южный парк онлайн бесплатно в хорошем качестве на русском языке. Все серии и сезоны от 1 до 27 бесплатно в HD качестве с русской озвучкой. Полная коллекция эпизодов Южного парка без регистрации.",
     type: "website",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru",
     siteName: "Южный парк онлайн",
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Южный парк онлайн | Смотреть все серии бесплатно",
-    description: "Смотрите все серии Южного парка онлайн бесплатно в хорошем качестве. Все сезоны от 1 до последнего.",
+    title: "Южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке | Все серии",
+    description: "Смотрите Южный парк онлайн бесплатно в хорошем качестве на русском языке. Все серии и сезоны от 1 до 27 бесплатно в HD качестве с русской озвучкой.",
     images: ["/assets/hero.png"]
   },
   alternates: {
@@ -285,10 +285,15 @@ const Home = () => {
                 
                 {/* SEO-дружественный текст для поисковиков */}
                 <div className="text-center text-white text-sm sm:text-base opacity-90 max-w-md">
-                  <p>Смотрите все серии Южного парка онлайн бесплатно в HD качестве. Полная коллекция всех сезонов с русской озвучкой и субтитрами.</p>
+                  <p><strong>Южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке</strong> - все серии и сезоны от 1 до 27 в HD качестве с русской озвучкой. Полная коллекция эпизодов без регистрации.</p>
                 </div>
                 
-                         <Link href='/south-park' className={cn("w-full max-w-56 sm:max-w-64 md:max-w-72 font-black text-sm sm:text-base md:text-lg py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-red-500 hover:bg-red-600 text-white border-3 sm:border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg text-center", buttonVariants({ variant: "default" }))} style={{ textShadow: '1px 1px 0px #000000' }}>
+                         <Link 
+                           href='/south-park' 
+                           className={cn("w-full max-w-56 sm:max-w-64 md:max-w-72 font-black text-sm sm:text-base md:text-lg py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-red-500 hover:bg-red-600 text-white border-3 sm:border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg text-center", buttonVariants({ variant: "default" }))} 
+                           style={{ textShadow: '1px 1px 0px #000000' }}
+                           data-analytics="watch_main_button"
+                         >
                            <span className="whitespace-nowrap">СМОТРЕТЬ ЮЖНЫЙ ПАРК!</span>
                          </Link>
               </div>

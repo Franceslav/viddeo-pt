@@ -273,15 +273,15 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
 
             <div className="mt-4">
                 <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="bg-gray-800 border-yellow-400 text-white">
+                    <Badge variant="outline" className="bg-gray-800 border-yellow-400 text-white" data-season={episode.season.seasonNumber}>
                         {episode.season.title}
                     </Badge>
-                    <Badge variant="secondary" className="bg-yellow-400 text-black">
+                    <Badge variant="secondary" className="bg-yellow-400 text-black" data-episode={episode.episodeNumber}>
                         Эпизод {episode.episodeNumber}
                     </Badge>
                 </div>
 
-                <h1 className="text-2xl font-bold mb-4 text-white">{episode.title}</h1>
+                <h1 className="text-2xl font-bold mb-4 text-white">{episode.title} - Сезон {episode.season.seasonNumber}, Серия {episode.episodeNumber}</h1>
 
                 <div className="flex items-center justify-between flex-wrap gap-4">
                     <div className="flex items-center space-x-4">

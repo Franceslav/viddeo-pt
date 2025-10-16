@@ -32,14 +32,24 @@ export const SeasonsList = async () => {
                 )}
                 {/* Кнопка видна только на десктопе */}
                 <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 md:group-hover:opacity-100 transition-opacity">
-                  <Button size="sm" className="pointer-events-auto bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold">
+                  <Button 
+                    size="sm" 
+                    className="pointer-events-auto bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold"
+                    data-analytics="watch_season_button"
+                    data-season={season.seasonNumber}
+                  >
                     <Play className="w-4 h-4 mr-2" />
                     Смотреть
                   </Button>
                 </div>
                 {/* Мобильная кнопка - всегда видна */}
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center md:hidden">
-                  <Button size="sm" className="pointer-events-auto bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold">
+                  <Button 
+                    size="sm" 
+                    className="pointer-events-auto bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold"
+                    data-analytics="watch_season_mobile_button"
+                    data-season={season.seasonNumber}
+                  >
                     <Play className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                     <span className="text-xs sm:text-sm">Смотреть</span>
                   </Button>

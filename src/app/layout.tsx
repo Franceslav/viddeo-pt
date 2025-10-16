@@ -7,6 +7,7 @@ import { TRPCProvider } from "./_trpc/Provider";
 import { SessionProvider } from "next-auth/react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import AnalyticsBinder from "@/components/analytics-binder";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -85,47 +86,48 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="South Park" />
         
-        {/* Yandex.Metrika counter */}
+        {/* Yandex.Metrika (ID: 104652080) */}
         <Script
           id="yandex-metrika"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              (function(m,e,t,r,i,k,a){
-                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                m[i].l=1*new Date();
-                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-              })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104652080', 'ym');
+              (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+              m[i].l=1*new Date();
+              for (var j=0;j<document.scripts.length;j++) {if (document.scripts[j].src===r) { return; }}
+              k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+              (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-              ym(104652080, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+              ym(104652080, "init", {
+                clickmap:true,
+                trackLinks:true,
+                accurateTrackBounce:true,
+                webvisor:true
+              });
             `,
           }}
         />
         <noscript>
           <div>
-            <img 
-              src="https://mc.yandex.ru/watch/104652080" 
-              style={{position: 'absolute', left: '-9999px'}} 
-              alt="" 
-            />
+            <img src="https://mc.yandex.ru/watch/104652080" style={{ position: 'absolute', left: '-9999px' }} alt="" />
           </div>
         </noscript>
-        {/* /Yandex.Metrika counter */}
       </head>
       <body
         className="font-sans antialiased"
       >
         <SessionProvider>
           <TRPCProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <div className="flex-1 flex">
-                {children}
+            <AnalyticsBinder>
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <div className="flex-1 flex">
+                  {children}
+                </div>
+                <Footer />
               </div>
-              <Footer />
-            </div>
-            <Toaster richColors />
+              <Toaster richColors />
+            </AnalyticsBinder>
           </TRPCProvider>
         </SessionProvider>
       </body>

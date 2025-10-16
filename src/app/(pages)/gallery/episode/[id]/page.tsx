@@ -13,12 +13,12 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     const episode = await trpc.episode.getEpisode({ id })
     
     return {
-      title: `${episode.title} | Южный парк онлайн - Сезон ${episode.season.seasonNumber}, Эпизод ${episode.episodeNumber}`,
-      description: episode.description || `Смотрите эпизод "${episode.title}" Южного парка онлайн бесплатно в хорошем качестве. Сезон ${episode.season.seasonNumber}, эпизод ${episode.episodeNumber}. Полная серия с русской озвучкой и субтитрами.`,
+      title: `Южный Парк ${episode.season.seasonNumber} сезон ${episode.episodeNumber} серия – ${episode.title} смотреть онлайн`,
+      description: `Смотрите "${episode.title}" - ${episode.season.seasonNumber} сезон ${episode.episodeNumber} серия Южного Парка онлайн бесплатно в HD качестве. Полная серия с русской озвучкой.`,
       keywords: `южный парк, ${episode.title}, сезон ${episode.season.seasonNumber}, эпизод ${episode.episodeNumber}, смотреть онлайн, бесплатно, hd качество, русская озвучка`,
       openGraph: {
-        title: `${episode.title} | Южный парк онлайн - Сезон ${episode.season.seasonNumber}, Эпизод ${episode.episodeNumber}`,
-        description: episode.description || `Смотрите эпизод "${episode.title}" Южного парка онлайн бесплатно в хорошем качестве. Сезон ${episode.season.seasonNumber}, эпизод ${episode.episodeNumber}.`,
+        title: `Южный Парк ${episode.season.seasonNumber} сезон ${episode.episodeNumber} серия – ${episode.title} смотреть онлайн`,
+        description: `Смотрите "${episode.title}" - ${episode.season.seasonNumber} сезон ${episode.episodeNumber} серия Южного Парка онлайн бесплатно в HD качестве. Полная серия с русской озвучкой.`,
         type: "video.episode",
         images: episode.image ? [{
           url: episode.image,
@@ -34,8 +34,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       },
       twitter: {
         card: "summary_large_image",
-        title: `${episode.title} | Южный парк онлайн - Сезон ${episode.season.seasonNumber}, Эпизод ${episode.episodeNumber}`,
-        description: episode.description || `Смотрите эпизод "${episode.title}" Южного парка онлайн бесплатно в хорошем качестве. Сезон ${episode.season.seasonNumber}, эпизод ${episode.episodeNumber}.`,
+        title: `Южный Парк ${episode.season.seasonNumber} сезон ${episode.episodeNumber} серия – ${episode.title} смотреть онлайн`,
+        description: `Смотрите "${episode.title}" - ${episode.season.seasonNumber} сезон ${episode.episodeNumber} серия Южного Парка онлайн бесплатно в HD качестве. Полная серия с русской озвучкой.`,
         images: episode.image ? [episode.image] : ["/assets/hero.png"],
       },
       alternates: {

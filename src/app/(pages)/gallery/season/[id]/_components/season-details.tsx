@@ -153,7 +153,13 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
                         </div>
                         
                         {/* Кнопка видна только на десктопе */}
-                        <Button className="bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold flex items-center">
+                        <Button 
+                          className="bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold flex items-center"
+                          data-analytics="watch_episode_button"
+                          data-season={season.seasonNumber}
+                          data-episode={episode.episodeNumber}
+                          data-episode-title={episode.title}
+                        >
                           <Play className="w-4 h-4 mr-2" />
                           Смотреть
                         </Button>
