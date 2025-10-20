@@ -15,14 +15,12 @@ interface Props {
   episodeNumber?: number;
 }
 
-const SuggestCard: FC<Props> = ({ id, title, views, type = 'video', image, seasonNumber, episodeNumber }) => {
+const SuggestCard: FC<Props> = ({ id, title, views, type = 'video', image }) => {
 
   const router = useRouter()
 
   const handleClick = () => {
-    if (type === 'episode' && seasonNumber && episodeNumber) {
-      router.push(`/yuzhnyy-park/sezon-${seasonNumber}/seria-${episodeNumber}`)
-    } else if (type === 'episode') {
+    if (type === 'episode') {
       router.push(`/gallery/episode/${id}`)
     } else {
       router.push(`/gallery/video/${id}`)

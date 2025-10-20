@@ -32,9 +32,9 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
 
     // === SEO helpers ===
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'
-    const pageUrl = `${baseUrl}/yuzhnyy-park/sezon-${episode.season.seasonNumber}/seria-${episode.episodeNumber}`
-    const seasonUrl = `${baseUrl}/yuzhnyy-park/sezon-${episode.season.seasonNumber}`
-    const galleryUrl = `${baseUrl}/yuzhnyy-park`
+    const pageUrl = `${baseUrl}/gallery/episode/${episode.id}`
+    const seasonUrl = `${baseUrl}/gallery/season/${episode.season.id}`
+    const galleryUrl = `${baseUrl}/gallery`
 
     const views = (episode.views ?? 0) + 1
     const likes = likesData.likes ?? 0
