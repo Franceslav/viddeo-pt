@@ -18,6 +18,14 @@ export const metadata: Metadata = {
   authors: [{ name: "South Park Online Team" }],
   creator: "South Park Online",
   publisher: "South Park Online",
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru',
+    types: {
+      'application/rss+xml': [
+        { url: '/rss.xml', title: 'Южный парк онлайн - RSS фид новых серий' }
+      ]
+    }
+  },
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
@@ -63,9 +71,6 @@ export const metadata: Metadata = {
     images: ["/assets/hero.png"],
     creator: "@southpark-online"
   },
-  alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru"
-  },
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
   },
@@ -81,6 +86,7 @@ export default function RootLayout({
     <html lang="ru">
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="alternate" type="application/rss+xml" title="Южный парк онлайн - RSS фид новых серий" href="/rss.xml" />
         <meta name="theme-color" content="#FFD700" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
