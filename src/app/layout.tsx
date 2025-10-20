@@ -28,9 +28,9 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/KennyMcCormick.webp", type: "image/webp" }
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" }
     ],
     apple: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" }
@@ -86,6 +86,8 @@ export default function RootLayout({
     <html lang="ru">
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="alternate" type="application/rss+xml" title="Южный парк онлайн - RSS фид новых серий" href="/rss.xml" />
         <meta name="theme-color" content="#FFD700" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
