@@ -134,7 +134,7 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
                     asChild
                     className="bg-gray-800 border-yellow-400 text-white hover:bg-gray-700 w-full sm:w-auto"
                 >
-                    <Link href={`/south-park/season-${episode.season.seasonNumber}`}>
+                    <Link href={`/gallery/season/${episode.season.id}`}>
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         <span className="hidden sm:inline">Назад к сезону</span>
                         <span className="sm:hidden">Назад</span>
@@ -176,8 +176,8 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
             {/* Видимые крошки */}
             <Breadcrumbs
                 items={[
-                    { name: 'South Park', href: '/south-park' },
-                    { name: `Сезон ${episode.season.seasonNumber}`, href: `/south-park/season-${episode.season.seasonNumber}` },
+                    { name: 'South Park', href: '/gallery' },
+                    { name: `Сезон ${episode.season.seasonNumber}`, href: `/gallery/season/${episode.season.id}` },
                     { name: episode.title },
                 ]}
             />
