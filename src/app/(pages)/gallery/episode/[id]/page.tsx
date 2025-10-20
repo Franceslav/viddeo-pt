@@ -4,7 +4,19 @@ import { Metadata } from 'next'
 import EpisodeContainer from "../_components/episode-container";
 import EpisodeContainerLoading from "../_components/episode-container-loading";
 import { trpc } from '@/app/server/routers/_app'
-import { createEpisodeSeoUrl } from '@/lib/transliteration'
+
+// Генерируем статические страницы для всех эпизодов
+export async function generateStaticParams() {
+  try {
+    const episodes = await trpc.episode.getEpisodes()
+    return episodes.map((episode) => ({
+      id: episode.id,
+    }))
+  } catch (error) {
+    console.error('Error generating static params for episodes:', error)
+    return []
+  }
+}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params
@@ -39,12 +51,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
         images: episode.image ? [episode.image] : ["/assets/hero.png"],
       },
       alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}${createEpisodeSeoUrl({
-          id,
-          title: episode.title,
-          seasonNumber: episode.season.seasonNumber,
-          episodeNumber: episode.episodeNumber
-        })}`
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'}/gallery/episode/${id}`
       }
     }
   } catch {

@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next'
 import { trpc } from '@/app/server/routers/_app'
-import { createEpisodeSeoUrl } from '@/lib/transliteration'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'
@@ -12,12 +11,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 1,
-    },
-    {
-      url: `${baseUrl}/south-park`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.95,
     },
     {
       url: `${baseUrl}/gallery`,
@@ -38,12 +31,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/test-kto-ty`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/comments`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
@@ -52,24 +39,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   try {
-          // Динамические страницы сезонов (SEO URL)
+          // Динамические страницы сезонов (простые URL)
           const seasons = await trpc.season.getSeasons()
           const seasonPages = seasons.map((season) => ({
-            url: `${baseUrl}/south-park/season-${season.seasonNumber}`,
+            url: `${baseUrl}/gallery/season/${season.id}`,
             lastModified: new Date(season.updatedAt),
             changeFrequency: 'weekly' as const,
             priority: 0.8,
           }))
 
-    // Динамические страницы эпизодов (SEO URL)
+    // Динамические страницы эпизодов (простые URL)
     const episodes = await trpc.episode.getEpisodes()
     const episodePages = episodes.map((episode) => ({
-      url: `${baseUrl}${createEpisodeSeoUrl({
-        id: episode.id,
-        title: episode.title,
-        seasonNumber: episode.season.seasonNumber,
-        episodeNumber: episode.episodeNumber
-      })}`,
+      url: `${baseUrl}/gallery/episode/${episode.id}`,
       lastModified: new Date(episode.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.7,

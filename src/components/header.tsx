@@ -32,10 +32,6 @@ const navItems: NavItem[] = [
     href: '/luchshie-serii',
   },
   {
-    title: 'Тест',
-    href: '/test-kto-ty',
-  },
-  {
     title: 'Комментарии',
     href: '/comments',
   }

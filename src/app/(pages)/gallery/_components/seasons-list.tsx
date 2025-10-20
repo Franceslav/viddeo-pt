@@ -6,7 +6,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { trpc } from '@/app/server/routers/_app'
-import { createSeasonUrl } from '@/lib/transliteration'
 
 export const SeasonsList = async () => {
   const seasons = await trpc.season.getSeasons()
@@ -16,7 +15,7 @@ export const SeasonsList = async () => {
       {seasons.map((season) => {
         return (
                 <Card key={season.id} className="w-full overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
-                  <Link href={createSeasonUrl(season.seasonNumber)} className="block">
+                  <Link href={`/gallery/season/${season.id}`} className="block">
               <div className="relative aspect-video bg-gray-100">
                 {season.image ? (
                   <Image
@@ -57,7 +56,7 @@ export const SeasonsList = async () => {
               </div>
             </Link>
             
-                  <Link href={createSeasonUrl(season.seasonNumber)} className="block">
+                  <Link href={`/gallery/season/${season.id}`} className="block">
               <CardHeader className="p-3 sm:p-4">
                 <CardTitle className="text-base sm:text-lg line-clamp-2 sm:line-clamp-1 group-hover:text-yellow-600 transition-colors">
                   {season.title} 

@@ -289,7 +289,7 @@ const Home = () => {
                 </div>
                 
                          <Link 
-                           href='/south-park' 
+                           href='/gallery' 
                            className={cn("w-full max-w-56 sm:max-w-64 md:max-w-72 font-black text-sm sm:text-base md:text-lg py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-red-500 hover:bg-red-600 text-white border-3 sm:border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg text-center", buttonVariants({ variant: "default" }))} 
                            style={{ textShadow: '1px 1px 0px #000000' }}
                            data-analytics="watch_main_button"
