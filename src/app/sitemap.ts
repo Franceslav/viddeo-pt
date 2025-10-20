@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
-      priority: 1,
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/gallery`,
@@ -36,17 +36,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily' as const,
       priority: 0.7,
     },
+    {
+      url: `${baseUrl}/auth`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
+    },
   ]
 
   try {
-          // Динамические страницы сезонов (простые URL)
-          const seasons = await trpc.season.getSeasons()
-          const seasonPages = seasons.map((season) => ({
-            url: `${baseUrl}/gallery/season/${season.id}`,
-            lastModified: new Date(season.updatedAt),
-            changeFrequency: 'weekly' as const,
-            priority: 0.8,
-          }))
+    // Динамические страницы сезонов (простые URL)
+    const seasons = await trpc.season.getSeasons()
+    const seasonPages = seasons.map((season) => ({
+      url: `${baseUrl}/gallery/season/${season.id}`,
+      lastModified: new Date(season.updatedAt),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }))
 
     // Динамические страницы эпизодов (простые URL)
     const episodes = await trpc.episode.getEpisodes()
@@ -56,7 +62,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }))
-
 
     // Динамические страницы персонажей
     const characters = await trpc.character.getCharacters()
