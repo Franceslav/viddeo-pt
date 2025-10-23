@@ -13,11 +13,11 @@ import { HydrateClient } from "@/app/server/routers/_app"
 import FAQSection from "@/components/faq-section"
 
 export const metadata: Metadata = {
-  title: "Южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке | Все серии",
+  title: "Южный Парк онлайн - все серии бесплатно в HD качестве",
   description: "Смотрите Южный парк онлайн бесплатно в хорошем качестве на русском языке. Все серии и сезоны от 1 до 27 бесплатно в HD качестве с русской озвучкой. Полная коллекция эпизодов Южного парка без регистрации.",
   keywords: "южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке, южный парк смотреть, южный парк онлайн, южный парк бесплатно, южный парк все серии, южный парк русская озвучка, южный парк hd качество, south park online",
   openGraph: {
-    title: "Южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке | Все серии",
+    title: "Южный Парк онлайн - все серии бесплатно в HD качестве",
     description: "Смотрите Южный парк онлайн бесплатно в хорошем качестве на русском языке. Все серии и сезоны от 1 до 27 бесплатно в HD качестве с русской озвучкой. Полная коллекция эпизодов Южного парка без регистрации.",
     type: "website",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке | Все серии",
+    title: "Южный Парк онлайн - все серии бесплатно в HD качестве",
     description: "Смотрите Южный парк онлайн бесплатно в хорошем качестве на русском языке. Все серии и сезоны от 1 до 27 бесплатно в HD качестве с русской озвучкой.",
     images: ["/assets/hero.png"]
   },
@@ -280,7 +280,7 @@ const Home = () => {
             <div className="w-full flex items-center justify-center">
               <div className="max-w-sm sm:max-w-md md:max-w-xl flex flex-col items-center gap-4 sm:gap-6">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center text-white transform -rotate-1 hover:rotate-0 transition-transform duration-300 leading-tight" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>
-                  WATCH AND <span className="text-yellow-400" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>SCREAM</span> LIKE CARTMAN!
+                  Южный Парк - <span className="text-yellow-400" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>все серии онлайн</span> бесплатно!
                 </h1>
                 
                 {/* SEO-дружественный текст для поисковиков */}
