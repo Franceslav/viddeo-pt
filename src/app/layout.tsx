@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
 import { Toaster } from "sonner";
 
@@ -6,6 +7,7 @@ import { TRPCProvider } from "./_trpc/Provider";
 import { SessionProvider } from "next-auth/react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import AnalyticsBinder from "@/components/analytics-binder";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -16,11 +18,19 @@ export const metadata: Metadata = {
   authors: [{ name: "South Park Online Team" }],
   creator: "South Park Online",
   publisher: "South Park Online",
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru',
+    types: {
+      'application/rss+xml': [
+        { url: '/rss.xml', title: 'Южный парк онлайн - RSS фид новых серий' }
+      ]
+    }
+  },
   icons: {
     icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/KennyMcCormick.webp", type: "image/webp" }
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" }
     ],
     apple: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" }
@@ -61,9 +71,6 @@ export const metadata: Metadata = {
     images: ["/assets/hero.png"],
     creator: "@southpark-online"
   },
-  alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_URL || "https://southpark-online.ru"
-  },
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
   },
@@ -79,24 +86,56 @@ export default function RootLayout({
     <html lang="ru">
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="alternate" type="application/rss+xml" title="Южный парк онлайн - RSS фид новых серий" href="/rss.xml" />
         <meta name="theme-color" content="#FFD700" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="South Park" />
+        
+        {/* Yandex.Metrika (ID: 104652080) */}
+        <Script
+          id="yandex-metrika"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+              m[i].l=1*new Date();
+              for (var j=0;j<document.scripts.length;j++) {if (document.scripts[j].src===r) { return; }}
+              k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+              (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+              ym(104652080, "init", {
+                clickmap:true,
+                trackLinks:true,
+                accurateTrackBounce:true,
+                webvisor:true
+              });
+            `,
+          }}
+        />
+        <noscript>
+          <div>
+            <img src="https://mc.yandex.ru/watch/104652080" style={{ position: 'absolute', left: '-9999px' }} alt="" />
+          </div>
+        </noscript>
       </head>
       <body
         className="font-sans antialiased"
       >
         <SessionProvider>
           <TRPCProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <div className="flex-1 flex">
-                {children}
+            <AnalyticsBinder>
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <div className="flex-1 flex">
+                  {children}
+                </div>
+                <Footer />
               </div>
-              <Footer />
-            </div>
-            <Toaster richColors />
+              <Toaster richColors />
+            </AnalyticsBinder>
           </TRPCProvider>
         </SessionProvider>
       </body>

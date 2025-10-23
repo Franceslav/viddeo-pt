@@ -32,9 +32,9 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
 
     // === SEO helpers ===
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'
-    const pageUrl = `${baseUrl}/yuzhnyy-park/sezon-${episode.season.seasonNumber}/seria-${episode.episodeNumber}`
-    const seasonUrl = `${baseUrl}/yuzhnyy-park/sezon-${episode.season.seasonNumber}`
-    const galleryUrl = `${baseUrl}/yuzhnyy-park`
+    const pageUrl = `${baseUrl}/gallery/episode/${episode.id}`
+    const seasonUrl = `${baseUrl}/gallery/season/${episode.season.id}`
+    const galleryUrl = `${baseUrl}/gallery`
 
     const views = (episode.views ?? 0) + 1
     const likes = likesData.likes ?? 0
@@ -134,7 +134,7 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
                     asChild
                     className="bg-gray-800 border-yellow-400 text-white hover:bg-gray-700 w-full sm:w-auto"
                 >
-                    <Link href={`/south-park/season-${episode.season.seasonNumber}`}>
+                    <Link href={`/gallery/season/${episode.season.id}`}>
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         <span className="hidden sm:inline">Назад к сезону</span>
                         <span className="sm:hidden">Назад</span>
@@ -176,8 +176,8 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
             {/* Видимые крошки */}
             <Breadcrumbs
                 items={[
-                    { name: 'South Park', href: '/south-park' },
-                    { name: `Сезон ${episode.season.seasonNumber}`, href: `/south-park/season-${episode.season.seasonNumber}` },
+                    { name: 'South Park', href: '/gallery' },
+                    { name: `Сезон ${episode.season.seasonNumber}`, href: `/gallery/season/${episode.season.id}` },
                     { name: episode.title },
                 ]}
             />
@@ -273,15 +273,15 @@ const EpisodeContainer: FC<Props> = async ({ id }) => {
 
             <div className="mt-4">
                 <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="bg-gray-800 border-yellow-400 text-white">
+                    <Badge variant="outline" className="bg-gray-800 border-yellow-400 text-white" data-season={episode.season.seasonNumber}>
                         {episode.season.title}
                     </Badge>
-                    <Badge variant="secondary" className="bg-yellow-400 text-black">
+                    <Badge variant="secondary" className="bg-yellow-400 text-black" data-episode={episode.episodeNumber}>
                         Эпизод {episode.episodeNumber}
                     </Badge>
                 </div>
 
-                <h1 className="text-2xl font-bold mb-4 text-white">{episode.title}</h1>
+                <h1 className="text-2xl font-bold mb-4 text-white">{episode.title} - Сезон {episode.season.seasonNumber}, Серия {episode.episodeNumber}</h1>
 
                 <div className="flex items-center justify-between flex-wrap gap-4">
                     <div className="flex items-center space-x-4">

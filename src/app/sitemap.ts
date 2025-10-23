@@ -10,13 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/south-park`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.95,
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/gallery`,
@@ -31,22 +25,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/luchshie-serii`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/comments`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.7,
     },
+    {
+      url: `${baseUrl}/auth`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
+    },
   ]
 
   try {
-          // Динамические страницы сезонов (SEO URL)
-          const seasons = await trpc.season.getSeasons()
-          const seasonPages = seasons.map((season) => ({
-            url: `${baseUrl}/south-park/season-${season.seasonNumber}`,
-            lastModified: new Date(season.updatedAt),
-            changeFrequency: 'weekly' as const,
-            priority: 0.8,
-          }))
+    // Динамические страницы сезонов (простые URL)
+    const seasons = await trpc.season.getSeasons()
+    const seasonPages = seasons.map((season) => ({
+      url: `${baseUrl}/gallery/season/${season.id}`,
+      lastModified: new Date(season.updatedAt),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }))
 
     // Динамические страницы эпизодов (рабочие ID-ссылки)
     const episodes = await trpc.episode.getEpisodes()
@@ -56,7 +62,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }))
-
 
     // Динамические страницы персонажей
     const characters = await trpc.character.getCharacters()

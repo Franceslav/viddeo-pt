@@ -6,7 +6,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { trpc } from '@/app/server/routers/_app'
-import { createSeasonUrl } from '@/lib/transliteration'
 
 export const SeasonsList = async () => {
   const seasons = await trpc.season.getSeasons()
@@ -16,7 +15,7 @@ export const SeasonsList = async () => {
       {seasons.map((season) => {
         return (
                 <Card key={season.id} className="w-full overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
-                  <Link href={createSeasonUrl(season.seasonNumber)} className="block">
+                  <Link href={`/gallery/season/${season.id}`} className="block">
               <div className="relative aspect-video bg-gray-100">
                 {season.image ? (
                   <Image
@@ -32,14 +31,24 @@ export const SeasonsList = async () => {
                 )}
                 {/* Кнопка видна только на десктопе */}
                 <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 md:group-hover:opacity-100 transition-opacity">
-                  <Button size="sm" className="pointer-events-auto bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold">
+                  <Button 
+                    size="sm" 
+                    className="pointer-events-auto bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold"
+                    data-analytics="watch_season_button"
+                    data-season={season.seasonNumber}
+                  >
                     <Play className="w-4 h-4 mr-2" />
                     Смотреть
                   </Button>
                 </div>
                 {/* Мобильная кнопка - всегда видна */}
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center md:hidden">
-                  <Button size="sm" className="pointer-events-auto bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold">
+                  <Button 
+                    size="sm" 
+                    className="pointer-events-auto bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-black font-bold"
+                    data-analytics="watch_season_mobile_button"
+                    data-season={season.seasonNumber}
+                  >
                     <Play className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                     <span className="text-xs sm:text-sm">Смотреть</span>
                   </Button>
@@ -47,7 +56,7 @@ export const SeasonsList = async () => {
               </div>
             </Link>
             
-                  <Link href={createSeasonUrl(season.seasonNumber)} className="block">
+                  <Link href={`/gallery/season/${season.id}`} className="block">
               <CardHeader className="p-3 sm:p-4">
                 <CardTitle className="text-base sm:text-lg line-clamp-2 sm:line-clamp-1 group-hover:text-yellow-600 transition-colors">
                   {season.title} 

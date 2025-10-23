@@ -9,6 +9,19 @@ import { HydrateClient } from "@/app/server/routers/_app"
 import { trpc } from '@/app/server/routers/_app'
 import Breadcrumbs from "@/components/breadcrumbs"
 
+// Генерируем статические страницы для всех сезонов
+export async function generateStaticParams() {
+  try {
+    const seasons = await trpc.season.getSeasons()
+    return seasons.map((season) => ({
+      id: season.id,
+    }))
+  } catch (error) {
+    console.error('Error generating static params for seasons:', error)
+    return []
+  }
+}
+
 export async function generateMetadata({ params }: SeasonPageProps): Promise<Metadata> {
   const { id } = await params
   

@@ -28,6 +28,10 @@ const navItems: NavItem[] = [
     href: '/characters',
   },
   {
+    title: 'Лучшие серии',
+    href: '/luchshie-serii',
+  },
+  {
     title: 'Комментарии',
     href: '/comments',
   }

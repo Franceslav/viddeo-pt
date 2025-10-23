@@ -1,6 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
-
-import { useSession } from 'next-auth/react'
 
 interface VideoAdProps {
   partnerId: string
@@ -10,36 +9,12 @@ interface VideoAdProps {
 }
 
 export default function VideoAd({ 
-  partnerId, 
-  className = '',
-  showForLoggedIn = false
+  partnerId: _partnerId, 
+  className: _className = '',
+  showForLoggedIn: _showForLoggedIn = false
 }: Omit<VideoAdProps, 'vastUrl'>) {
-  const { data: session } = useSession()
-
-  // Скрываем рекламу для авторизованных пользователей
-  if (session?.user && !showForLoggedIn) {
-    return null
-  }
-
-  // Если не передан VAST URL, используем дефолтный
-  // const _defaultVastUrl = vastUrl || `https://partner.1xbet.com/vast?tag=${partnerId}`
-
-  return (
-    <div className={`video-ad ${className}`}>
-      {/* VAST реклама будет интегрирована в плеер через PlayerJS */}
-      <div className="text-center p-4 bg-gray-100 rounded-lg">
-        <p className="text-sm text-gray-600 mb-2">Реклама</p>
-        <a 
-          href={`https://1xbet.com/?tag=${partnerId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 hover:text-blue-800 font-medium"
-        >
-          1xBet - Ставки на спорт
-        </a>
-      </div>
-    </div>
-  )
+  // Временно отключено для улучшения SEO
+  return null
 }
 
 // Функция для получения VAST URL для интеграции с плеером

@@ -11,6 +11,19 @@ import { trpc } from '@/app/server/routers/_app'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
+// Генерируем статические страницы для всех персонажей
+export async function generateStaticParams() {
+  try {
+    const characters = await trpc.character.getCharacters()
+    return characters.map((character) => ({
+      id: character.id,
+    }))
+  } catch (error) {
+    console.error('Error generating static params for characters:', error)
+    return []
+  }
+}
+
 export async function generateMetadata({ params }: CharacterPageProps): Promise<Metadata> {
   const { id } = await params
   
