@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next'
 import { trpc } from '@/app/server/routers/_app'
-import { createEpisodeSeoUrl } from '@/lib/transliteration'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'
@@ -49,15 +48,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.8,
           }))
 
-    // Динамические страницы эпизодов (SEO URL)
+    // Динамические страницы эпизодов (рабочие ID-ссылки)
     const episodes = await trpc.episode.getEpisodes()
     const episodePages = episodes.map((episode) => ({
-      url: `${baseUrl}${createEpisodeSeoUrl({
-        id: episode.id,
-        title: episode.title,
-        seasonNumber: episode.season.seasonNumber,
-        episodeNumber: episode.episodeNumber
-      })}`,
+      url: `${baseUrl}/gallery/episode/${episode.id}`,
       lastModified: new Date(episode.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.7,
