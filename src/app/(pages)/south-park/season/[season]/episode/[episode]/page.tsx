@@ -99,7 +99,7 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
                 items={[
                   { name: 'South Park', href: '/south-park' },
                   { name: `Сезон ${seasonNumber}`, href: `/south-park/season-${seasonNumber}` },
-                  { name: episodeData.title },
+                  { name: episodeData.title, href: `/south-park/season-${seasonNumber}/episode-${episodeNumber}` },
                 ]}
               />
             </div>
