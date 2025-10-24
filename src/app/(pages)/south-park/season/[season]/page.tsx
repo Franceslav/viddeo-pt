@@ -84,7 +84,7 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
             <div className="py-4">
               <Breadcrumbs
                 items={[
-                  { name: 'South Park', href: '/gallery' },
+                  { name: 'South Park', href: '/south-park' },
                   { name: `Сезон ${seasonNumber}`, href: `/south-park/season-${seasonNumber}` },
                 ]}
               />
