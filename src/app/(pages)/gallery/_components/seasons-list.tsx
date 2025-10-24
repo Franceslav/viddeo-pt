@@ -15,7 +15,7 @@ export const SeasonsList = async () => {
       {seasons.map((season) => {
         return (
                 <Card key={season.id} className="w-full overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
-                  <Link href={`/gallery/season/${season.id}`} className="block">
+                  <Link href={`/south-park/season-${season.seasonNumber}`} className="block">
               <div className="relative aspect-video bg-gray-100">
                 {season.image ? (
                   <Image
@@ -56,7 +56,7 @@ export const SeasonsList = async () => {
               </div>
             </Link>
             
-                  <Link href={`/gallery/season/${season.id}`} className="block">
+                  <Link href={`/south-park/season-${season.seasonNumber}`} className="block">
               <CardHeader className="p-3 sm:p-4">
                 <CardTitle className="text-base sm:text-lg line-clamp-2 sm:line-clamp-1 group-hover:text-yellow-600 transition-colors">
                   {season.title} 

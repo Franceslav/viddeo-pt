@@ -42,22 +42,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.3,
     },
+    {
+      url: `${baseUrl}/south-park`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
   ]
 
   try {
-    // Динамические страницы сезонов (простые URL)
+    // Динамические страницы сезонов (SEO-friendly URL)
     const seasons = await trpc.season.getSeasons()
     const seasonPages = seasons.map((season) => ({
-      url: `${baseUrl}/gallery/season/${season.id}`,
+      url: `${baseUrl}/south-park/season-${season.seasonNumber}`,
       lastModified: new Date(season.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     }))
 
-    // Динамические страницы эпизодов (рабочие ID-ссылки)
+    // Динамические страницы эпизодов (SEO-friendly URL)
     const episodes = await trpc.episode.getEpisodes()
     const episodePages = episodes.map((episode) => ({
-      url: `${baseUrl}/gallery/episode/${episode.id}`,
+      url: `${baseUrl}/south-park/season-${episode.season.seasonNumber}/episode-${episode.episodeNumber}`,
       lastModified: new Date(episode.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.7,

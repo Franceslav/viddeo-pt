@@ -76,7 +76,7 @@ export const SeasonDetails = async ({ seasonId }: SeasonDetailsProps) => {
           <div className="grid gap-3 sm:gap-4">
             {season.episodes.map((episode) => (
                      <Card key={episode.id} className="overflow-hidden hover:shadow-lg transition-shadow bg-gray-800 border-2 border-yellow-400 cursor-pointer group">
-                       <Link href={`/gallery/episode/${episode.id}`} className="block">
+                       <Link href={`/south-park/season-${season.seasonNumber}/episode-${episode.episodeNumber}`} className="block">
                   {/* Мобильная версия - вертикальная карточка */}
                   <div className="md:hidden">
                     <div className="flex flex-col">

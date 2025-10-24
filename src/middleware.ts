@@ -8,6 +8,7 @@ export default async function middleware(req: NextRequest) {
   const session = await auth()
   const { pathname } = req.nextUrl
 
+
   // Проверяем защищенные маршруты
   const isProtected = protectedRoutes.some((route) =>
     pathname.startsWith(route)
