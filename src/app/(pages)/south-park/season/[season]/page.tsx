@@ -19,7 +19,10 @@ export async function generateStaticParams() {
     }))
   } catch (error) {
     console.error('Error generating static params for seasons:', error)
-    return []
+    // Fallback: генерируем для сезонов 1-27 если БД недоступна
+    return Array.from({ length: 27 }, (_, i) => ({
+      season: (i + 1).toString(),
+    }))
   }
 }
 
@@ -74,7 +77,38 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
     const seasonData = seasons.find(s => s.seasonNumber === seasonNumber)
     
     if (!seasonData) {
-      notFound()
+      // Если сезон не найден в БД, показываем заглушку вместо 404
+      return (
+        <HydrateClient>
+          <div className="min-h-screen bg-black">
+            <Container>
+              <div className="py-4">
+                <Breadcrumbs
+                  items={[
+                    { name: 'South Park', href: '/south-park' },
+                    { name: `Сезон ${seasonNumber}`, href: `/south-park/season-${seasonNumber}` },
+                  ]}
+                />
+              </div>
+              
+              <div className="text-center py-20">
+                <h1 className="text-4xl font-black text-white mb-4">
+                  Сезон {seasonNumber} - Южный Парк
+                </h1>
+                <p className="text-lg text-white mb-6">
+                  Сезон {seasonNumber} пока недоступен. Проверьте другие сезоны.
+                </p>
+                <a 
+                  href="/south-park" 
+                  className="inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Все сезоны
+                </a>
+              </div>
+            </Container>
+          </div>
+        </HydrateClient>
+      )
     }
 
     return (
