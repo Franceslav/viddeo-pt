@@ -1,7 +1,8 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { trpc } from '@/app/server/routers/_app'
-import EpisodeContainer from '@/app/(pages)/gallery/episode/_components/episode-container'
+// import EpisodeContainer from '@/app/(pages)/gallery/episode/_components/episode-container'
 import Breadcrumbs from '@/components/breadcrumbs'
 import { HydrateClient } from "@/app/server/routers/_app"
 import Container from '@/components/container'
@@ -104,7 +105,20 @@ export default async function EpisodePage({ params }: EpisodePageProps) {
               />
             </div>
             
-            <EpisodeContainer id={episodeData.id} />
+            <div className="text-center py-20">
+              <h1 className="text-4xl font-black text-white mb-4">
+                {episodeData.title || `Эпизод ${episodeNumber}`}
+              </h1>
+              <p className="text-lg text-white mb-6">
+                {episodeData.description || `Смотрите эпизод ${episodeNumber} сезона ${seasonNumber} Южного Парка онлайн бесплатно в HD качестве с русской озвучкой.`}
+              </p>
+              <Link 
+                href="/south-park" 
+                className="inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Все сезоны
+              </Link>
+            </div>
           </Container>
         </div>
       </HydrateClient>

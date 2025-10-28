@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { SeasonsList } from '@/app/(pages)/gallery/_components/seasons-list'
+import SeasonsList from '@/components/seasons-list'
 import Breadcrumbs from '@/components/breadcrumbs'
 import { HydrateClient } from "@/app/server/routers/_app"
 import Container from '@/components/container'

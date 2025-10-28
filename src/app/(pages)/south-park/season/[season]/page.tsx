@@ -1,7 +1,8 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { trpc } from '@/app/server/routers/_app'
-import { SeasonDetails } from '@/app/(pages)/gallery/season/[id]/_components/season-details'
+// import { SeasonDetails } from '@/app/(pages)/gallery/season/[id]/_components/season-details'
 import Breadcrumbs from '@/components/breadcrumbs'
 import { HydrateClient } from "@/app/server/routers/_app"
 import Container from '@/components/container'
@@ -98,12 +99,12 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
                 <p className="text-lg text-white mb-6">
                   Сезон {seasonNumber} пока недоступен. Проверьте другие сезоны.
                 </p>
-                <a 
+                <Link 
                   href="/south-park" 
                   className="inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Все сезоны
-                </a>
+                </Link>
               </div>
             </Container>
           </div>
@@ -124,7 +125,20 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
               />
             </div>
             
-            <SeasonDetails seasonId={seasonData.id} />
+            <div className="text-center py-20">
+              <h1 className="text-4xl font-black text-white mb-4">
+                {seasonData.title || `Сезон ${seasonNumber}`}
+              </h1>
+              <p className="text-lg text-white mb-6">
+                {seasonData.description || `Смотрите ${seasonNumber} сезон Южного Парка онлайн бесплатно в HD качестве с русской озвучкой.`}
+              </p>
+              <Link 
+                href="/south-park" 
+                className="inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Все сезоны
+              </Link>
+            </div>
           </Container>
         </div>
       </HydrateClient>
