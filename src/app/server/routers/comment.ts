@@ -150,12 +150,73 @@ export const commentRouter = router({
       })
     }),
 
+  // Получить комментарии к эпизоду с сортировкой
+  getEpisodeComments: publicProcedure
+    .input(z.object({ 
+      episodeId: z.string(),
+      sortBy: z.enum(['top', 'newest']).default('top'),
+      limit: z.number().min(1).max(50).default(20),
+      cursor: z.string().optional()
+    }))
+    .query(async ({ input, ctx }) => {
+      const orderBy = input.sortBy === 'top' 
+        ? [
+            { commentLikes: { _count: 'desc' as const } },
+            { createdAt: 'desc' as const }
+          ]
+        : { createdAt: 'desc' as const }
+
+      const comments = await ctx.db.comment.findMany({
+        where: { 
+          episodeId: input.episodeId,
+          parentId: { isSet: false } // Только родительские комментарии
+        },
+        include: {
+          user: {
+            select: { id: true, name: true, email: true, image: true }
+          },
+          commentLikes: true,
+          replies: {
+            include: {
+              user: {
+                select: { id: true, name: true, email: true, image: true }
+              },
+              commentLikes: true
+            },
+            orderBy: { createdAt: 'asc' }
+          },
+          _count: {
+            select: {
+              replies: true
+            }
+          }
+        },
+        orderBy,
+        take: input.limit + 1,
+        cursor: input.cursor ? { id: input.cursor } : undefined
+      })
+
+      let nextCursor: string | undefined = undefined
+      if (comments.length > input.limit) {
+        const nextItem = comments.pop()
+        nextCursor = nextItem!.id
+      }
+
+      return {
+        comments,
+        nextCursor
+      }
+    }),
+
   // Добавить комментарий к эпизоду
   addComment: publicProcedure
     .input(z.object({ 
       episodeId: z.string(),
       content: z.string().min(1, "Comment cannot be empty"),
       userId: z.string(),
+      userName: z.string().optional(),
+      userEmail: z.string().optional(),
+      userImage: z.string().optional(),
       parentId: z.string().optional()
     }))
     .mutation(async ({ input, ctx }) => {
@@ -171,16 +232,44 @@ export const commentRouter = router({
         })
       }
 
-      // Проверяем, что пользователь существует
-      const user = await ctx.db.user.findUnique({
+      // Проверяем, что пользователь существует или создаем его
+      let user = await ctx.db.user.findUnique({
         where: { id: input.userId }
       })
 
       if (!user) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'User not found'
-        })
+        // Создаем пользователя с данными из сессии
+        try {
+          user = await ctx.db.user.create({
+            data: {
+              id: input.userId,
+              name: input.userName || 'Пользователь',
+              email: input.userEmail || `user-${input.userId}@temp.com`,
+              image: input.userImage || null
+            }
+          })
+        } catch {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'User not found and could not be created'
+          })
+        }
+      } else {
+        // Обновляем данные пользователя, если они изменились
+        if (input.userName || input.userEmail || input.userImage) {
+          try {
+            user = await ctx.db.user.update({
+              where: { id: input.userId },
+              data: {
+                ...(input.userName && { name: input.userName }),
+                ...(input.userEmail && { email: input.userEmail }),
+                ...(input.userImage && { image: input.userImage })
+              }
+            })
+          } catch {
+            // Игнорируем ошибки обновления
+          }
+        }
       }
 
       // Если это ответ на комментарий, проверяем что родительский комментарий существует
@@ -206,7 +295,7 @@ export const commentRouter = router({
         },
         include: {
           user: {
-            select: { name: true, email: true, image: true }
+            select: { id: true, name: true, email: true, image: true }
           },
           commentLikes: true
         }
@@ -242,7 +331,8 @@ export const commentRouter = router({
   // Удалить комментарий (только автор)
   deleteComment: publicProcedure
     .input(z.object({ 
-      id: z.string()
+      id: z.string(),
+      userId: z.string()
     }))
     .mutation(async ({ input, ctx }) => {
       const comment = await ctx.db.comment.findUnique({
@@ -256,8 +346,13 @@ export const commentRouter = router({
         })
       }
 
-      // TODO: Add authorization check (only author or admin can delete)
-      // For now, assuming client-side check or simple authorization
+      // Проверяем, что пользователь является автором комментария
+      if (comment.userId !== input.userId) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You can only delete your own comments'
+        })
+      }
       return await ctx.db.comment.delete({
         where: { id: input.id }
       })
@@ -283,16 +378,27 @@ export const commentRouter = router({
             })
           }
 
-          // Проверяем, что пользователь существует
-          const user = await ctx.db.user.findUnique({
+          // Проверяем, что пользователь существует или создаем его
+          let user = await ctx.db.user.findUnique({
             where: { id: input.userId }
           })
 
           if (!user) {
-            throw new TRPCError({
-              code: 'NOT_FOUND',
-              message: 'User not found'
-            })
+            try {
+              user = await ctx.db.user.create({
+                data: {
+                  id: input.userId,
+                  name: 'Пользователь',
+                  email: `user-${input.userId}@temp.com`,
+                  image: null
+                }
+              })
+            } catch {
+              throw new TRPCError({
+                code: 'NOT_FOUND',
+                message: 'User not found and could not be created'
+              })
+            }
           }
 
           // Ищем существующий лайк
@@ -350,16 +456,27 @@ export const commentRouter = router({
             })
           }
 
-          // Проверяем, что пользователь существует
-          const user = await ctx.db.user.findUnique({
+          // Проверяем, что пользователь существует или создаем его
+          let user = await ctx.db.user.findUnique({
             where: { id: input.userId }
           })
 
           if (!user) {
-            throw new TRPCError({
-              code: 'NOT_FOUND',
-              message: 'User not found'
-            })
+            try {
+              user = await ctx.db.user.create({
+                data: {
+                  id: input.userId,
+                  name: 'Пользователь',
+                  email: `user-${input.userId}@temp.com`,
+                  image: null
+                }
+              })
+            } catch {
+              throw new TRPCError({
+                code: 'NOT_FOUND',
+                message: 'User not found and could not be created'
+              })
+            }
           }
 
           // Ищем существующий лайк

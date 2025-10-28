@@ -95,14 +95,16 @@ const EpisodesManagement = ({ userId }: EpisodesManagementProps) => {
                                         <div className="mt-2 flex items-center gap-2">
                                             <Link className="w-4 h-4 text-muted-foreground" />
                                             <span className="text-xs text-muted-foreground font-mono">
-                                                /gallery/episode/{episode.id}
+                                                /{episode.season.seasonNumber.toString().padStart(2, '0')}-{episode.episodeNumber.toString().padStart(2, '0')}
                                             </span>
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
                                                 className="h-6 w-6 p-0"
                                                 onClick={() => {
-                                                    navigator.clipboard.writeText(`/gallery/episode/${episode.id}`)
+                                                    const seasonSlug = `sezon-${episode.season.seasonNumber.toString().padStart(2, '0')}`;
+                                                    const episodeSlug = `seriya-${episode.episodeNumber.toString().padStart(2, '0')}-${episode.title.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-')}`;
+                                                    navigator.clipboard.writeText(`/${seasonSlug}/${episodeSlug}`)
                                                     toast.success("URL скопирован в буфер обмена")
                                                 }}
                                             >

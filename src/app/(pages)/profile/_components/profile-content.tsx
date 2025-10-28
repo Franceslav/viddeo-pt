@@ -48,9 +48,15 @@ export const ProfileContent = () => {
   })
 
   const updateUserAvatar = trpc.user.updateUserAvatar.useMutation({
-    onSuccess: () => {
+    onSuccess: (updatedUser) => {
       toast.success('Аватарка обновлена!')
       utils.user.getUserById.invalidate({ userId: session?.user?.id || '' })
+      // Обновляем сессию с новыми данными пользователя
+      if (session?.user) {
+        session.user.image = updatedUser.image
+        session.user.name = updatedUser.name
+        session.user.email = updatedUser.email
+      }
       setSelectedFile(null)
       setPreviewUrl(null)
     },
@@ -61,7 +67,10 @@ export const ProfileContent = () => {
 
   const handleDeleteComment = (commentId: string) => {
     if (window.confirm('Вы уверены, что хотите удалить этот комментарий?')) {
-      deleteComment.mutate({ id: commentId })
+      deleteComment.mutate({ 
+        id: commentId,
+        userId: session?.user?.id || ''
+      })
     }
   }
 

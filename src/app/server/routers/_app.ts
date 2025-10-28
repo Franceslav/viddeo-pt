@@ -26,7 +26,7 @@ export const appRouter = router({
 });
 
 export const getQueryClient = cache(makeQueryClient);
-const caller = createCallerFactory(appRouter)(createTRPCContext);
+const caller = createCallerFactory(appRouter)(() => createTRPCContext());
 export const { trpc, HydrateClient } = createHydrationHelpers<typeof appRouter>(
   caller,
   getQueryClient,

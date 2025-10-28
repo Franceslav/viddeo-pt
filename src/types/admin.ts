@@ -66,7 +66,7 @@ export interface SeasonWithEpisodes {
 export interface EpisodeBasic {
   id: string
   title: string
-  description: string
+  description: string | null
   url: string
   episodeNumber: number
   image: string | null
@@ -93,7 +93,7 @@ export interface SeasonWithEpisodesFromRouter {
 export interface EpisodeWithSeasonFromRouter {
   id: string
   title: string
-  description: string
+  description: string | null
   url: string
   episodeNumber: number
   image: string | null
@@ -113,7 +113,7 @@ export interface EpisodeWithSeasonFromRouter {
 export interface EpisodeWithSeason {
   id: string
   title: string
-  description: string
+  description: string | null
   url: string
   episodeNumber: number
   image: string | null

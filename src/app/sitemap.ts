@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { trpc } from '@/app/server/routers/_app'
+import { seasonSlug, episodeSlug } from '@/lib/slugify'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://southpark-online.ru'
@@ -13,19 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/gallery`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
-    },
-    {
       url: `${baseUrl}/characters`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/luchshie-serii`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
@@ -45,21 +34,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   try {
-    // Динамические страницы сезонов (простые URL)
+    // Динамические страницы сезонов - единый формат /sezon-[номер]
     const seasons = await trpc.season.getSeasons()
     const seasonPages = seasons.map((season) => ({
-      url: `${baseUrl}/gallery/season/${season.id}`,
+      url: `${baseUrl}/${seasonSlug(season.seasonNumber)}`,
       lastModified: new Date(season.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     }))
 
-    // Динамические страницы эпизодов (рабочие ID-ссылки)
+    // Динамические страницы эпизодов
     const episodes = await trpc.episode.getEpisodes()
     const episodePages = episodes.map((episode) => ({
-      url: `${baseUrl}/gallery/episode/${episode.id}`,
+      url: `${baseUrl}/${seasonSlug(episode.season.seasonNumber)}/${episode.slug || episodeSlug(episode.episodeNumber, episode.title)}`,
       lastModified: new Date(episode.updatedAt),
-      changeFrequency: 'weekly' as const,
+      changeFrequency: 'monthly' as const,
       priority: 0.7,
     }))
 

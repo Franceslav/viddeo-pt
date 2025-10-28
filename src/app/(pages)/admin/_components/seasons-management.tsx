@@ -10,6 +10,7 @@ import { toast } from "sonner"
 import SeasonForm from "./season-form"
 import Image from "next/image"
 import { SeasonWithEpisodesFromRouter } from "@/types/admin"
+import { seasonSlug } from "@/lib/slugify"
 
 const SeasonsManagement = () => {
     const [isFormOpen, setIsFormOpen] = useState(false)
@@ -107,14 +108,14 @@ const SeasonsManagement = () => {
                                         <div className="mt-2 flex items-center gap-2">
                                             <Link className="w-4 h-4 text-muted-foreground" />
                                             <span className="text-xs text-muted-foreground font-mono">
-                                                /gallery/season/{season.id}
+                                                /{seasonSlug(season.seasonNumber)}
                                             </span>
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
                                                 className="h-6 w-6 p-0"
                                                 onClick={() => {
-                                                    navigator.clipboard.writeText(`/gallery/season/${season.id}`)
+                                                    navigator.clipboard.writeText(`/${seasonSlug(season.seasonNumber)}`)
                                                     toast.success("URL скопирован в буфер обмена")
                                                 }}
                                             >

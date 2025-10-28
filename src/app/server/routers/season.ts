@@ -94,7 +94,10 @@ export const seasonRouter = router({
             }
 
             const season = await ctx.db.season.create({
-                data: input
+                data: {
+                    ...input,
+                    isActive: true
+                }
             });
 
             return season;

@@ -3,10 +3,6 @@ import NextAuth from "next-auth"
 import Credentials from 'next-auth/providers/credentials'
 
 import { prisma } from "@/config/prisma"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-
-import { TRPCError } from "@trpc/server"
-import { trpc } from "./app/server/routers/_app"
 
 
 const providers = [
@@ -22,17 +18,29 @@ const providers = [
       }
 
       try {
-        const user = await trpc.user.getUserByEmail({ email: credentials.email as string });
-        
-        await trpc.user.validateUserPassWord({ email: credentials.email as string, password: credentials.password as string });
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email as string }
+        });
 
-        return user;
-      } catch (error) {
-        if (error instanceof TRPCError) {
-          console.error('Authentication error:', error.message);
-        } else {
-          console.error('Unexpected error during authentication:', error);
+        if (!user?.password) {
+          return null;
         }
+
+        const bcrypt = await import('bcryptjs');
+        const isPasswordValid = await bcrypt.compare(credentials.password as string, user.password);
+
+        if (!isPasswordValid) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image
+        };
+      } catch (error) {
+        console.error('Authentication error:', error);
         return null;
       }
     },
@@ -40,14 +48,25 @@ const providers = [
 ]
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
   callbacks: {
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub as string
+      if (session.user && token) {
+        session.user.id = token.id as string
+        session.user.name = token.name as string
+        session.user.email = token.email as string
+        session.user.image = token.image as string
       }
       return session
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+        token.name = user.name
+        token.email = user.email
+        token.image = user.image
+      }
+      return token
     }
   },
   providers,

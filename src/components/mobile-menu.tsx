@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { Menu, X, Home, Navigation, Users, MessageCircle, User, LogOut } from 'lucide-react'
+import { Menu, X, Home, Users, MessageCircle, User, LogOut } from 'lucide-react'
 import { Button } from './ui/button'
 import { useSession, signOut } from 'next-auth/react'
 
@@ -17,11 +17,6 @@ const navItems: NavItem[] = [
     title: 'Главная',
     href: '/',
     icon: <Home className="w-4 h-4" />
-  },
-  {
-    title: 'Навигация',
-    href: '/gallery',
-    icon: <Navigation className="w-4 h-4" />
   },
   {
     title: 'Персонажи',
@@ -90,11 +85,11 @@ const MobileMenu = () => {
     <div ref={menuRef} className="md:hidden relative">
       <Button
         variant="ghost"
-        size="icon"
+        size="sm"
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-white border-2 border-black shadow-md hover:shadow-lg transform hover:scale-110 hover:rotate-3 transition-all duration-300"
+        className="bg-white border-2 border-black shadow-md hover:shadow-lg transform hover:scale-110 hover:rotate-3 transition-all duration-300 w-8 h-8 p-0"
       >
-        {isOpen ? <X className="w-6 h-6 text-black" /> : <Menu className="w-6 h-6 text-black" />}
+        {isOpen ? <X className="w-4 h-4 text-black" /> : <Menu className="w-4 h-4 text-black" />}
       </Button>
       
       {isOpen && (

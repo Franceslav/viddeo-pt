@@ -113,29 +113,12 @@ export async function GET(request: NextRequest) {
       // Получить эпизоды конкретного сезона
       episodes = await prisma.episode.findMany({
         where: { seasonId },
-        orderBy: { episodeNumber: 'asc' },
-        include: {
-          season: true,
-          user: {
-            select: { name: true, email: true }
-          },
-          likes: true
-        }
+        orderBy: { episodeNumber: 'asc' }
       })
     } else {
       // Получить все эпизоды
       episodes = await prisma.episode.findMany({
-        orderBy: [
-          { season: { seasonNumber: 'asc' } },
-          { episodeNumber: 'asc' }
-        ],
-        include: {
-          season: true,
-          user: {
-            select: { name: true, email: true }
-          },
-          likes: true
-        }
+        orderBy: { episodeNumber: 'asc' }
       })
     }
 

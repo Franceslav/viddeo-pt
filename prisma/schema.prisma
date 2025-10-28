@@ -40,6 +40,11 @@ model Season {
   seasonNumber Int
   isActive     Boolean @default(true)
   image        String? // URL картинки сезона
+  slug         String? // URL слаг для сезона (optional для старых данных)
+  year         Int?    // Год выпуска сезона
+  poster       String? // URL постера сезона
+  metaTitle    String? // SEO заголовок
+  metaDesc     String? // SEO описание
 
   episodes Episode[]
 
@@ -50,10 +55,18 @@ model Season {
 model Episode {
   id            String  @id @default(auto()) @map("_id") @db.ObjectId
   title         String
-  description   String
+  titleEn       String? // Английское название
+  description   String?
   url           String
   episodeNumber Int
   image         String? // URL картинки эпизода
+  slug          String? // URL слаг для эпизода (optional для старых данных)
+  datePublished DateTime? // Дата публикации
+  duration      String? // Продолжительность в формате ISO 8601
+  isOfficial    Boolean @default(false) // Официальный источник
+  isEmbedded    Boolean @default(false) // Встроенное видео
+  videoUrl      String? // URL видео
+  thumbnailUrl  String? // URL превью
 
   seasonId String @db.ObjectId
   season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)

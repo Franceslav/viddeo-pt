@@ -7,6 +7,10 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: [
           '/',
+          '/sezon-*/',
+          '/sezon-*/seriya-*/',
+          '/characters/',
+          '/comments/',
           '/_next/static/',
           '/_next/image/',
           '/assets/',
@@ -20,7 +24,9 @@ export default function robots(): MetadataRoute.Robots {
           '/test-player-simple/',
           '/_next/webpack-hmr',
           '/_next/server/',
-          '/_next/server-chunks/'
+          '/_next/server-chunks/',
+          '/_trpc/',
+          '/test-route/'
         ],
       },
     ],

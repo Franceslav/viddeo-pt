@@ -1,7 +1,6 @@
 "use client"
 import { useState } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
-import FAQSchema from "./seo/faq-schema"
 
 interface FAQItem {
   question: string
@@ -27,9 +26,7 @@ export default function FAQSection({ faqs, title = "Часто задаваем�
   }
 
   return (
-    <>
-      <FAQSchema faqs={faqs} />
-      <section className="py-8 px-4">
+    <section className="py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-white mb-8 text-center">
             {title}
@@ -65,6 +62,5 @@ export default function FAQSection({ faqs, title = "Часто задаваем�
           </div>
         </div>
       </section>
-    </>
   )
 }

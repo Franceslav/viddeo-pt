@@ -1,4 +1,3 @@
-import Link from "next/link"
 import Image from "next/image"
 import { Suspense } from "react"
 import { ErrorBoundary } from "react-error-boundary"
@@ -8,7 +7,7 @@ import { buttonVariants } from "@/components/ui/button"
 
 import { cn } from "@/lib/utils"
 import Container from "@/components/container"
-import { SeasonsList } from "./(pages)/gallery/_components/seasons-list"
+import SeasonsList from "@/components/seasons-list"
 import { HydrateClient } from "@/app/server/routers/_app"
 import FAQSection from "@/components/faq-section"
 
@@ -288,14 +287,14 @@ const Home = () => {
                   <p><strong>Южный парк смотреть онлайн бесплатно в хорошем качестве на русском языке</strong> - все серии и сезоны от 1 до 27 в HD качестве с русской озвучкой. Полная коллекция эпизодов без регистрации.</p>
                 </div>
                 
-                         <Link 
-                           href='/gallery' 
-                           className={cn("w-full max-w-56 sm:max-w-64 md:max-w-72 font-black text-sm sm:text-base md:text-lg py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-red-500 hover:bg-red-600 text-white border-3 sm:border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg text-center", buttonVariants({ variant: "default" }))} 
+                         <a 
+                           href='#seasons' 
+                           className={cn("w-full max-w-56 sm:max-w-64 md:max-w-72 font-black text-sm sm:text-base md:text-lg py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-red-500 hover:bg-red-600 text-white border-3 sm:border-4 border-black rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg text-center cursor-pointer", buttonVariants({ variant: "default" }))} 
                            style={{ textShadow: '1px 1px 0px #000000' }}
                            data-analytics="watch_main_button"
                          >
                            <span className="whitespace-nowrap">СМОТРЕТЬ ЮЖНЫЙ ПАРК!</span>
-                         </Link>
+                         </a>
               </div>
             </div>
           </main>
@@ -304,7 +303,7 @@ const Home = () => {
             {/* Описание сайта - теперь первое */}
             
             {/* Список сезонов - теперь второе */}
-            <div className="text-center px-2">
+            <div id="seasons" className="text-center px-2">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 text-white transform -rotate-1" style={{ textShadow: '2px 2px 0px #ff0000, 4px 4px 0px #000000, 6px 6px 0px rgba(0,0,0,0.8)' }}>
                 ЛУЧШИЕ СЕЗОНЫ ЮЖНОГО ПАРКА!
               </h2>

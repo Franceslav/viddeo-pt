@@ -46,7 +46,7 @@ const UniversalEpisodeForm = ({ episode, onClose, userId }: UniversalEpisodeForm
     useEffect(() => {
         if (episode) {
             setTitle(episode.title)
-            setDescription(episode.description)
+            setDescription(episode.description || "")
             setUrl(episode.url)
             setEpisodeNumber(episode.episodeNumber)
             setSeasonId(episode.seasonId)

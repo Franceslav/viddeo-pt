@@ -13,7 +13,18 @@ export const episodeRouter = router({
                         { episodeNumber: 'asc' }
                     ],
                     include: {
-                        season: true,
+                        season: {
+                            select: { 
+                                id: true, 
+                                seasonNumber: true, 
+                                title: true, 
+                                description: true, 
+                                isActive: true, 
+                                image: true, 
+                                createdAt: true, 
+                                updatedAt: true 
+                            }
+                        },
                         user: {
                             select: { name: true, email: true }
                         },
@@ -37,9 +48,8 @@ export const episodeRouter = router({
                     where: { seasonId: input.seasonId },
                     orderBy: { episodeNumber: 'asc' },
                     include: {
-                        season: true,
-                        user: {
-                            select: { name: true, email: true }
+                        season: {
+                            select: { id: true, seasonNumber: true, title: true }
                         },
                         likes: true
                     }
@@ -58,9 +68,8 @@ export const episodeRouter = router({
             const episode = await ctx.db.episode.findUnique({
                 where: { id: input.id },
                 include: {
-                    season: true,
-                    user: {
-                        select: { name: true, email: true }
+                    season: {
+                        select: { id: true, seasonNumber: true, title: true }
                     },
                     likes: true
                 }
@@ -83,7 +92,11 @@ export const episodeRouter = router({
             try {
                 const currentEpisode = await ctx.db.episode.findUnique({
                     where: { id: input.id },
-                    include: { season: true }
+                    include: { 
+                        season: {
+                            select: { id: true, seasonNumber: true, title: true }
+                        }
+                    }
                 });
 
                 if (!currentEpisode) {
@@ -96,7 +109,11 @@ export const episodeRouter = router({
                         { season: { seasonNumber: 'asc' } },
                         { episodeNumber: 'asc' }
                     ],
-                    include: { season: true }
+                    include: { 
+                        season: {
+                            select: { id: true, seasonNumber: true, title: true }
+                        }
+                    }
                 });
 
                 const currentIndex = allEpisodes.findIndex(ep => ep.id === currentEpisode.id);
@@ -126,9 +143,8 @@ export const episodeRouter = router({
                     episodeNumber: input.episodeNumber
                 },
                 include: {
-                    season: true,
-                    user: {
-                        select: { name: true, email: true }
+                    season: {
+                        select: { id: true, seasonNumber: true, title: true }
                     },
                     likes: true
                 }
