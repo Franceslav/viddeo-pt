@@ -26,7 +26,9 @@ export default function robots(): MetadataRoute.Robots {
           '/_next/server/',
           '/_next/server-chunks/',
           '/_trpc/',
-          '/test-route/'
+          '/test-route/',
+          '/south-park/',
+          '/luchshie-serii/'
         ],
       },
     ],
